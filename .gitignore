@@ -10,8 +10,7 @@
 ./datamart-service/target/*
 /target/
 /.settings
-/.classpath
-/.project
+
 *.class
 /bin/
 /build/
