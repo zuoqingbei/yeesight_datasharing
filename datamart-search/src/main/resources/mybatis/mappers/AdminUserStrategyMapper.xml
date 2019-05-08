@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.AdminUserStrategyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.AdminUserStrategy">
+        <result column="user_id" property="userId" />
+        <result column="data_strategy_id" property="dataStrategyId" />
+        <result column="strategy_type" property="strategyType" />
+        <result column="datasource_id" property="datasourceId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id AS userId, data_strategy_id AS dataStrategyId, strategy_type AS strategyType, datasource_id AS datasourceId
+    </sql>
+<select id="getByuserId" parameterType="String" resultType="com.haier.datamart.entity.AdminUserStrategy">
+select <include refid="Base_Column_List"></include> from admin_user_strategy where user_id=#{id}
+</select>
+<select id="selectByuid" resultType="String" parameterType="String">
+SELECT COUNT(*) as num from admin_user_strategy u 
+LEFT JOIN admin_datasource_config c on c.id=u.datasource_id
+where u.strategy_type!='开放策略' 
+and c.del_flag='0'
+		<if test="uid != null and uid!=''">
+				and c.create_by=#{uid} 
+		</if>
+</select>
+</mapper>

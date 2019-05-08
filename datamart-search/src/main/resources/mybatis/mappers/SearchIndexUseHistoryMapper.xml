@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.SearchIndexUseHistoryMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.haier.datamart.entity.SearchIndexUseHistory">
+		<result column="id" property="id" />
+		<result column="user_name" property="userName" />
+		<result column="user_email" property="userEmail" />
+		<result column="user_tel" property="userTel" />
+		<result column="user_num" property="userNum" />
+		<result column="user_dept" property="userDept" />
+		<result column="leader_name" property="leaderName" />
+		<result column="leader_email" property="leaderEmail" />
+		<result column="leader_tel" property="leaderTel" />
+		<result column="leader_num" property="leaderNum" />
+		<result column="leader_dept" property="leaderDept" />
+		<result column="source_db" property="sourceDb" />
+		<result column="target_db" property="targetDb" />
+		<result column="manage_type" property="manageType" />
+		<result column="manage_sql" property="manageSql" />
+		<result column="manage_url" property="manageUrl" />
+		<result column="manage_name" property="manageName" />
+		<result column="manage_pwd" property="managePwd" />
+		<result column="use_reason" property="useReason" />
+		<result column="sh_status" property="shStatus" />
+		<result column="sh_user" property="shUser" />
+		<result column="sh_backs" property="shBacks" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+		<result column="shUserName" property="shUserName" />
+		<result column="system_name" property="systemName" />
+		<result column="mail_status" property="mailStatus" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id,
+		user_name,
+		user_email,
+		system_name,
+		mail_status,
+		user_tel,
+		user_num,
+		user_dept,
+		leader_name,
+		leader_email,
+		leader_tel,
+		leader_num,
+		leader_dept,
+		source_db,
+		target_db,
+		manage_type,
+		manage_sql,
+		manage_url,
+		manage_name,
+		manage_pwd,
+		use_reason,
+		sh_status,
+		sh_user,
+		sh_backs,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag,
+		mail_status as mailStatus
+	</sql>
+	<select id="pageList" parameterType="com.haier.datamart.entity.SearchIndexUseHistory"
+		resultMap="BaseResultMap">
+		SELECT h.*,u.`name` as shUserName FROM `search_index_use_history` h
+		LEFT JOIN sys_user u on u.id=h.sh_user
+		where h.del_flag=0
+		<if test="keyWord != null and keyWord != ''">
+			and (
+			h.sh_backs LIKE CONCAT('%',#{keyWord},'%')
+			or h.user_name LIKE CONCAT('%',#{keyWord},'%')
+			or h.user_email LIKE CONCAT('%',#{keyWord},'%')
+			or h.user_tel LIKE CONCAT('%',#{keyWord},'%')
+			or h.user_num LIKE CONCAT('%',#{keyWord},'%')
+			or h.user_dept LIKE CONCAT('%',#{keyWord},'%')
+			or h.leader_name LIKE CONCAT('%',#{keyWord},'%')
+			or h.leader_email LIKE CONCAT('%',#{keyWord},'%')
+			or h.leader_tel LIKE CONCAT('%',#{keyWord},'%')
+			or h.leader_num LIKE CONCAT('%',#{keyWord},'%')
+			or h.leader_dept LIKE CONCAT('%',#{keyWord},'%')
+			or h.use_reason LIKE CONCAT('%',#{keyWord},'%')
+			or h.manage_sql LIKE CONCAT('%',#{keyWord},'%')
+			or h.manage_url LIKE CONCAT('%',#{keyWord},'%')
+			or h.manage_name LIKE CONCAT('%',#{keyWord},'%')
+			or h.remarks LIKE CONCAT('%',#{keyWord},'%')
+			or h.manage_type LIKE CONCAT('%',#{keyWord},'%')
+			or u.`name` LIKE CONCAT('%',#{keyWord},'%')
+			)
+		</if>
+		<if test="shStatus != null and shStatus != ''">
+			and h.sh_status=#{shStatus}
+		</if>
+		ORDER BY create_date desc
+		LIMIT ${startNum},${pageSize}
+
+	</select>
+</mapper>

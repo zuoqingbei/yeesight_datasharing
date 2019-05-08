@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.DataInterfaceExcMapper">
+
+   <!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="com.haier.datamart.entity.DataInterfaceExc">
+      <id column="id" property="id" />
+      <result column="data_type" property="dataType" />
+      <result column="data_space" property="dataSpace" />
+      <result column="data_sql" property="dataSql" />
+      <result column="param_id" property="paramId" />
+      <result column="begin_date" property="beginDate" />
+      <result column="date_format" property="dateFormat" />
+      <result column="fresh_flag" property="freshFlag" />
+      <result column="update_days" property="updateDays" />
+      <result column="timer_offset" property="timerOffset" />
+      <result column="exc_time" property="excTime" />
+      <result column="cache_type" property="cacheType" />
+      <result column="transform_data" property="transformData" />
+      <result column="create_by" property="createBy" />
+      <result column="create_time" property="createTime" />
+      <result column="last_update_by" property="lastUpdateBy" />
+      <result column="last_update_time" property="lastUpdateTime" />
+      <result column="remark" property="remark" />
+      <result column="dataSourceId" property="dataSourceId" />
+      <result column="del_flag" property="delFlag" />
+   </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      a.id,
+      a.data_type as dataType,
+      a.data_space as dataSpace,
+      a.data_sql AS dataSql,
+      a.param_id AS paramId,
+      a.begin_date AS beginDate,
+      a.date_format AS dateFormat,
+      a.fresh_flag AS freshFlag,
+      a.update_days AS updateDays,
+      a.timer_offset AS timerOffset,
+      a.exc_time AS excTime,
+      a.cache_type AS cacheType,
+      a.transform_data AS transformData,
+      a.create_by AS createBy,
+      a.create_time AS createTime,
+      a.last_update_by as lastUpdateBy,
+      a.last_update_time AS lastUpdateTime,
+      a.remark,
+      a.dataSourceId,
+      a.del_flag AS delFlag
+	</sql>
+	
+	<!-- 根据数据源+表名称查询统一接口 -->
+	<select id="findExcByDbAndContentId" resultType="com.haier.datamart.entity.DataInterfaceExc">
+		SELECT
+		DISTINCT
+		<include refid="Base_Column_List" /> from
+		data_interface_exc a 
+		<if test="isAdmin != 'true'">
+			INNER JOIN(
+				SELECT e.* from sys_product_exc e INNER JOIN (
+				SELECT DISTINCT p.* from sys_product p INNER JOIN sys_product_group pg on pg.product_id=p.id
+				INNER JOIN sys_user_group ug on ug.group_id=pg.group_id
+				INNER JOIN sys_user u on u.id=ug.user_id where u.del_flag=0 and p.del_flag=0 and u.id=#{userId}
+				)b on b.id=e.product_id
+			)d on a.id=d.exc_id
+		</if>
+		
+		LEFT JOIN data_interface_table_relative r 
+		on a.id=r.exc_id
+		where r.data_source_id=#{dataSourceId}
+		and a.dataSourceId=#{dataSourceId}
+		and r.content_id=#{contentId} 
+		and a.del_flag=0
+		limit ${start},${end}
+	</select>
+	
+	<!-- 根据指标编码查询统一接口 -->
+	<select id="findExcByIndexId" resultType="com.haier.datamart.entity.DataInterfaceExc">
+		SELECT DISTINCT
+		<include refid="Base_Column_List" /> from
+			data_interface_exc a
+			<if test="isAdmin != 'true'">
+			INNER JOIN(
+				SELECT e.* from sys_product_exc e INNER JOIN (
+				SELECT DISTINCT p.* from sys_product p INNER JOIN sys_product_group pg on pg.product_id=p.id
+				INNER JOIN sys_user_group ug on ug.group_id=pg.group_id
+				INNER JOIN sys_user u on u.id=ug.user_id where u.del_flag=0 and p.del_flag=0 and u.id=#{userId}
+				)b on b.id=e.product_id
+			)d on a.id=d.exc_id
+			</if>
+		INNER JOIN (
+			SELECT
+				r.exc_id
+			FROM
+				(
+					SELECT
+						DISTINCT content.table_name
+					FROM
+						scan_index_table_relative re
+					LEFT JOIN admin_data_content content ON content.id = re.content_id
+					WHERE
+						re.del_flag = 0
+					AND content.del_flag = 0
+					AND re.del_flag = 0
+					AND re.index_id = #{indexId}
+				) b
+			INNER JOIN data_interface_table_relative r ON CONCAT(r.db_name, '.', r.content_id) = b.table_name
+			OR r.content_id = b.table_name
+		) c ON c.exc_id = a.id
+		WHERE
+			a.del_flag = 0
+	</select>
+	
+	
+	<!-- 根据报表编码查询统一接口 -->
+	<select id="findExcByReportId" resultType="com.haier.datamart.entity.DataInterfaceExc">
+		SELECT DISTINCT
+		<include refid="Base_Column_List" /> from
+			data_interface_exc a
+			<if test="isAdmin != 'true'">
+			INNER JOIN(
+				SELECT e.* from sys_product_exc e INNER JOIN (
+				SELECT DISTINCT p.* from sys_product p INNER JOIN sys_product_group pg on pg.product_id=p.id
+				INNER JOIN sys_user_group ug on ug.group_id=pg.group_id
+				INNER JOIN sys_user u on u.id=ug.user_id where u.del_flag=0 and p.del_flag=0 and u.id=#{userId}
+				)b on b.id=e.product_id
+			)d on a.id=d.exc_id
+		   </if>
+		INNER JOIN (
+			SELECT
+				r.exc_id
+			FROM
+				(
+					SELECT
+						DISTINCT content.table_name
+					FROM
+		   search_reports_index m LEFT JOIN
+						scan_index_table_relative re on re.index_id=m.index_id
+					LEFT JOIN admin_data_content content ON content.id = re.content_id
+					WHERE
+						re.del_flag = 0
+					AND content.del_flag = 0
+					AND re.del_flag = 0
+					AND m.report_id = #{reportId}
+				) b
+			INNER JOIN data_interface_table_relative r ON CONCAT(r.db_name, '.', r.content_id) = b.table_name
+			OR r.content_id = b.table_name
+		) c ON c.exc_id = a.id
+		WHERE
+			a.del_flag = 0
+	</select>
+
+</mapper>

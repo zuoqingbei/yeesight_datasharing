@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.EnteringTableSettingHeaderMapper">
+
+   <!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="com.haier.datamart.entity.EnteringTableSettingHeader">
+      <result column="id" property="id" />
+      <result column="entering_setting_id" property="enteringSettingId" />
+      <result column="rownum" property="rownum" />
+      <result column="name" property="name" />
+      <result column="width" property="width" />
+      <result column="hight" property="hight" />
+      <result column="style" property="style" />
+      <result column="row_from" property="rowFrom" />
+      <result column="column_from" property="columnFrom" />
+      <result column="row_to" property="rowTo" />
+      <result column="column_to" property="columnTo" />
+      <result column="order_no" property="orderNo" />
+      <result column="create_date" property="createDate" />
+      <result column="create_by" property="createBy" />
+      <result column="update_by" property="updateBy" />
+      <result column="update_date" property="updateDate" />
+      <result column="remarks" property="remarks" />
+      <result column="del_flag" property="delFlag" />
+      <result column="data_format" property="dataFormat" />
+      <result column="data_format_string" property="dataFormatString" />
+      <result column="locked" property="locked" />
+      <result column="hiidden" property="hiidden" />
+      <result column="align" property="align" />
+      <result column="wrap_text" property="wrapText" />
+      <result column="vertical_alignment" property="verticalAlignment" />
+      <result column="rotation" property="rotation" />
+      <result column="indention" property="indention" />
+      <result column="border_left" property="borderLeft" />
+      <result column="border_right" property="borderRight" />
+      <result column="border_top" property="borderTop" />
+      <result column="border_bottom" property="borderBottom" />
+      <result column="border_left_color" property="borderLeftColor" />
+      <result column="border_right_color" property="borderRightColor" />
+      <result column="border_top_color" property="borderTopColor" />
+      <result column="border_bottom_color" property="borderBottomColor" />
+      <result column="fill_background_color" property="fillBackgroundColor" />
+      <result column="fill_pattern" property="fillPattern" />
+      <result column="fill_foreground_color" property="fillForegroundColor" />
+      <result column="font_name" property="fontName" />
+      <result column="font_height" property="fontHeight" />
+      <result column="font_color" property="fontColor" />
+      <result column="row_height" property="rowHeight" />
+   </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      id,
+      entering_setting_id,
+      rownum,
+      name,
+      width,
+      hight,
+      style,
+      row_from,
+      column_from,
+      row_to,
+      column_to,
+      order_no,
+      create_date,
+      create_by,
+      update_by,
+      update_date,
+      remarks,
+      del_flag,
+      data_format,
+      data_format_string,
+      locked,
+      hiidden,
+      align,
+      wrap_text,
+      vertical_alignment,
+      rotation,
+      indention,
+      border_left,
+      border_right,
+      border_top,
+      border_bottom,
+      border_left_color,
+      border_right_color,
+      border_top_color,
+      border_bottom_color,
+      fill_background_color,
+      fill_pattern,
+      fill_foreground_color,
+      font_name,
+      font_height,
+      font_color,
+      row_height
+</sql>
+
+</mapper>

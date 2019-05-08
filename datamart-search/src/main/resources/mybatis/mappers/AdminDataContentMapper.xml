@@ -1,0 +1,406 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.AdminDataContentMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.haier.datamart.entity.AdminDataContent">
+		<result column="id" property="id" />
+		<result column="data_source_id" property="dataSourceId" />
+		<result column="table_name" property="tableName" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		admin_data_content.id, admin_data_content.data_source_id AS dataSourceId,
+		admin_data_content.table_name AS tableName, u.name AS createBy,
+		admin_data_content.create_date AS createDate,
+		admin_data_content.update_by AS updateBy,
+		admin_data_content.update_date AS updateDate,
+		admin_data_content.remarks, admin_data_content.del_flag AS delFlag
+	</sql>
+	<sql id="adminDataContentColumns">
+		a.id AS "id",
+		a.data_source_id AS "dataSourceId",
+		a.table_name AS "tableName",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS
+		"delFlag"
+	</sql>
+
+
+	<select id="findList" resultType="com.haier.datamart.entity.AdminDataContent">
+		SELECT
+		<include refid="adminDataContentColumns" />
+		FROM admin_data_content a
+
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	<insert id="insert">
+		INSERT INTO admin_data_content(
+		id,
+		data_source_id,
+		table_name,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES (
+		#{id},
+		#{dataSourceId},
+		#{tableName},
+		#{columnName},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{delFlag}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE admin_data_content SET
+		id = #{id},
+		data_source_id = #{dataSourceId},
+		content_id = #{contentId},
+		table_name = #{tableName},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete" parameterType="String">
+		UPDATE admin_data_content SET
+		del_flag ='1'
+		WHERE id = #{id}
+
+	</update>
+	<update id="deletebyConfigID" parameterType="String">
+		UPDATE
+		admin_data_content SET
+		del_flag ='1'
+		WHERE data_source_id=#{id}
+
+	</update>
+	<insert id="insertBatch" parameterType="java.util.List">
+
+		INSERT INTO admin_data_content(
+		id,
+		data_source_id,
+		table_name,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES
+		<foreach collection="contents" item="content" index="index"
+			separator=",">
+			(
+			#{content.id},
+			#{content.dataSourceId},
+			#{content.tableName},
+			#{content.createBy},
+			#{content.createDate},
+			#{content.updateBy},
+			#{content.updateDate},
+			#{content.remarks},
+			#{content.delFlag}
+			)
+
+		</foreach>
+	</insert>
+	<select id="findListByScan" resultType="com.haier.datamart.entity.AdminDataContent">
+		SELECT
+		<include refid="adminDataContentColumns" />
+		FROM admin_data_content a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="dataSourceId != null and dataSourceId != ''">
+				AND a.data_source_id = #{dataSourceId}
+			</if>
+			<if test="tableName != null and tableName != ''">
+				AND a.table_name= #{tableName}
+			</if>
+		</where>
+	</select>
+	<update id="updateListByScan" parameterType="java.util.List">
+		update admin_data_content
+		<trim prefix="set" suffixOverrides=",">
+
+			<trim prefix="id =case" suffix="end,">
+				<foreach collection="contents" item="content">
+					<if test="content.id!=null">
+						when id = #{content.id} then #{content.id}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="data_source_id =case" suffix="end,">
+				<foreach collection="contents" item="content">
+					<if test="content.dataSourceId!=null">
+						when id = #{content.id} then #{content.dataSourceId}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="table_name =case" suffix="end,">
+				<foreach collection="contents" item="content">
+					<if test="content.tableName!=null">
+						when id = #{content.id} then #{content.tableName}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="create_by =case" suffix="end,">
+				<foreach collection="contents" item="content">
+					<if test="content.createBy!=null">
+						when id = #{content.id} then #{content.createBy}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="create_date =case" suffix="end,">
+				<foreach collection="contents" item="content">
+					<if test="content.createDate!=null">
+						when id = #{content.id} then #{content.createDate}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="update_by =case" suffix="end,">
+				<foreach collection="contents" item="content">
+					<if test="content.updateBy!=null">
+						when id = #{content.id} then #{content.updateBy}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="update_date =case" suffix="end,">
+				<foreach collection="contents" item="content">
+					<if test="content.updateDate!=null">
+						when id = #{content.id} then #{content.updateDate}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="remarks =case" suffix="end,">
+				<foreach collection="contents" item="content">
+					<if test="content.remarks!=null">
+						when id = #{content.id} then #{content.remarks}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		<where>
+			<foreach collection="contents" separator="or" item="content">
+				id = #{content.id}
+			</foreach>
+		</where>
+	</update>
+	<update id="updateListByScan2" parameterType="java.util.List">
+		<foreach collection="contents" item="content" index="index"
+			open="" close="" separator=";">
+			UPDATE admin_data_content a
+			<set>
+				a.id=#{content.id},
+				a.data_source_id = #{content.dataSourceId},
+				a.table_name = #{content.tableName},
+				a.create_by = #{content.createBy},
+				a.create_date = #{content.createDate},
+				a.update_by=#{content.updateBy},
+				a.update_date=#{content.updateDate},
+				a.remarks = #{content.remarks}
+			</set>
+			WHERE a.id = #{content.id}
+		</foreach>
+	</update>
+
+	<select id="findListByScan2" resultType="com.haier.datamart.entity.AdminDataContent">
+		SELECT
+		<include refid="adminDataContentColumns" />
+		FROM admin_data_content a
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.data_source_id = #{dataSourceId}
+			</if>
+		</where>
+	</select>
+
+
+	<insert id="add" parameterType="com.haier.datamart.entity.AdminDataContent">
+		insert into admin_data_content
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="dataSourceId != null">
+				data_source_id,
+			</if>
+			<if test="tableName != null">
+				table_name,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="delFlag != null">
+				del_flag,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="dataSourceId != null">
+				#{dataSourceId},
+			</if>
+			<if test="tableName != null">
+				#{tableName},
+			</if>
+			<if test="createBy != null">
+				#{createBy},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate},
+			</if>
+			<if test="remarks != null">
+				#{remarks},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag},
+			</if>
+		</trim>
+	</insert>
+	<select id="getContent" parameterType="com.haier.datamart.entity.AdminDataContent"
+		resultType="com.haier.datamart.entity.AdminDataContent">
+		select * from admin_data_content where data_source_id=#{dataSourceId} and
+		table_name=#{tableName} and del_flag='0'
+	</select>
+	<select id="getByIndexid" parameterType="String"
+		resultType="com.haier.datamart.entity.AdminDataContent">
+		SELECT  c.id,c.table_name AS tableName from admin_data_content c inner JOIN(
+		SELECT DISTINCT re.content_id from scan_index_table_relative re LEFT JOIN search_index i on i.id=re.index_id
+		 where i.id=#{id} and re.del_flag=0 and i.del_flag=0) a on a.content_id=c.id where c.del_flag=0
+	</select>
+	<select id="getAll">
+		select * from admin_data_content where del_flag='0'
+	</select>
+	<select id="getAllby" parameterType="com.haier.datamart.entity.AdminDataContent"
+		resultType="com.haier.datamart.entity.AdminDataContent">
+		select
+		<include refid="Base_Column_List"></include>
+		from admin_data_content left join sys_user u on
+		u.id=admin_data_content.create_by where 1=1
+		<if test="dataSourceId != null and dataSourceId!=''">
+			and admin_data_content.data_source_id=#{dataSourceId}
+		</if>
+		<if test="tableName != null">
+			and admin_data_content.table_name like '%${tableName}%'
+		</if>
+		<if test="remarks != null">
+			and admin_data_content.remarks like '%${remarks}%'
+		</if>
+		<!-- <if test="createBy!=null"> and admin_data_content.create_by=#{createBy} 
+			</if> -->
+		and admin_data_content.del_flag='0'
+		order by admin_data_content.create_date desc
+	</select>
+
+	<select id="getAllbyName" parameterType="com.haier.datamart.entity.AdminDataContent"
+		resultType="com.haier.datamart.entity.AdminDataContent">
+		select id,table_name as name from admin_data_content where 1=1
+		and data_source_id=#{dataSourceId}
+		<if test="tableName != null">
+			and table_name=#{tableName},
+		</if>
+		and del_flag='0'
+	</select>
+	<update id="updatTable" parameterType="com.haier.datamart.entity.AdminDataContent">
+		update admin_data_content
+		<set>
+			<if test="id != null">
+				id=#{id},
+			</if>
+			<if test="dataSourceId != null">
+				data_source_id=#{dataSourceId},
+			</if>
+			<if test="tableName != null">
+				table_name=#{tableName},
+			</if>
+			<if test="createBy != null">
+				create_by=#{createBy},
+			</if>
+			<if test="createDate != null">
+				create_date=#{createDate},
+			</if>
+			<if test="updateBy != null">
+				update_by=#{updateBy},
+			</if>
+			<if test="updateDate != null">
+				update_date=#{updateDate},
+			</if>
+			<if test="remarks != null">
+				remarks=#{remarks},
+			</if>
+			<if test="delFlag != null">
+				del_flag=#{delFlag},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+	<select id="get" resultType="com.haier.datamart.entity.AdminDataContent"
+		parameterType="String">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM admin_data_content left join sys_user u on
+		u.id=admin_data_content.create_by where admin_data_content.id = #{id} and admin_data_content.del_flag='0'
+	</select>
+	<select id="selectbyuid" resultType="String" parameterType="String">
+		SELECT COUNT(*) as num from admin_data_content
+		where del_flag='0'
+		<if test="uid != null and uid!=''">
+			and create_by=#{uid}
+		</if>
+	</select>
+</mapper>

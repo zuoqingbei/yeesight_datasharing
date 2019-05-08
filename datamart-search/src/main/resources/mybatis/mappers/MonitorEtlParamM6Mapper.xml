@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MonitorEtlParamM6Mapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.MonitorEtlParamM6">
+        <id column="module_id" property="moduleId" />
+        <result column="index_id" property="indexId" />
+        <result column="index_name" property="indexName" />
+        <result column="test_type" property="testType" />
+        <result column="test_path" property="testPath" />
+        <result column="type_id" property="typeId" />
+        <result column="module_desc" property="moduleDesc" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        module_id AS moduleId, index_id AS indexId, index_name AS indexName, test_type AS testType, test_path AS testPath, type_id AS typeId, module_desc AS moduleDesc, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+    
+    <!-- /**
+	 * 根据传入参数更新数据库
+	 * @param com.haier.datamart.entity.MonitorEtlParamM6 paramM6
+	 */
+	Integer updateParamM6(MonitorEtlParamM6 paramM6); -->
+	<update id="updateParamM6" parameterType="com.haier.datamart.entity.MonitorEtlParamM6">
+		update
+			monitor_etl_param_m6
+		<set>
+			<if	test="indexId!=null">
+				index_id=#{indexId},
+			</if>
+			<if	test="indexName!=null">
+				index_name=#{indexName},
+			</if>
+			<if	test="testType!=null">
+				test_type=#{testType},
+			</if>
+			<if	test="testPath!=null">
+				test_path=#{testPath},
+			</if>
+			<if	test="typeId!=null">
+				type_id=#{typeId},
+			</if>
+			<if	test="moduleDesc!=null">
+				module_desc=#{moduleDesc},
+			</if>
+			<if	test="createBy!=null">
+				create_by=#{createBy},
+			</if>
+			<if	test="createDate!=null">
+				create_date=#{createDate},
+			</if>
+			<if	test="updateBy!=null">
+				update_by=#{updateBy},
+			</if>
+			<if	test="remarks!=null">
+				remarks=#{remarks},
+			</if>
+			<if	test="delFlag!=null">
+				del_flag=#{delFlag},
+			</if>
+	        update_date=#{updateDate}
+		</set>
+		where
+			module_id=#{moduleId}
+	</update>
+    <!-- List<MonitorEtlParamM6> getListByUserId(String uid);
+	/**
+	 * 增加操作
+	 * @param paramM6
+	 * @return
+	 */
+	Integer addParam6(MonitorEtlParamM6 paramM6); -->
+	<insert id="addParam6" parameterType="com.haier.datamart.entity.MonitorEtlParamM6">
+		insert into
+			monitor_etl_param_m6
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			module_id,
+			<if	test="indexId!=null">
+				index_id,
+			</if>
+			<if	test="indexName!=null">
+				index_name,
+			</if>
+			<if	test="testType!=null">
+				test_type,
+			</if>
+			<if	test="testPath!=null">
+				test_path,
+			</if>
+			<if	test="typeId!=null">
+				type_id,
+			</if>
+			<if	test="moduleDesc!=null">
+				module_desc,
+			</if>
+			<if	test="createBy!=null">
+				create_by,
+			</if>
+			<if	test="createDate!=null">
+				create_date,
+			</if>
+			<if	test="updateBy!=null">
+				update_by,
+			</if>
+			<if	test="remarks!=null">
+				remarks,
+			</if>
+			<if	test="delFlag!=null">
+				del_flag,
+			</if>
+			<if	test="updateDate!=null">
+				update_date,
+			</if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			#{moduleId},
+			<if	test="indexId!=null">
+				#{indexId},
+			</if>
+			<if	test="indexName!=null">
+				#{indexName},
+			</if>
+			<if	test="testType!=null">
+				#{testType},
+			</if>
+			<if	test="testPath!=null">
+				#{testPath},
+			</if>
+			<if	test="typeId!=null">
+				#{typeId},
+			</if>
+			<if	test="moduleDesc!=null">
+				#{moduleDesc},
+			</if>
+			<if	test="createBy!=null">
+				#{createBy},
+			</if>
+			<if	test="createDate!=null">
+				#{createDate},
+			</if>
+			<if	test="updateBy!=null">
+				#{updateBy},
+			</if>
+			<if	test="remarks!=null">
+				#{remarks},
+			</if>
+			<if	test="delFlag!=null">
+				#{delFlag},
+			</if>
+			<if	test="updateDate!=null">
+				#{updateDate},
+			</if>
+		</trim>
+	</insert>
+	
+    <!-- /**
+     * @param moudelId
+     * @return com.haier.datamart.entity.MonitorEtlParamM6
+     */
+	MonitorEtlParamM6 getModel6ById(String moduleId); -->
+	<select id="getModel6ById" resultType="com.haier.datamart.entity.MonitorEtlParamM6">
+		select 
+			<include refid="Base_Column_List"></include>
+		from
+			monitor_etl_param_m6
+		where
+			module_id=#{moduleId}
+		and
+			del_flag=0
+	</select>
+	<!-- /**
+	 * 根据用户id查找对应的数据
+	 * @param uid
+	 * @return
+	 */ -->
+	 <select id="getListByUserId" resultType="com.haier.datamart.entity.MonitorEtlParamM6">
+		select 
+			<include refid="Base_Column_List"></include>
+		from
+			monitor_etl_param_m6
+		where
+			<!-- create_by=#{createBy}
+		and -->
+			del_flag=0
+	</select>
+    
+	<!-- /**
+	 * 删除操作
+	 * @param moduleId
+	 */
+	Integer deleteModel6(String moduleId); -->
+	<update id="deleteModel6">
+		update
+			monitor_etl_param_m6
+		set
+		 	del_flag=1
+		where
+			module_id=#{moduleId}
+	</update>
+</mapper>

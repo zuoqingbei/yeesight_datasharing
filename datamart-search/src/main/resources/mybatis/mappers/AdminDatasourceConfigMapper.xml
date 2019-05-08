@@ -1,0 +1,299 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.AdminDatasourceConfigMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.haier.datamart.entity.AdminDatasourceConfig">
+		<result column="id" property="id" />
+		<result column="user_id" property="userId" />
+		<result column="name" property="name" />
+		<result column="enname" property="enname" />
+		<result column="db_type" property="dbType" />
+		<result column="db_diver" property="dbDiver" />
+		<result column="db_url" property="dbUrl" />
+		<result column="db_name" property="dbName" />
+		<result column="db_password" property="dbPassword" />
+		<result column="max_num" property="maxNum" />
+		<result column="useable" property="useable" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+		<result column="db_version" property="dbVersion" />
+		<result column="suport_transaction" property="suportTransaction" />
+		<result column="office_id" property="officeId" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, user_id AS userId, name, enname, db_type AS dbType, db_diver AS
+		dbDiver, db_url AS dbUrl, db_name AS dbName, db_password AS
+		dbPassword, max_num AS maxNum, useable, create_by AS createBy,
+		create_date AS createDate, update_by AS updateBy, update_date AS
+		updateDate, remarks, del_flag AS delFlag,office_id as officeId
+	</sql>
+
+	<sql id="adminDatasourceConfigColumns">
+		a.id AS "id",
+		a.user_id AS "userId",
+		a.name AS "name",
+		a.enname AS "enname",
+		a.db_type AS "dbType",
+		a.db_diver AS "dbDiver",
+		a.db_url AS "dbUrl",
+		a.db_name AS "dbName",
+		a.db_password AS
+		"dbPassword",
+		a.max_num AS "maxNum",
+		a.useable AS "useable",
+		a.create_by
+		AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS
+		"updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag",
+		a.office_id as "officeId"
+	</sql>
+
+	<select id="get" parameterType="String" resultType="com.haier.datamart.entity.AdminDatasourceConfig">
+		SELECT
+		<include refid="adminDatasourceConfigColumns" />
+		FROM admin_datasource_config a
+		WHERE a.id = #{id} and a.del_flag='0'
+	</select>
+	<select id="getConfig" parameterType="com.haier.datamart.entity.AdminDatasourceConfig"
+		resultType="com.haier.datamart.entity.AdminDatasourceConfig">
+		select * from admin_datasource_config where db_url=#{dbUrl} and
+		db_name=#{dbName} and db_password=#{dbPassword} and del_flag='0'
+	</select>
+	<select id="getConfigByDb" parameterType="com.haier.datamart.entity.AdminDatasourceConfig"
+		resultType="com.haier.datamart.entity.AdminDatasourceConfig">
+		select
+		<include refid="adminDatasourceConfigColumns" />
+		from admin_datasource_config where db_url=#{dbUrl}
+	</select>
+	<insert id="add" parameterType="com.haier.datamart.entity.AdminDatasourceConfig">
+		insert into admin_datasource_config
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="userId != null">
+				user_id,
+			</if>
+			<if test="name != null">
+				name,
+			</if>
+
+			<if test="enname != null">
+				enname,
+			</if>
+			<if test="dbType != null">
+				db_type,
+			</if>
+
+			<if test="dbDiver != null">
+				db_diver,
+			</if>
+			<if test="dbUrl != null">
+				db_url,
+			</if>
+			<if test="dbName != null">
+				db_name,
+			</if>
+			<if test="dbPassword != null">
+				db_password,
+			</if>
+			<if test="maxNum != null">
+				max_num,
+			</if>
+			<if test="useable != null">
+				useable,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="delFlag != null">
+				del_flag,
+			</if>
+			<if test="officeId != null">
+				office_id
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="name != null">
+				#{name},
+			</if>
+
+			<if test="enname != null">
+				#{enname},
+			</if>
+			<if test="dbType != null">
+				#{dbType},
+			</if>
+
+			<if test="dbDiver != null">
+				#{dbDiver},
+			</if>
+			<if test="dbUrl != null">
+				#{dbUrl},
+			</if>
+			<if test="dbName != null">
+				#{dbName},
+			</if>
+			<if test="dbPassword != null">
+				#{dbPassword},
+			</if>
+			<if test="maxNum != null">
+				#{maxNum},
+			</if>
+			<if test="useable != null">
+				#{useable},
+			</if>
+			<if test="createBy != null">
+				#{createBy},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate},
+			</if>
+			<if test="remarks != null">
+				#{remarks},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag},
+			</if>
+			<if test="officeId != null">
+				#{officeId}
+			</if>
+		</trim>
+	</insert>
+	<select id="getAll" resultType="com.haier.datamart.entity.AdminDatasourceConfig">
+		select
+		<include refid="Base_Column_List"></include>
+		from admin_datasource_config where 1=1
+		and del_flag='0' order by create_date desc
+	</select>
+	<select id="getAllbyuid" resultType="com.haier.datamart.entity.AdminDatasourceConfig"
+		parameterType="com.haier.datamart.entity.AdminDatasourceConfig">
+		select
+		<include refid="Base_Column_List"></include>
+		from admin_datasource_config where 1=1
+		<if test="createBy != null">
+			and create_by=#{createBy}
+		</if>
+		and del_flag='0' order by create_date desc
+	</select>
+	<update id="update">
+		update admin_datasource_config
+		<set>
+			<if test="id != null">
+				id=#{id},
+			</if>
+			<if test="userId != null">
+				user_id=#{userId},
+			</if>
+			<if test="name != null">
+				name=#{name},
+			</if>
+
+			<if test="enname != null">
+				enname=#{enname},
+			</if>
+			<if test="dbType != null">
+				db_type=#{dbType},
+			</if>
+
+			<if test="dbDiver != null">
+				db_diver=#{dbDiver},
+			</if>
+			<if test="dbUrl != null">
+				db_url=#{dbUrl},
+			</if>
+			<if test="dbName != null">
+				db_name=#{dbName},
+			</if>
+			<if test="dbPassword != null">
+				db_password=#{dbPassword},
+			</if>
+			<if test="maxNum != null">
+				max_num=#{maxNum},
+			</if>
+			<if test="useable != null">
+				userable=#{useable},
+			</if>
+			<if test="createBy != null">
+				create_by=#{createBy},
+			</if>
+			<if test="createDate != null">
+				create_date=#{createDate},
+			</if>
+			<if test="updateBy != null">
+				update_by=#{updateBy},
+			</if>
+			<if test="updateDate != null">
+				update_date=#{updateDate},
+			</if>
+			<if test="remarks != null">
+				remarks=#{remarks},
+			</if>
+			<if test="officeId != null">
+				office_id=#{officeId},
+			</if>
+			<if test="delFlag != null">
+				del_flag=#{delFlag}
+			</if>
+
+		</set>
+
+		where id=#{id}
+	</update>
+	<update id="delete">
+		UPDATE admin_datasource_config SET
+		del_flag ='1'
+		WHERE id = #{id}
+
+	</update>
+	<select id="selectByuid" resultType="String" parameterType="String">
+		SELECT COUNT(*) as num from admin_datasource_config
+		where del_flag='0'
+		<if test="uid != null and uid!=''">
+				and create_by=#{uid} 
+		</if>
+	</select>
+	<select id="getAllByOfficeId" parameterType="String" resultType="com.haier.datamart.entity.AdminDatasourceConfig">
+		select
+		<include refid="Base_Column_List"></include>
+		from admin_datasource_config where 1=1
+		and del_flag='0' and  office_id=#{officeId} order by create_date desc
+	</select>
+</mapper>
+

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.SysProductGroupMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.SysProductGroup">
+        <result column="product_id" property="productId" />
+        <result column="group_id" property="groupId" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        product_id AS productId, group_id AS groupId
+    </sql>
+	 <!-- 
+	 * 根据用户组id集合查询对应的信息
+	 * @param userGroupIdList
+	 * @return
+	List<SysProductGroup> getSysProductIdList(List<SysUserGroup> userGroupIdList); -->
+	<select id="getSysProductIdList" parameterType="com.haier.datamart.entity.SysUserGroup" resultType="com.haier.datamart.entity.SysProductGroup">
+		select
+			<include refid="Base_Column_List"></include>
+		from
+			sys_product_group
+		where
+			1=1
+		<foreach collection="list" item="each" open="and group_id in(" close=")" separator=",">
+			#{each.groupId}
+		</foreach>	
+	</select>
+	
+</mapper>

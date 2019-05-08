@@ -1,0 +1,326 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MonitorEtlParamM1Mapper">
+
+    
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.MonitorEtlParamM1">
+        <id column="module_id" property="moduleId" />
+        <result column="index_id" property="indexId" />
+        <result column="index_name" property="indexName" />
+        <result column="tableinput_database" property="tableinputDatabase" />
+        <result column="tableinput_sql" property="tableinputSql" />
+        <result column="tableinput1_database" property="tableinput1Database" />
+        <result column="tableinput1_sql" property="tableinput1Sql" />
+        <result column="sortmeta" property="sortmeta" />
+        <result column="sortmeta1" property="sortmeta1" />
+        <result column="mergejoinmeta" property="mergejoinmeta" />
+        <result column="mergejoinmeta1" property="mergejoinmeta1" />
+        <result column="filter_leftvalue" property="filterLeftvalue" />
+        <result column="filter_rightvalue" property="filterRightvalue" />
+        <result column="d_value" property="dValue" />
+        <result column="tableoutput_database" property="tableoutputDatabase" />
+        <result column="tableoutput_table" property="tableoutputTable" />
+        <result column="tableoutput_column" property="tableoutputColumn" />
+        <result column="streamoutput_column" property="streamoutputColumn" />
+        <result column="type_id" property="typeId" />
+        <result column="module_desc" property="moduleDesc" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        module_id AS moduleId, index_id AS indexId, index_name AS indexName, tableinput_database AS tableinputDatabase, tableinput_sql AS tableinputSql, tableinput1_database AS tableinput1Database, tableinput1_sql AS tableinput1Sql, sortmeta, sortmeta1, mergejoinmeta, mergejoinmeta1, filter_leftvalue AS filterLeftvalue, filter_rightvalue AS filterRightvalue, d_value AS dValue, tableoutput_database AS tableoutputDatabase, tableoutput_table AS tableoutputTable, tableoutput_column AS tableoutputColumn, streamoutput_column AS streamoutputColumn, type_id AS typeId, module_desc AS moduleDesc, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+  <!--  根据id查询
+  @param id
+  @return
+  MonitorEtlParamM1 selectOne(String moduleId); -->   
+<select id="getModel1ById" resultType="com.haier.datamart.entity.MonitorEtlParamM1">
+	select 
+		<include refid="Base_Column_List"></include> 
+	from 
+		monitor_etl_param_m1 
+	where
+		module_id=#{moduleId}
+	and
+		del_flag=0
+</select>
+
+	<!-- 根据用户id查找对应的数据
+	@param uid
+	@return
+	List<MonitorEtlParamM1> getListByUserId(String uid); -->
+<select id="getListByUserId" resultType="com.haier.datamart.entity.MonitorEtlParamM1">
+	select 
+		<include refid="Base_Column_List"></include> 
+	from 
+		monitor_etl_param_m1 
+	where
+		<!-- create_by=#{uid}
+	and -->
+		del_flag=0
+</select>
+<!--插入操作 -->
+<insert id="addParam1"  parameterType="com.haier.datamart.entity.MonitorEtlParamM1">
+insert into monitor_etl_param_m1
+<trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="moduleId != null" >
+        module_id,
+      </if>
+      <if test="indexId != null" >
+        index_id,
+      </if>
+      <if test="indexName != null" >
+        index_name,
+      </if>
+      <if test="tableinputDatabase != null" >
+        tableinput_database,
+      </if>
+       <if test="tableinputSql != null" >
+        tableinput_sql,
+      </if>
+      <if test="tableinput1Database != null" >
+        tableinput1_database,
+      </if>
+        <if test="tableinput1Sql != null" >
+        tableinput1_sql,
+      </if>
+       <if test="sortmeta != null" >
+        sortmeta,
+      </if>
+       <if test="sortmeta1 != null" >
+        sortmeta1,
+      </if>
+       <if test="mergejoinmeta != null" >
+        mergejoinmeta,
+      </if> 
+       <if test="mergejoinmeta1 != null" >
+        mergejoinmeta1,
+      </if> 
+       <if test="filterLeftvalue != null" >
+        filter_leftvalue,
+      </if>
+      <if test="filterRightvalue != null" >
+        filter_rightvalue,
+      </if>
+      <if test="tableoutputDatabase != null" >
+        tableoutput_database,
+      </if>
+      <if test="tableoutputTable != null" >
+        tableoutput_table,
+      </if>
+      <if test="tableoutputColumn != null" >
+        tableoutput_column,
+      </if>
+      <if test="streamoutputColumn != null" >
+        streamoutput_column,
+      </if>
+       <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if><if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="typeId != null" >
+        type_id,
+      </if>
+	  <if test="moduleDesc != null" >
+        module_desc,
+      </if>
+      <if test="dValue != null" >
+        d_value,
+      </if>
+      <if test="delFlag != null" >
+        del_flag
+      </if> 
+      
+      </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     <if test="moduleId != null" >
+        #{moduleId},
+      </if>
+      <if test="indexId != null" >
+        #{indexId},
+      </if>
+      <if test="indexName != null" >
+        #{indexName},
+      </if>
+      <if test="tableinputDatabase != null" >
+        #{tableinputDatabase},
+      </if>
+       <if test="tableinputSql != null" >
+        #{tableinputSql},
+      </if>
+      <if test="tableinput1Database != null" >
+        #{tableinput1Database},
+      </if>
+       <if test="tableinput1Sql != null" >
+        #{tableinput1Sql},
+      </if>
+       <if test="sortmeta != null" >
+        #{sortmeta},
+      </if>
+       <if test="sortmeta1 != null" >
+        #{sortmeta1},
+      </if>
+       <if test="mergejoinmeta != null" >
+        #{mergejoinmeta},
+      </if> 
+      <if test="mergejoinmeta1 != null" >
+        #{mergejoinmeta1},
+      </if>
+       <if test="filterLeftvalue != null" >
+        #{filterLeftvalue},
+      </if>
+      <if test="filterRightvalue != null" >
+        #{filterRightvalue},
+      </if>
+      <if test="tableoutputDatabase != null" >
+        #{tableoutputDatabase},
+      </if>
+      <if test="tableoutputTable != null" >
+        #{tableoutputTable},
+      </if>
+      <if test="tableoutputColumn != null" >
+        #{tableoutputColumn},
+      </if>
+      <if test="streamoutputColumn != null" >
+        #{streamoutputColumn},
+      </if>
+       <if test="createBy != null" >
+        #{createBy},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if><if test="updateBy != null" >
+        #{updateBy},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="typeId != null" >
+        #{typeId},
+      </if>
+	  <if test="moduleDesc != null" >
+        #{moduleDesc},
+      </if>
+       <if test="dValue != null" >
+        #{dValue},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag}
+      </if> 
+    </trim>
+</insert>
+<update id="delete"  parameterType="String">
+update monitor_etl_param_m1 set del_flag='1' where monitor_id=#{mid}
+</update>
+
+<!-- 根据传入参数更新数据库
+@param com.haier.datamart.entity.MonitorEtlParamM1 paramM1
+Integer updateParamM1(MonitorEtlParamM1 paramM1); -->
+<update id="updateParamM1"  parameterType="com.haier.datamart.entity.MonitorEtlParamM1">
+	update monitor_etl_param_m1
+	<set>
+      <if test="indexId != null" >
+        index_id=#{indexId},
+      </if>
+      <if test="indexName != null" >
+        index_name=#{indexName},
+      </if>
+      <if test="tableinputDatabase != null" >
+        tableinput_database=#{tableinputDatabase},
+      </if>
+       <if test="tableinputSql != null" >
+        tableinput_sql=#{tableinputSql},
+      </if>
+      <if test="tableinput1Database != null" >
+        tableinput1_database=#{tableinput1Database},
+      </if>
+        <if test="tableinput1Sql != null" >
+        tableinput1_sql=#{tableinput1Sql},
+      </if>
+       <if test="sortmeta != null" >
+        sortmeta=#{sortmeta},
+      </if>
+       <if test="sortmeta1 != null" >
+        sortmeta1=#{sortmeta1},
+      </if>
+       <if test="mergejoinmeta != null" >
+        mergejoinmeta=#{mergejoinmeta},
+      </if>
+       <if test="mergejoinmeta1 != null" >
+        mergejoinmeta1=#{mergejoinmeta1},
+      </if>
+       <if test="filterLeftvalue != null" >
+        filter_leftvalue=#{filterLeftvalue},
+      </if>
+      <if test="filterRightvalue != null" >
+        filter_rightvalue=#{filterRightvalue},
+      </if>
+      <if test="tableoutputDatabase != null" >
+        tableoutput_database=#{tableoutputDatabase},
+      </if>
+      <if test="tableoutputTable != null" >
+        tableoutput_table=#{tableoutputTable},
+      </if>
+      <if test="tableoutputColumn != null" >
+        tableoutput_column=#{tableoutputColumn},
+      </if>
+      <if test="streamoutputColumn != null" >
+        streamoutput_column=#{streamoutputColumn},
+      </if>
+      <if test="updateBy != null" >
+        update_by=#{updateBy},
+      </if>
+      <if test="remarks != null" >
+        remarks=#{remarks},
+      </if>
+      <if test="delFlag != null" >
+        del_flag=#{delFlag},
+      </if> 
+      <if test="typeId != null" >
+        type_id=#{typeId},
+      </if>
+	  <if test="moduleDesc != null" >
+        module_desc=#{moduleDesc},
+      </if>
+      <if test="dValue != null" >
+        d_value=#{dValue},
+      </if>
+        update_date=#{updateDate}
+	</set>
+	where
+		module_id=#{moduleId}
+</update>
+
+<!-- 删除操作
+@param moduleId
+Integer deleteModel1(String moduleId); -->
+<update  id="deleteModel1">
+	update 
+		 monitor_etl_param_m1
+	set
+		del_flag=1
+	where
+		module_id=#{moduleId}
+</update>	 
+	
+</mapper>

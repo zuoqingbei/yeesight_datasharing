@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MailHeaderModuleMapper">
+
+   <!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="com.haier.datamart.entity.MailHeaderModule">
+      <result column="id" property="id" />
+      <result column="mail_id" property="mailId" />
+      <result column="org_content" property="orgContent" />
+      <result column="deal_content" property="dealContent" />
+      <result column="params_desc" property="paramsDesc" />
+      <result column="message_title" property="messageTitle" />
+      <result column="apply_user" property="applyUser" />
+      <result column="apply_tel" property="applyTel" />
+      <result column="apply_mail" property="applyMail" />
+      <result column="apply_number" property="applyNumber" />
+      <result column="create_by" property="createBy" />
+      <result column="create_date" property="createDate" />
+      <result column="update_by" property="updateBy" />
+      <result column="update_date" property="updateDate" />
+      <result column="remarks" property="remarks" />
+      <result column="del_flag" property="delFlag" />
+   </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      id,
+      mail_id,
+      org_content,
+      deal_content,
+      params_desc,
+      message_title,
+      apply_user,
+      apply_tel,
+      apply_mail,
+      apply_number,
+      create_by,
+      create_date,
+      update_by,
+      update_date,
+      remarks,
+      del_flag,
+</sql>
+
+</mapper>

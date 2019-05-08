@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.AdminDataContentDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.haier.datamart.entity.AdminDataContentDetail">
+		<result column="id" property="id" />
+		<result column="datasource_id" property="datasourceId" />
+		<result column="content_id" property="contentId" />
+		<result column="column_name" property="columnName" />
+		<result column="column_type" property="columnType" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+	</resultMap>
+	<resultMap id="BaseResultMap2"
+		type="com.haier.datamart.entity.AdminDataContentDetail">
+		<result column="id" property="id" />
+		<result column="datasource_id" property="datasourceId" />
+		<result column="content_id" property="contentId" />
+		<result column="table_name" property="tableName" />
+		<result column="column_name" property="columnName" />
+		<result column="column_type" property="columnType" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+	</resultMap>
+
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, datasource_id AS datasourceId, content_id AS contentId, column_name
+		AS columnName, column_type AS columnType, create_by AS createBy,
+		create_date AS createDate, update_by AS updateBy, update_date AS
+		updateDate, remarks, del_flag AS delFlag
+	</sql>
+	<sql id="adminDataContentDetailColumns">
+		a.id AS "id",
+		a.datasource_id AS "datasourceId",
+		a.content_id AS "contentId",
+		a.column_name AS "columnName",
+		a.column_type AS "columnType",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS
+		"delFlag"
+	</sql>
+
+	<sql id="adminDataContentDetailJoins">
+		LEFT JOIN search_index b ON b.id = a.id
+	</sql>
+	<select id="findList" resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		SELECT
+		<include refid="adminDataContentDetailColumns" />
+		FROM admin_data_content_detail a
+		<include refid="adminDataContentDetailJoins" />
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	<insert id="insert">
+		INSERT INTO admin_data_content_detail(
+		id,
+		datasource_id,
+		content_id,
+		column_name,
+		column_type,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES (
+		#{id},
+		#{datasourceId},
+		#{contentId},
+		#{columnName},
+		#{columnType},
+		#{createBy.id},
+		#{createDate},
+		#{updateBy.id},
+		#{updateDate},
+		#{remarks},
+		#{delFlag}
+		)
+	</insert>
+
+	<update id="update">
+		UPDATE admin_data_content_detail SET
+		id = #{id},
+		datasource_id = #{datasourceId},
+		content_id = #{contentId},
+		column_name = #{columnName},
+		column_type = #{columnType},
+		update_by = #{updateBy.id},
+		update_date = #{updateDate},
+		remarks = #{remarks}
+		WHERE id = #{id}
+	</update>
+
+	<update id="delete">
+		UPDATE search_api_errorcode SET
+		del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+
+	</update>
+	<select id="getInclude" parameterType="String" resultMap="BaseResultMap2">
+		<!-- SELECT DISTINCT dc.`name`,c.table_name ,d.column_name,d.column_type,d.remarks 
+			FROM `scan_index_table_relative` r RIGHT JOIN admin_data_content c on c.id=r.content_id 
+			RIGHT JOIN admin_data_content_detail d on d.id=r.content_deatil_id LEFT JOIN 
+			admin_datasource_config dc on dc.id=r.data_source_id where r.del_flag=0 and 
+			r.index_id=#{id}; -->
+		<!-- select distinct
+		dc.`name`,
+		c.table_name,
+		d.column_name,
+		d.column_type,
+		d.remarks
+		FROM
+	admin_data_content_detail d
+LEFT JOIN scan_index_table_relative r ON d.id= r.content_deatil_id
+LEFT JOIN admin_data_content c ON r.content_id = c.id
+LEFT JOIN admin_datasource_config dc ON dc.id =r.data_source_id
+		where
+		r.del_flag = 0
+		and d.del_flag=0
+		and c.del_flag=0
+		and r.index_id =#{id} -->
+		select distinct
+		dc.`name`,
+		c.table_name,
+		d.column_name,
+		d.column_type,
+		d.remarks
+		FROM
+		admin_data_content_detail d
+		LEFT JOIN scan_index_table_relative r ON d.id= r.content_deatil_id
+		LEFT JOIN admin_data_content c ON r.content_id = c.id
+		LEFT JOIN admin_datasource_config dc ON dc.id =r.data_source_id
+		where
+		r.del_flag = 0
+		and d.del_flag=0
+		and c.del_flag=0
+		and r.index_id =#{id}
+
+	</select>
+	<insert id="insertBatch" parameterType="java.util.List">
+
+		INSERT INTO admin_data_content_detail(
+		id,
+		datasource_id,
+		content_id,
+		column_name,
+		column_type,
+		create_by,
+		create_date,
+		update_by,
+		update_date,
+		remarks,
+		del_flag
+		) VALUES
+		<foreach collection="contentDetail" item="content" index="index"
+			separator=",">
+			(
+			#{content.id},
+			#{content.datasourceId},
+			#{content.contentId},
+			#{content.columnName},
+			#{content.columnType},
+			#{content.createBy},
+			#{content.createDate},
+			#{content.updateBy},
+			#{content.updateDate},
+			#{content.remarks},
+			#{content.delFlag}
+			)
+
+		</foreach>
+	</insert>
+	<select id="findListByScan" resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		SELECT
+		<include refid="adminDataContentDetailColumns" />
+		FROM admin_data_content_detail a
+
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="datasourceId != null and datasourceId != ''">
+				AND a.datasource_id = #{datasourceId}
+			</if>
+			<if test="contentId != null and contentId != ''">
+				AND a.content_id=#{contentId}
+			</if>
+			<if test="columnName != null and columnName != ''">
+				AND a.column_name=#{columnName}
+			</if>
+			<!-- <if test="columnType != null and columnType != ''"> AND a.column_type=#{columnType} 
+				</if> -->
+
+		</where>
+
+	</select>
+	<select id="findListByScan2" resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		SELECT
+		<include refid="adminDataContentDetailColumns" />
+		FROM admin_data_content_detail a
+
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+
+			AND a.datasource_id = #{datasourceId} AND a.content_id=#{contentId}
+
+
+		</where>
+
+	</select>
+	<update id="updateListByScan" parameterType="java.util.List">
+		update admin_data_content
+		<trim prefix="set" suffixOverrides=",">
+
+			<trim prefix="id =case" suffix="end,">
+				<foreach collection="contentDetail" item="content">
+					<if test="content.id!=null">
+						when id = #{content.id} then #{content.id}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="data_source_id =case" suffix="end,">
+				<foreach collection="contentDetail" item="content">
+					<if test="content.datasourceId!=null">
+						when id = #{content.id} then #{content.datasourceId}
+					</if>
+				</foreach>
+			</trim>
+			<!-- <trim prefix="content_id =case" suffix="end,"> <foreach collection="contentDetail" 
+				item="content"> <if test="content.contentId!=null"> when id = #{content.id} 
+				then #{content.contentId} </if> </foreach> </trim> <trim prefix="column_name 
+				=case" suffix="end,"> <foreach collection="contentDetail" item="content"> 
+				<if test="content.columnName!=null"> when id = #{content.id} then #{content.columnName} 
+				</if> </foreach> </trim> <trim prefix="column_type =case" suffix="end,"> 
+				<foreach collection="contentDetail" item="content"> <if test="content.columnType!=null"> 
+				when id = #{content.id} then #{content.columnType} </if> </foreach> </trim> -->
+
+			<trim prefix="create_by =case" suffix="end,">
+				<foreach collection="contentDetail" item="content">
+					<if test="content.createBy!=null">
+						when id = #{content.id} then #{content.createBy}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="create_date =case" suffix="end,">
+				<foreach collection="contentDetail" item="content">
+					<if test="content.createDate!=null">
+						when id = #{content.id} then #{content.createDate}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="update_by =case" suffix="end,">
+				<foreach collection="contentDetail" item="content">
+					<if test="content.updateBy!=null">
+						when id = #{content.id} then #{content.updateBy}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="update_date =case" suffix="end,">
+				<foreach collection="contentDetail" item="content">
+					<if test="content.updateDate!=null">
+						when id = #{content.id} then #{content.updateDate}
+					</if>
+				</foreach>
+			</trim>
+			<trim prefix="remarks =case" suffix="end,">
+				<foreach collection="contentDetail" item="content">
+					<if test="content.remarks!=null">
+						when id = #{content.id} then #{content.remarks}
+					</if>
+				</foreach>
+			</trim>
+		</trim>
+		<where>
+			<foreach collection="contentDetail" separator="or" item="content">
+				id = #{content.id}
+			</foreach>
+		</where>
+	</update>
+
+
+	<update id="updateListByScan2" parameterType="java.util.List">
+		<foreach collection="contentDetail" item="content" index="index"
+			separator=";">
+			UPDATE admin_data_content_detail SET
+			id=#{content.id},
+			datasource_id = #{content.datasourceId},
+			content_id =
+			#{content.contentId},
+			column_name = #{content.columnName},
+			column_type=#{content.columnType},
+			create_by = #{content.updateBy},
+			create_date = #{content.updateDate},
+			update_by=#{content.createBy},
+			update_date=#{content.createDate},
+			remarks = #{content.remarks}
+			WHERE data_source_id = #{content.datasourceId} and
+			content_id=#{content.contentId} and column_name =
+			#{content.columnName} and column_type=#{content.columnType}
+		</foreach>
+	</update>
+
+	<insert id="add" parameterType="com.haier.datamart.entity.AdminDataContentDetail">
+		insert into admin_data_content_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="datasourceId != null">
+				datasource_id,
+			</if>
+			<if test="contentId != null">
+				content_id,
+			</if>
+			<if test="columnName != null">
+				column_name,
+			</if>
+			<if test="columnType != null">
+				column_type,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="delFlag != null">
+				del_flag,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="datasourceId != null">
+				#{datasourceId},
+			</if>
+			<if test="contentId != null">
+				#{contentId},
+			</if>
+			<if test="columnName != null">
+				#{columnName},
+			</if>
+			<if test="columnType != null">
+				#{columnType},
+			</if>
+			<if test="createBy != null">
+				#{createBy},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate},
+			</if>
+			<if test="remarks != null">
+				#{remarks},
+			</if>
+			<if test="delFlag != null">
+				#{delFlag},
+			</if>
+		</trim>
+	</insert>
+	<select id="getDetail" parameterType="com.haier.datamart.entity.AdminDataContentDetail"
+		resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		select * from admin_data_content_detail where datasource_id=#{datasourceId}
+		and column_name=#{columnName} and content_id=#{contentId}
+	</select>
+	<select id="getByCid" parameterType="String"
+		resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		SELECT d.id,d.column_name AS columnName from admin_data_content_detail d
+		left JOIN admin_data_content c on c.id=d.content_id
+		where c.id=#{id} and c.del_flag=0 and d.del_flag=0
+	</select>
+	<select id="getAll">
+		select * from admin_data_content_detail
+	</select>
+	<select id="getAllByDb" parameterType="String"
+		resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		SELECT * FROM `admin_data_content_detail` where datasource_id=#{dataSourceId} and del_flag=0
+	</select>
+	<select id="getAllby" parameterType="String"
+		resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		select
+		<include refid="Base_Column_List"></include>
+		from admin_data_content_detail where content_id=#{id}
+	</select>
+	<select id="getAllbyName" parameterType="String"
+		resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		select id,column_name as name from admin_data_content_detail where
+		content_id=#{id}
+	</select>
+	<select id="getColumnByContent" parameterType="String"
+		resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		select 
+		<include refid="Base_Column_List" />
+		 from admin_data_content_detail where
+		content_id=#{id}
+	</select>
+	<select id="getList" parameterType="com.haier.datamart.entity.AdminDataContentDetail"
+		resultType="com.haier.datamart.entity.AdminDataContentDetail">
+		<!-- SELECT d.id,d.column_name as columnName,d.column_type as
+		columnType,d.remarks,d.create_by as createBy, c.table_name as
+		tableName,co.`name` as name from admin_data_content_detail d
+		left JOIN admin_data_content c on c.id=d.content_id
+		left JOIN admin_datasource_config co on co.id=c.data_source_id
+		where 1=1
+		<if test="id != null and id !=''">
+			and co.id=#{id}
+		</if>
+		<if test="columnName != null and columnName != ''">
+			and d.column_name like '%${columnName}%'
+		</if>
+		<if test="columnType != null and columnType!=''">
+			and d.column_type like '%${columnType}%'
+		</if>
+		<if test="remarks != null and remarks!=''">
+			and d.remarks like '%${remarks}%'
+		</if>
+		<if test="contentId != null and contentId !=''">
+			and c.id=#{contentId}
+		</if>
+		<if test="createBy!=null">
+			and d.create_By=#{createBy}
+		</if>
+		order by d.create_date desc -->
+		SELECT
+		d.id,
+		d.column_name AS columnName,
+		d.column_type AS columnType,
+		d.remarks,
+		d.create_by AS createBy,
+		a.table_name AS tableName,
+		a.configName AS name
+	FROM
+		admin_data_content_detail d
+	INNER JOIN (
+		SELECT
+			c.*, con. NAME AS configName,con.create_by as createBy
+		FROM
+			admin_data_content c
+		LEFT JOIN admin_datasource_config con ON con.id = c.data_source_id
+		WHERE
+			c.del_flag = 0
+		AND con.del_flag = 0
+		<if test="createBy!=null">
+			AND con.create_by = #{createBy}
+		</if>
+		<if test="contentId != null and contentId !=''">
+			and c.id=#{contentId}
+		</if>
+		<if test="id != null and id !=''">
+			and con.id=#{id}
+		</if>
+		
+	) a ON a.id = d.content_id
+	LEFT JOIN sys_user u on u.id=a.createBy
+	WHERE 1=1
+	
+		<if test="columnName != null and columnName != ''">
+			and d.column_name like '%${columnName}%'
+		</if>
+		<if test="columnType != null and columnType!=''">
+			and d.column_type like '%${columnType}%'
+		</if>
+		<if test="remarks != null and remarks!=''">
+			and d.remarks like '%${remarks}%'
+		</if>
+		and d.del_flag = 0
+	ORDER BY
+		d.create_date DESC
+	</select>
+	<select id="selectByuid" parameterType="String" resultType="String">
+		SELECT COUNT(*) as num from admin_data_content_detail
+		where del_flag='0'
+		<if test="uid != null and uid!=''">
+			and create_by=#{uid}
+		</if>
+	</select>
+	<update id="deletebyconfigID" parameterType="String">
+		UPDATE
+		admin_data_content_detail SET
+		del_flag ='1'
+		WHERE datasource_id=#{id}
+
+	</update>
+</mapper>

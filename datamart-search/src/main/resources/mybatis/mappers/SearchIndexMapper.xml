@@ -1,0 +1,798 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.SearchIndexMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.SearchIndex">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="code" property="code" />
+        <result column="screen_no" property="screenNo" />
+        <result column="screen_name" property="screenName" />
+        <result column="screen_url" property="screenUrl" />
+        <result column="descs" property="descs" />
+        <result column="source_table_id" property="sourceTableId" />
+        <result column="target_db_id" property="targetDbId" />
+        <result column="show_table" property="showTable" />
+        <result column="sql" property="sql" />
+        <result column="plat" property="plat" />
+        <result column="dingyi" property="dingyi" />
+        <result column="index_type" property="indexType" />
+        <result column="index_fenlei" property="indexFenlei" />
+        <result column="expression" property="expression" />
+        <result column="workflow" property="workflow" />
+        <result column="coordinator" property="coordinator" />
+        <result column="get_data_magic" property="getDataMagic" />
+        <result column="get_data_time" property="getDataTime" />
+        <result column="get_data_quart" property="getDataQuart" />
+        <result column="time_long" property="timeLong" />
+        <result column="get_data_type" property="getDataType" />
+        <result column="mask_interface_user" property="maskInterfaceUser" />
+        <result column="mask_interface_user_worknum" property="maskInterfaceUserWorknum" />
+        <result column="mask_interface_user_email" property="maskInterfaceUserEmail" />
+        <result column="it_interface_user" property="itInterfaceUser" />
+        <result column="it_interface_user_worknum" property="itInterfaceUserWorknum" />
+        <result column="it_interface_user_emaik" property="itInterfaceUserEmail" />
+        <result column="offer_user" property="offerUser" />
+        <result column="accuracy_standard" property="accuracyStandard" />
+        <result column="data_status" property="dataStatus" />
+        <result column="category1" property="category1" />
+        <result column="category2" property="category2" />
+        <result column="category3" property="category3" />
+        <result column="tags" property="tags" />
+        <result column="view_num" property="viewNum" />
+        <result column="zan_num" property="zanNum" />
+        <result column="share_num" property="shareNum" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+         <result column="areaName" property="areaName" />
+             <result column="use_system" property="useSystem" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, code, screen_no AS screenNo, screen_name AS screenName, screen_url AS screenUrl, descs, source_table_id as sourceTableId, target_db_id as targetDbId , show_table AS showTable,`sql`,plat, dingyi, index_type AS indexType, index_fenlei AS indexFenlei, expression, workflow, coordinator, get_data_magic AS getDataMagic, get_data_time AS getDataTime, get_data_quart AS getDataQuart, time_long AS timeLong, get_data_type AS getDataType, mask_interface_user AS maskInterfaceUser, it_interface_user AS itInterfaceUser, data_status AS dataStatus, category1, category2, category3, tags, view_num AS viewNum, zan_num AS zanNum, share_num AS shareNum, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+    <sql id="searchIndexColumns">
+		a.id AS "id",
+		a.name AS "name",
+		a.code AS "code",
+		a.screen_no AS "screenNo",
+		a.screen_name AS "screenName",
+		a.screen_url AS "screenUrl",
+		a.descs AS "descs",
+		a.source_table_id AS "sourceTableId",
+		a.target_db_id AS "targetDbId",
+		a.show_table AS "showTable",
+		a.`sql` AS "sql",
+		a.plat AS "plat",
+		a.dingyi AS "dingyi",
+		a.index_type AS "indexType",
+		a.index_fenlei AS "indexFenlei",
+		a.expression AS "expression",
+		a.workflow AS "workflow",
+		a.coordinator AS "coordinator",
+		a.get_data_magic AS "getDataMagic",
+		a.get_data_time AS "getDataTime",
+		a.get_data_quart AS "getDataQuart",
+		a.time_long AS "timeLong",
+		a.get_data_type AS "getDataType",
+		a.mask_interface_user AS "maskInterfaceUser",
+		a.mask_interface_user_worknum AS "maskInterfaceUserWorknum",
+		a.mask_interface_user_email AS "maskInterfaceUserEmail",
+		a.it_interface_user AS "itInterfaceUser",
+		a.it_interface_user_worknum AS "itInterfaceUserWorknum",
+		a.it_interface_user_email AS "itInterfaceUserEmail",
+		a.offer_user AS "offerUser",
+		a.accuracy_standard AS "accuracyStandard",
+		a.data_status AS "dataStatus",
+		a.category1 AS "category1",
+		a.category2 AS "category2",
+		a.category3 AS "category3",
+		a.tags AS "tags",
+		a.create_by AS "createBy.id",
+		a.view_num AS "viewNum",
+		a.use_system AS "useSystem",
+		a.create_date AS "createDate",
+		a.zan_num AS "zanNum",
+		a.update_by AS "updateBy.id",
+		a.share_num AS "shareNum",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="searchIndexJoins">
+	</sql>
+	<select id="get" resultType="com.haier.datamart.entity.SearchIndex">
+		SELECT 
+			<include refid="searchIndexColumns"/>
+		FROM search_index a
+		<include refid="searchIndexJoins"/>
+		WHERE a.id = #{id} and a.del_flag='0'
+	</select>
+		<select id="findList" resultType="com.haier.datamart.entity.SearchIndex">
+		SELECT 
+			<include refid="searchIndexColumns"/>
+		FROM search_index a
+		<include refid="searchIndexJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="name != null and name != ''">
+				AND a.name LIKE 
+					<if test="dbName == 'oracle'">'%'||#{name}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{name}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{name},'%')</if>
+			</if>
+			<if test="descs != null and descs != ''">
+				AND a.descs LIKE 
+					<if test="dbName == 'oracle'">'%'||#{descs}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{descs}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{descs},'%')</if>
+			</if>
+			<if test="category1 != null and category1 != ''">
+				AND a.category1 LIKE 
+					<if test="dbName == 'oracle'">'%'||#{category1}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{category1}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{category1},'%')</if>
+			</if>
+			<if test="category2 != null and category2 != ''">
+				AND a.category2 LIKE 
+					<if test="dbName == 'oracle'">'%'||#{category2}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{category2}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{category2},'%')</if>
+			</if>
+			<if test="category3 != null and category3 != ''">
+				AND a.category3 LIKE 
+					<if test="dbName == 'oracle'">'%'||#{category3}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{category3}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{category3},'%')</if>
+			</if>
+			<if test="tags != null and tags != ''">
+				AND a.tags LIKE 
+					<if test="dbName == 'oracle'">'%'||#{tags}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{tags}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{tags},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<!-- <select id="findAllList" resultType="com.haier.datamart.entity.ThinkerIndex">
+		SELECT 
+			<include refid="thinkerIndexColumns"/>
+		FROM search_index a
+		<include refid="thinkerIndexJoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.update_date DESC
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO search_index(
+			id,
+			name,
+			code,
+			screen_no,
+			screen_name,
+			screen_url,
+			show_type,
+			descs,
+			show_table,
+			use_filed,
+			expression,
+			category1,
+			category2,
+			category3,
+			tags,
+			create_by,
+			view_num,
+			create_date,
+			zan_num,
+			update_by,
+			share_num,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{name},
+			#{code},
+			#{screenNo},
+			#{screenName},
+			#{screenUrl},
+			#{showType},
+			#{descs},
+			#{showTable},
+			#{useFiled},
+			#{expression},
+			#{category1},
+			#{category2},
+			#{category3},
+			#{tags},
+			#{createBy.id},
+			#{viewNum},
+			#{createDate},
+			#{zanNum},
+			#{updateBy.id},
+			#{shareNum},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	-->
+	<update id="update" parameterType="com.haier.datamart.entity.SearchIndex">
+		UPDATE search_index 
+		<set> 			
+	 <if test="id != null" >
+       id=#{id},
+      </if>
+      <if test="name != null" >
+      name=#{name},
+      </if>
+      <if test="code != null" >
+       code=#{code},
+      </if>
+      <if test="screenNo != null" >
+        screen_no=#{screenNo},
+      </if>
+      <if test="screenUrl != null" >
+      screen_url=  #{screenUrl},
+      </if>
+       <if test="screenName != null" >
+       screen_name #{screenName},
+      </if>
+      <if test="descs != null" >
+        descs=#{descs},
+      </if>
+      <if test="sourceTableId != null" >
+        source_table_id=#{sourceTableId},
+      </if>
+      <if test="targetDbId != null" >
+        target_db_id=#{targetDbId},
+      </if>
+      <if test="showTable != null" >
+        show_table=#{showTable},
+      </if>
+      <if test="sql != null" >
+        sql=#{sql},
+      </if>
+       <if test="plat != null" >
+        plat=#{plat},
+      </if>
+      <if test="dingyi != null" >
+        dingyi=#{dingyi},
+      </if>
+      <if test="indexType != null" >
+        index_type=#{indexType},
+        </if>
+       <if test="indexFenlei != null" >
+       index_fenlei= #{indexFenlei},
+      </if>
+      <if test="expression != null" >
+        expression=#{expression},
+      </if>
+      <if test="workflow != null" >
+       workflow= #{workflow},
+      </if>
+      <if test="coordinator != null" >
+        coordinator=#{coordinator},
+      </if> 
+      <if test="getDataMagic != null" >
+       get_data_magic=#{getDataMagic},
+      </if>
+      <if test="getDataTime != null" >
+       get_data_time= #{getDataTime},
+      </if>     
+      <if test="getDataQuart != null" >
+       get_data_quart=#{getDataQuart},
+      </if>
+      <if test="timeLong != null" >
+        time_long=#{timeLong},
+      </if>
+      <if test="getDataType != null" >
+       get_data_type=#{getDataType},
+      </if>
+      <if test="maskInterfaceUser != null" >
+        mask_interface_user=#{maskInterfaceUser},
+      </if>
+       <if test="maskInterfaceUserWorknum != null" >
+        mask_interface_user_worknum=#{maskInterfaceUserWorknum},
+      </if>
+      <if test="maskInterfaceUserEmail != null" >
+        mask_interface_user_email=#{maskInterfaceUserEmail},
+      </if>
+      <if test="itInterfaceUser != null" >
+       it_interface_user=#{itInterfaceUser},
+      </if>
+       <if test="itInterfaceUserWorknum != null" >
+       it_interface_user_worknum=#{itInterfaceUserWorknum},
+      </if>
+      
+       <if test="itInterfaceUserEmail != null" >
+       it_interface_user_email=#{itInterfaceUserEmail},
+      </if>
+      <if test="offerUser != null" >
+        offer_user=#{offerUser},
+      </if>
+      <if test="accuracyStandard != null" >
+        accuracy_standard=#{accuracyStandard},
+      </if>
+      <if test="dataStatus != null" >
+        data_status=#{dataStatus},
+      </if>      
+      <if test="category1 != null" >
+        category1=#{category1},
+      </if>
+      <if test="category2 != null" >
+        category2=#{category2},
+      </if>
+      <if test="category3 != null" >
+        category3=#{category3},
+      </if>
+      <if test="tags != null" >
+       tags=#{tags},
+      </if>     
+       <if test="viewNum != null" >
+        view_num=#{viewNum},
+      </if>
+       <if test="zanNum != null" >
+        zan_num=#{zanNum},
+      </if>      
+       <if test="shareNum != null" >
+        share_num=#{shareNum},
+      </if>
+       
+     
+      <if test="updateBy != null" >
+        update_by=#{updateBy},
+      </if>
+      <if test="updateDate != null" >
+       update_date=#{updateDate},
+      </if>
+      <if test="remarks != null" >
+        remarks=#{remarks},
+      </if>
+      <if test="delFlag != null" >
+       del_flag= #{delFlag},
+      </if> 
+      </set>
+		WHERE id = #{id}
+		
+	</update>
+	 
+	<update id="updateDelete" parameterType="com.haier.datamart.entity.SearchIndex">
+		UPDATE search_index SET 
+			del_flag = #{delFlag}
+		WHERE id = #{id}
+	</update>
+
+ 
+ <select id="getInclude" parameterType="String" resultType="com.haier.datamart.entity.SearchIndex">
+	
+	SELECT  <include refid="searchIndexColumns"/> from search_index a
+INNER JOIN search_reports_index re on re.index_id =a.id
+INNER JOIN search_reports sre on re.report_id=sre.id
+where sre.id=#{id}
+	</select>
+	 <select id="getInclude2" parameterType="String" resultType="com.haier.datamart.entity.SearchIndex">
+	SELECT DISTINCT dc.`name`,c.table_name ,d.column_name,d.column_type FROM `scan_index_table_relative` r  RIGHT  JOIN admin_data_content c on c.id=r.content_id  RIGHT  JOIN admin_data_content_detail d on d.id=r.content_deatil_id
+LEFT JOIN admin_datasource_config dc on dc.id=r.data_source_id
+ where r.index_id=#{id};
+	</select>
+	
+<insert id="addExcle">
+ insert into search_index
+<trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="code != null" >
+        code,
+      </if>
+      <if test="screenNo != null" >
+        screen_no,
+      </if>
+      <if test="screenUrl != null" >
+        screen_url,
+      </if>
+       <if test="screenName != null" >
+        screen_name,
+      </if>
+      <if test="descs != null" >
+        descs,
+      </if>
+       <if test="sourceTableId != null" >
+        source_table_id,
+      </if>
+      <if test="targetDbId != null" >
+        target_db_id,
+      </if>
+      <if test="showTable != null" >
+        show_table,
+      </if>
+      <if test="sql != null" >
+        `sql`,
+      </if>
+       <if test="plat != null" >
+        plat,
+      </if>
+      <if test="dingyi != null" >
+        dingyi,
+      </if>
+      <if test="indexType != null" >
+        index_type,
+      </if>
+      <if test="indexFenlei != null" >
+        index_fenlei,
+      </if>
+      <if test="expression != null" >
+        expression,
+      </if>
+      <if test="workflow != null" >
+        workflow,
+      </if>
+      <if test="coordinator != null" >
+        coordinator,
+      </if> 
+      <if test="getDataMagic != null" >
+        get_data_magic,
+      </if>
+      <if test="getDataTime != null" >
+        get_data_time,
+      </if>     
+      <if test="getDataQuart != null" >
+        get_data_quart,
+      </if>
+      <if test="timeLong != null" >
+        time_long,
+      </if>
+      <if test="getDataType != null" >
+        get_data_type,
+      </if>
+      <if test="maskInterfaceUser != null" >
+        mask_interface_user,
+      </if>
+       <if test="maskInterfaceUserWorknum != null" >
+        mask_interface_user_worknum,
+      </if>
+       <if test="maskInterfaceUserEmail != null" >
+        mask_interface_user_email,
+      </if>
+      <if test="itInterfaceUser != null" >
+        it_interface_user,
+      </if>
+      <if test="itInterfaceUserWorknum != null" >
+        it_interface_user_worknum,
+      </if>
+      <if test="itInterfaceUserEmail != null" >
+        it_interface_user_email,
+      </if>
+      <if test="offerUser != null" >
+        offer_user,
+      </if>
+       <if test="accuracyStandard != null" >
+        accuracy_standard,
+      </if>
+      <if test="dataStatus != null" >
+        data_status,
+      </if>      
+      <if test="category1 != null" >
+        category1,
+      </if>
+      <if test="category2 != null" >
+        category2,
+      </if>
+      <if test="category3 != null" >
+        category3,
+      </if>
+      <if test="tags != null" >
+        tags,
+      </if>     
+       <if test="viewNum != null" >
+        view_num,
+      </if>
+       <if test="zanNum != null" >
+        zan_num,
+      </if>      
+       <if test="shareNum != null" >
+        share_num,
+      </if>
+       <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if><if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="delFlag != null" >
+        del_flag
+      </if> 
+      </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+     <if test="id != null" >
+        #{id},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="code != null" >
+        #{code},
+      </if>
+      <if test="screenNo != null" >
+        #{screenNo},
+      </if>
+      <if test="screenUrl != null" >
+        #{screenUrl},
+      </if>
+       <if test="screenName != null" >
+        #{screenName},
+      </if>
+      <if test="descs != null" >
+        #{descs},
+      </if>
+       <if test="sourceTableId != null" >
+        #{sourceTableId},
+      </if>
+      <if test="targetDbId != null" >
+        #{targetDbId},
+      </if>
+      <if test="showTable != null" >
+        #{showTable},
+      </if>
+      <if test="sql != null" >
+        #{sql},
+      </if>
+       <if test="plat != null" >
+        #{plat},
+      </if>
+      <if test="dingyi != null" >
+        #{dingyi},
+      </if>
+      <if test="indexType != null" >
+        #{indexType},
+        </if>
+       <if test="indexFenlei != null" >
+        #{indexFenlei},
+      </if>
+      <if test="expression != null" >
+        #{expression},
+      </if>
+      <if test="workflow != null" >
+        #{workflow},
+      </if>
+      <if test="coordinator != null" >
+        #{coordinator},
+      </if> 
+      <if test="getDataMagic != null" >
+        #{getDataMagic},
+      </if>
+      <if test="getDataTime != null" >
+        #{getDataTime},
+      </if>     
+      <if test="getDataQuart != null" >
+        #{getDataQuart},
+      </if>
+      <if test="timeLong != null" >
+        #{timeLong},
+      </if>
+      <if test="getDataType != null" >
+        #{getDataType},
+      </if>
+      <if test="maskInterfaceUser != null" >
+        #{maskInterfaceUser},
+      </if>
+       <if test="maskInterfaceUserWorknum != null" >
+        #{maskInterfaceUserWorknum},
+      </if>
+       <if test="maskInterfaceUserEmail != null" >
+        #{maskInterfaceUserEmail},
+      </if>
+      <if test="itInterfaceUser != null" >
+        #{itInterfaceUser},
+      </if>
+     
+      <if test="itInterfaceUserWorknum != null" >
+        #{itInterfaceUserWorknum},
+      </if>
+       <if test="itInterfaceUserEmail != null" >
+        #{itInterfaceUserEmail},
+      </if>
+       <if test="offerUser != null" >
+       #{offerUser},
+      </if>
+       <if test="accuracyStandard != null" >
+        #{accuracyStandard},
+      </if>
+      <if test="dataStatus != null" >
+        #{dataStatus},
+      </if>      
+      <if test="category1 != null" >
+        #{category1},
+      </if>
+      <if test="category2 != null" >
+        #{category2},
+      </if>
+      <if test="category3 != null" >
+        #{category3},
+      </if>
+      <if test="tags != null" >
+        #{tags},
+      </if>     
+       <if test="viewNum != null" >
+        #{viewNum},
+      </if>
+       <if test="zanNum != null" >
+        #{zanNum},
+      </if>      
+       <if test="shareNum != null" >
+        #{shareNum},
+      </if>
+       <if test="createBy != null" >
+        #{createBy},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if><if test="updateBy != null" >
+        #{updateBy},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag}
+      </if> 
+    </trim>
+
+
+</insert>
+
+<select id="getByName" parameterType="String" resultType="com.haier.datamart.entity.SearchIndex">
+select <include refid="Base_Column_List"></include> from search_index where name=#{name} and del_flag='0'
+
+</select>
+<select id="getAll" resultType="com.haier.datamart.entity.SearchIndex" parameterType="com.haier.datamart.entity.SearchIndex">
+SELECT DISTINCT area.`name` as areaName,a.id, a.name, a.code, a.screen_no AS screenNo, a.screen_name AS screenName, a.screen_url AS screenUrl, a.descs, a.show_table AS showTable, a.plat, a.dingyi, a.index_type AS indexType, a.index_fenlei AS indexFenlei, a.expression, 
+a.workflow, a.coordinator, a.get_data_magic AS getDataMagic, a.get_data_time AS getDataTime, a.get_data_quart AS getDataQuart, a.time_long AS timeLong, a.get_data_type AS getDataType, a.mask_interface_user AS maskInterfaceUser, a.it_interface_user AS itInterfaceUser, 
+a.data_status AS dataStatus, a.category1, a.category2, a.category3, a.tags, a.view_num AS viewNum, a.zan_num AS zanNum, a.share_num AS shareNum, a.create_by AS createBy, a.create_date AS createDate, a.update_by AS updateBy, a.update_date AS updateDate, a.remarks,
+ a.del_flag AS delFlag,
+(SELECT
+
+	GROUP_CONCAT(dic.description)
+FROM
+	`search_index_dimension` d
+LEFT JOIN sys_dict dic ON dic.id = d.dic_id
+WHERE
+	d.del_flag = '0'
+AND d.report_id = a.id
+)as dimensionNames
+ from search_index a
+LEFT JOIN scan_subject_area_index ain on ain.index_id=a.id
+LEFT JOIN scan_subject_area area on area.id=ain.subject_area_id
+where 1=1 and a.del_flag='0'
+<if test="name !=null and name !=''">
+ and  a.name like '%${name}%'
+</if>
+<if test="plat !=null and plat !=''">
+ and  a.plat = #{plat}
+</if>
+<if test="code !=null and code !=''">
+ and a.code like '%${code}%'
+</if>
+<if test="areaId !=null and areaId !=''">
+ and area.id = #{areaId}
+</if>
+<if test="entering !=null and entering !=''">
+ and a.id in (select distinct index_id from entering_table_setting_info where del_flag=0)
+</if>
+<if test="createBy !=null and createBy !=''">
+ and (a.create_by = #{createBy} or a.id in(
+	 SELECT
+		index_id
+	FROM
+		search_reports_index
+	WHERE
+		report_id IN ( SELECT report.report_id from sys_role_report report LEFT JOIN sys_role role on role.id=report.role_id
+	LEFT JOIN sys_group_role gr on gr.role_id=role.id LEFT JOIN sys_group g on g.id=gr.group_id
+	LEFT JOIN sys_user_group ug on ug.group_id=g.id
+	where ug.user_id=#{createBy} )
+ ))
+</if>
+order by a.create_date desc
+</select>
+<select id="getName" parameterType="String" resultType="com.haier.datamart.entity.SearchIndex">
+select <include refid="Base_Column_List"></include>from search_index where  name=#{name} and del_flag='0'
+</select>
+<!-- 根据指标编码集合获取对应实体集合
+ List<SearchIndex> getEntriesByIndexCodes(List<String> list) -->
+ <select id="getEntriesByIndexCodes" parameterType="java.util.List" resultType="com.haier.datamart.entity.SearchIndex">
+ 	select 
+ 		<include refid="Base_Column_List"></include>
+ 	from
+ 		search_index
+ 	where
+ 		del_flag=0
+ 	<foreach collection="list" item="indexCode" index="a" separator="," open="and code in(" close=")">
+ 		#{indexCode}
+ 	</foreach>
+ </select>
+ <select id="getplat" resultType="com.haier.datamart.entity.SearchIndex">
+ select DISTINCT plat from search_index where del_flag='0'
+ </select>
+ <select id="getbySYS" resultType="com.haier.datamart.entity.SearchIndex" parameterType="String">
+ SELECT <include refid="searchIndexColumns"/> from search_index a
+LEFT JOIN (select * from search_index_plat GROUP BY index_id) pl on a.id=pl.index_id
+LEFT JOIN sys_dict d on d.id=pl.dic_id
+where d.id=#{dicId} and a.del_flag='0'
+ </select>
+ <select id="getbyReport" parameterType="String" resultType="com.haier.datamart.entity.SearchIndex">
+ SELECT <include refid="searchIndexColumns"/> from  search_index a
+LEFT JOIN search_reports_index re on re.index_id=a.id
+LEFT JOIN search_reports report on report.id=re.report_id
+where report.id=#{reportId}
+ </select>
+ <select id="getbyReportandName"  resultType="com.haier.datamart.entity.SearchIndex">
+ SELECT <include refid="searchIndexColumns"/> from  search_index a
+LEFT JOIN search_reports_index re on re.index_id=a.id
+LEFT JOIN search_reports report on report.id=re.report_id
+where report.id=#{reportId} and a.name LIKE concat(concat("%",#{indexname}),"%")
+ </select>
+ <select id="getbyCode" parameterType="String" resultType="com.haier.datamart.entity.SearchIndex">
+ select <include refid="searchIndexColumns"/> from search_index a where a.code=#{code}
+</select>
+ 
+ <select id="getUserSeeIndex" parameterType="String" resultType="com.haier.datamart.entity.SearchIndex">
+	SELECT b.* from (
+	SELECT
+		index_id
+	FROM
+		search_reports_index
+	WHERE
+		report_id IN ( SELECT report.report_id from sys_role_report report LEFT JOIN sys_role role on role.id=report.role_id
+	LEFT JOIN sys_group_role gr on gr.role_id=role.id LEFT JOIN sys_group g on g.id=gr.group_id
+	LEFT JOIN sys_user_group ug on ug.group_id=g.id
+	where ug.user_id=#{userId})
+	)a INNER JOIN search_index b on b.id=a.index_id where b.del_flag=0
+ </select>
+ 
+ 
+ <select id="getIndexBySubject" parameterType="String" resultType="com.haier.datamart.entity.SearchIndex">
+		SELECT <include refid="searchIndexColumns"/>  from scan_subject_area_index i 
+		left  JOIN  search_index a  on i.index_id=a.id 
+	LEFT JOIN scan_subject_area area on area.id=i.subject_area_id
+	where a.del_flag=0 and area.id=#{subjectId} ORDER BY a.create_date desc
+ </select>
+</mapper>

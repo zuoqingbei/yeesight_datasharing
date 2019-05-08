@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.SysVisitorMapper">
+  <resultMap id="BaseResultMap" type="com.haier.datamart.entity.SysVisitor">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="mac_address" jdbcType="VARCHAR" property="macAddress" />
+    <result column="login_time" jdbcType="TIMESTAMP" property="loginTime" />
+    <result column="quit_time" jdbcType="TIMESTAMP" property="quitTime" />
+    <result column="issued_at" jdbcType="TIMESTAMP" property="issuedAt" />
+    <result column="expiration" jdbcType="TIMESTAMP" property="expiration" />
+    <result column="login_status" jdbcType="CHAR" property="loginStatus" />
+  </resultMap>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.haier.datamart.entity.SysVisitor">
+    <result column="user_agent" jdbcType="LONGVARCHAR" property="userAgent" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, token, user_id, ip, mac_address, login_time, quit_time, issued_at, expiration, 
+    login_status
+  </sql>
+  <sql id="Blob_Column_List">
+    user_agent
+  </sql>
+  
+  <!-- 查询 -->
+  <select id="select" parameterType="java.lang.Integer" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from sys_visitor
+    <where>
+      <if test="id != null">
+        id = #{id,jdbcType=INTEGER}
+      </if>
+      <if test="token != null">
+        and token = #{token,jdbcType=VARCHAR}
+      </if>
+      <if test="userId != null">
+        and userId = #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="loginStatus != null">
+        and loginStatus = #{loginStatus,jdbcType=CHAR}
+      </if>
+    </where>
+  </select>
+  <!-- 删除 -->
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from sys_visitor
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <!-- 添加 -->
+  <insert id="insertSelective" parameterType="com.haier.datamart.entity.SysVisitor">
+    insert into sys_visitor
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="token != null">
+        token,
+      </if>
+      <if test="userId != null">
+        user_id,
+      </if>
+      <if test="ip != null">
+        ip,
+      </if>
+      <if test="macAddress != null">
+        mac_address,
+      </if>
+      <if test="loginTime != null">
+        login_time,
+      </if>
+      <if test="quitTime != null">
+        quit_time,
+      </if>
+      <if test="issuedAt != null">
+        issued_at,
+      </if>
+      <if test="expiration != null">
+        expiration,
+      </if>
+      <if test="loginStatus != null">
+        login_status,
+      </if>
+      <if test="userAgent != null">
+        user_agent,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="token != null">
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="macAddress != null">
+        #{macAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quitTime != null">
+        #{quitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuedAt != null">
+        #{issuedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiration != null">
+        #{expiration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginStatus != null">
+        #{loginStatus,jdbcType=CHAR},
+      </if>
+      <if test="userAgent != null">
+        #{userAgent,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <!-- 更新 -->
+  <update id="updateByPrimaryKeySelective" parameterType="com.haier.datamart.entity.SysVisitor">
+    update sys_visitor
+    <set>
+      <if test="token != null">
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null">
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="ip != null">
+        ip = #{ip,jdbcType=VARCHAR},
+      </if>
+      <if test="macAddress != null">
+        mac_address = #{macAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="loginTime != null">
+        login_time = #{loginTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="quitTime != null">
+        quit_time = #{quitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="issuedAt != null">
+        issued_at = #{issuedAt,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expiration != null">
+        expiration = #{expiration,jdbcType=TIMESTAMP},
+      </if>
+      <if test="loginStatus != null">
+        login_status = #{loginStatus,jdbcType=CHAR},
+      </if>
+      <if test="userAgent != null">
+        user_agent = #{userAgent,jdbcType=LONGVARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <!-- 更新其他地方登录状态 -->
+  <update id="updateLoggedInStatus" parameterType="com.haier.datamart.entity.SysVisitor">
+    update sys_visitor
+    <set>
+      login_status = "2",
+      quit_time = now() 
+    </set>
+    where user_id = #{userId,jdbcType=VARCHAR} and mac_address != #{macAddress,jdbcType=VARCHAR} and login_status = "0"
+  </update>
+  <!-- 注销过期签证 -->
+  <update id="logoutSign" parameterType="com.haier.datamart.entity.SysVisitor">
+    update sys_visitor
+    <set>
+      login_status = "1",
+      <if test="quitTime != null">
+        quit_time = #{quitTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where login_status != "1" and token = #{token,jdbcType=VARCHAR} 
+  </update>
+  <!-- 定时注销过期签证 -->
+  <update id="timingLogoutSign">
+    update sys_visitor
+    <set>
+      login_status = "1",
+      quit_time = expiration
+    </set>
+    where login_status = "0" and  expiration <![CDATA[ < ]]> now() and quit_time is NUll
+  </update>
+  
+</mapper>

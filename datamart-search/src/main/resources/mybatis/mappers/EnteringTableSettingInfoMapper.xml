@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.EnteringTableSettingInfoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.EnteringTableSettingInfo">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="descs" property="descs" />
+        <result column="valid_begin_time" property="validBeginTime" />
+        <result column="valid_end_time" property="validEndTime" />
+        <result column="datasource_config_id" property="datasourceConfigId" />
+        <result column="start_cron" property="startCron" />
+        <result column="endCron" property="endCron" />
+        <result column="create_date" property="createDate" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+        <result column="start_cron" property="startCron" />
+        <result column="end_cron" property="endCron" />
+        <result column="datasource_config_id" property="datasourceConfigId" />
+        <result column="product_id" property="productId" />
+        <result column="error_continue" property="errorContinue" />
+    </resultMap>
+    
+	<resultMap id="BaseResultMap2" type="com.haier.datamart.entity.EnteringTableSettingInfo">
+        <result column="id" property="id" />
+        <result column="indexName" property="indexName" />
+        <result column="name" property="name" />
+        <result column="descs" property="descs" />
+        <result column="valid_begin_time" property="validBeginTime" />
+        <result column="valid_end_time" property="validEndTime" />
+        <result column="create_date" property="createDate" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+        <result column="start_cron" property="startCron" />
+        <result column="end_cron" property="endCron" />
+        <result column="datasource_config_id" property="datasourceConfigId" />
+        <result column="product_id" property="productId" />
+        <result column="bak_table_name" property="bakTableName" />
+        <result column="bak_datasource_config_id" property="bakDatasourceConfigId" />
+        <result column="entering_type" property="enteringType" />
+        <result column="header_json" property="headerJson" />
+        <result column="excel_model_name" property="excelModelName" />
+        <result column="error_continue" property="errorContinue" />
+    </resultMap>
+    
+    <!-- /**
+	  根据表名和id删除记录
+	 @param tableName
+	 @param idOfEntry
+	 void deleteOneEntry(@Param("tableName")String tableName,@Param("idOfEntry") String idOfEntry); -->
+	<update id="deleteOneEntry"  statementType="STATEMENT">
+		UPDATE 
+			${tableName}
+		SET
+			del_flag=1
+		WHERE
+			id=${idOfEntry}
+	</update>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+
+        id,  name, descs, valid_begin_time AS validBeginTime, valid_end_time AS validEndTime, create_date AS createDate, create_by AS createBy, update_by AS updateBy, update_date AS updateDate, remarks,start_cron AS startCron,end_cron AS endCron,datasource_config_id AS datasourceConfigId,product_id As productId,status AS status,
+        bak_table_name AS bakTableName,bak_datasource_config_id AS bakDatasourceConfigId,error_continue as errorContinue,
+        entering_type AS enteringType,header_json AS headerJson,excel_model_name AS excelModelName,del_flag AS delFlag
+    </sql>
+	<select id="getByName" parameterType="com.haier.datamart.entity.EnteringTableSettingInfo" resultType="com.haier.datamart.entity.EnteringTableSettingInfo">
+		select <include refid="Base_Column_List"/> from entering_table_setting_info where name=#{name} and datasource_config_id=#{datasourceConfigId} and del_flag=0
+	</select>
+	<select id="getById" parameterType="String" resultType="com.haier.datamart.entity.EnteringTableSettingInfo">
+		select <include refid="Base_Column_List"/> from entering_table_setting_info where id=#{id} and del_flag=0
+	</select>
+	<insert id="insertMethod" parameterType="com.haier.datamart.entity.EnteringTableSettingInfo">
+		insert into entering_table_setting_info (
+			id,
+			name,
+			descs,
+			valid_begin_time,
+			valid_end_time,
+			create_date,
+			create_by,
+			update_by,
+			update_date,
+			remarks,
+			start_cron,
+			end_cron,
+			datasource_config_id,
+			product_id,
+			<if test="bakTableName != null" >
+					bak_table_name,
+			</if>
+			<if test="bakDatasourceConfigId != null" >
+					bak_datasource_config_id,
+			</if>
+			<if test="enteringType != null" >
+					entering_type,
+			</if>
+			<if test="headerJson != null" >
+					header_json,
+			</if>
+			<if test="excelModelName != null" >
+					excel_model_name,
+			</if>
+			<if test="errorContinue != null" >
+					error_continue,
+			</if>
+			del_flag
+			        
+        
+			
+		)values(
+			#{id},
+			#{name},
+			#{descs},
+			#{validBeginTime},
+			#{validEndTime},
+			#{createDate},
+			#{createBy},
+			#{updateBy},
+			#{updateDate},
+			#{remarks},
+			#{startCron},
+			#{endCron},
+			#{datasourceConfigId},
+			#{productId},
+			<if test="bakTableName != null" >
+					#{bakTableName},
+			</if>
+			<if test="bakDatasourceConfigId != null" >
+					#{bakDatasourceConfigId},
+			</if>
+			<if test="enteringType != null" >
+					#{enteringType},
+			</if>
+			<if test="headerJson != null" >
+					#{headerJson},
+			</if>
+			<if test="excelModelName != null" >
+					#{excelModelName},
+			</if>
+			<if test="errorContinue != null" >
+					#{errorContinue},
+			</if>
+			0
+		)
+	</insert>
+	<update id="deleteById" parameterType="String">
+		update entering_table_setting_info set del_flag=1 where id=#{id}
+	</update>
+	<update id="updateById" parameterType="com.haier.datamart.entity.EnteringTableSettingInfo">
+		update entering_table_setting_info set
+		 <if test="id != null" >
+			id=#{id},
+		 </if>
+		 <if test="name != null" >
+			name=#{name},
+		 </if>
+		 <if test="descs != null" >
+			descs=#{descs},
+		 </if>
+		 <if test="validBeginTime != null" >
+			valid_begin_time=#{validBeginTime},
+		 </if>
+		 <if test="validEndTime != null" >
+			valid_end_time=#{validEndTime},
+		 </if>
+		 <if test="datasourceConfigId != null" >
+			datasource_config_id=#{datasourceConfigId},
+		 </if>
+		  <if test="productId != null" >
+			product_id=#{productId},
+		 </if>
+		 <!--  <if test="createDate != null" >
+			create_date=#{createDate},
+		 </if>
+		  <if test="createBy != null" >
+			create_by=#{createBy},
+		 </if> -->
+		 <!--  <if test="updateBy != null" >
+			update_by=#{updateBy},
+		  </if> -->
+		   <if test="updateDate != null" >
+			update_date=#{updateDate},
+		   </if>
+		    <if test="remarks != null" >
+			remarks=#{remarks},
+			 </if>
+			<if test="startCron != null" >
+			start_cron=#{startCron},
+			</if>
+			<if test="endCron != null" >
+			end_cron=#{endCron},
+			</if>
+			<if test="bakTableName != null" >
+					bak_table_name=#{bakTableName},
+			</if>
+			<if test="bakDatasourceConfigId != null" >
+					bak_datasource_config_id=#{bakDatasourceConfigId},
+			</if>
+			<if test="enteringType != null" >
+					entering_type=#{enteringType},
+			</if>
+			<if test="headerJson != null" >
+					header_json=#{headerJson},
+			</if>
+			<if test="excelModelName != null" >
+					excel_model_name=#{excelModelName},
+			</if>
+			<if test="errorContinue != null" >
+					error_continue=#{errorContinue},
+			</if>
+			 del_flag=0
+			  where id=#{id}
+	</update>
+	<insert id="insert">
+ 		insert into entering_table_setting_info
+		<trim prefix="(" suffix=")" suffixOverrides="," >
+		      <if test="id != null" >
+		        id,
+		      </if>
+		      <if test="name != null" >
+		        name,
+		      </if>
+		      <if test="descs != null" >
+		        descs,
+		      </if>
+		      <if test="validBeginTime != null" >
+		        valid_begin_time,
+		      </if>
+		       <if test="validEndTime != null" >
+		        valid_end_time,
+		      </if>
+		      <if test="createDate != null" >
+		        create_date,
+		      </if>
+		        <if test="createBy != null" >
+		        create_by,
+		      </if>
+		       <if test="updateBy != null" >
+		        update_by,
+		      </if>
+		      <if test="updateDate != null" >
+		        update_date,
+		      </if>
+		      <if test="remarks != null" >
+		        remarks,
+		        </if>
+		     <if test="startCron != null" >
+				start_cron,
+			 </if>
+			<if test="endCron != null" >
+				end_cron,
+			</if>
+			<if test="datasourceConfigId != null" >
+				datasource_config_id,
+			 </if>
+			 <if test="errorContinue != null" >
+					error_continue,
+			</if>
+		      </trim>
+		    <trim prefix="values (" suffix=")" suffixOverrides="," >
+		     <if test="id != null" >
+		        #{id},
+		      </if>
+		      <if test="name != null" >
+		         #{name},
+		      </if>
+		      <if test="descs != null" >
+		         #{descs},
+		      </if>
+		      <if test="validBeginTime != null" >
+		        #{validBeginTime},
+		      </if>
+		       <if test="validEndTime != null" >
+		         #{validEndTime},
+		      </if>
+		      <if test="createDate != null" >
+		        #{createDate},
+		      </if>
+		        <if test="createBy != null" >
+		        #{createBy},
+		      </if>
+		       <if test="updateBy != null" >
+		         #{updateBy},
+		      </if>
+		      <if test="updateDate != null" >
+		        #{updateDate},
+		      </if>
+		      <if test="remarks != null" >
+		        #{remarks},
+		      </if>
+		 	<if test="startCron != null" >
+				#{startCron},
+			</if>
+			<if test="endCron != null" >
+				#{endCron},
+			</if>
+			<if test="datasourceConfigId != null" >
+				#{datasourceConfigId},
+		 	</if>
+		 	 <if test="errorContinue != null" >
+					#{errorContinue},
+			</if>
+		    </trim>
+		</insert>
+		<select id="getSettingInfoDetail" parameterType="com.haier.datamart.entity.EnteringTableSettingInfo" resultMap="BaseResultMap2">
+			select t1.* from entering_table_setting_info t1  where 1=1
+			<if test="productId!=null">	
+				and product_id=#{productId}
+				</if>
+		      <if test="name != null  " >
+		        and t1.name  like concat('%',#{name},'%')
+		      </if>
+		      <if test="descs != null   " >
+		        and t1.descs  like concat('%',#{descs},'%')
+		      </if>
+		      <if test="validBeginTime != null " >
+		        and t1.valid_begin_time &lt;=#{validBeginTime} 
+		      </if>
+		       <if test="validEndTime != null" >
+		         and t1.valid_end_time &gt;=#{validEndTime}
+		      </if>
+		      and t1.del_flag=0 
+		      ORDER BY t1.create_date desc
+		      <!-- limit #{pageNum},#{size} -->
+		       
+	    </select>
+	    <select id="getSettingInfoDetailById" parameterType="com.haier.datamart.entity.EnteringTableSettingInfo" resultMap="BaseResultMap2">
+			select t1.* from entering_table_setting_info t1 where   t1.id=#{id} and del_flag=0
+	    </select>
+	    <update id="changestatus" parameterType="com.haier.datamart.entity.EnteringTableSettingInfo">
+	    update entering_table_setting_info set status=#{status} where id=#{id}
+	    
+	    </update>
+	    <select id="getAll" resultType="com.haier.datamart.entity.EnteringTableSettingInfo">
+	    select * from entering_table_setting_info
+	    </select>
+	    <select id="getSettingInfoByDesc" parameterType="String" resultType="com.haier.datamart.entity.EnteringTableSettingInfo">
+			select <include refid="Base_Column_List"/> from entering_table_setting_info where descs=#{id} and del_flag=0
+		</select>
+</mapper>

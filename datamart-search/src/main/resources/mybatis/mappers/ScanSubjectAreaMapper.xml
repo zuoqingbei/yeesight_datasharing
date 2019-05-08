@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.ScanSubjectAreaMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.ScanSubjectArea">
+        <result column="id" property="id" />
+        <result column="parent_id" property="parentId" />
+        <result column="parent_ids" property="parentIds" />
+        <result column="name" property="name" />
+        <result column="description" property="description" />
+        <result column="sort" property="sort" />
+        <result column="create_date" property="createDate" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id,parent_id AS parentId, parent_ids AS parentIds,  name, description, sort, create_date AS createDate, create_by AS createBy, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+<select id="selectbyname" parameterType="String" resultType="com.haier.datamart.entity.ScanSubjectArea">
+ select * from scan_subject_area where name=#{name}
+</select>
+<select id="selectAllbyLikename"  resultType="com.haier.datamart.entity.ScanSubjectArea">
+ select <include refid="Base_Column_List"></include> from scan_subject_area where 
+ 	 <if test="name != null" >
+ 	 	 name like '%${name}%' and 
+ 	 </if>
+ 	  <if test="parentId != null" >
+ 	  	 parent_id=#{parentId} and
+ 	  </if>
+		del_flag='0'
+		ORDER BY sort
+</select>
+<insert id="add" parameterType="com.haier.datamart.entity.ScanSubjectArea">
+insert into scan_subject_area
+<trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+       <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        <if test="id != null" >
+        #{id},
+      </if>
+      <if test="parentId != null" >
+        #{parentId},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="description != null" >
+        #{description},
+      </if>
+      <if test="sort != null" >
+        #{sort},
+      </if>
+      <if test="createBy != null" >
+        #{createBy},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if><if test="updateBy != null" >
+        #{updateBy},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+    </trim>
+</insert>
+<select id="selectChildrenbyId" parameterType="String" resultType="com.haier.datamart.entity.ScanSubjectArea">
+ select * from scan_subject_area where parent_id= #{id} and del_flag='0' order by sort
+</select>
+<select id="getAll" resultType="com.haier.datamart.entity.ScanSubjectArea">
+select <include refid="Base_Column_List"></include> from scan_subject_area where del_flag='0'and parent_id !='0'
+</select>
+<select id="getAll2" resultType="com.haier.datamart.entity.ScanSubjectArea">
+select * from scan_subject_area where del_flag='0'
+</select>
+<update id="deleteById" parameterType="com.haier.datamart.entity.ScanSubjectArea">
+	update scan_subject_area set del_flag = #{DEL_FLAG_DELETE}
+		WHERE id = #{id}
+</update>
+<update id="updateSubjectArea" parameterType="com.haier.datamart.entity.ScanSubjectArea">
+	update scan_subject_area set 
+	<if test="parentId != null" >
+       parent_id = #{parentId},
+    </if>
+	<if test="name != null" >
+       name = #{name},
+    </if>
+	<if test="description != null" >
+       description = #{description},
+    </if>
+   
+    <if test="remarks != null" >
+       remarks = #{remarks}, 
+    </if>
+     <if test="updateBy != null" >
+      update_by = #{updateBy},
+    </if>
+<if test="sort != null" >
+      sort =#{sort},
+    </if>
+    <if test="updateDate != null" >
+      update_date =#{updateDate}
+    </if>
+	WHERE id = #{id}
+</update>
+
+
+</mapper>

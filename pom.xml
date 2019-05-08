@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>com.haier.datamart</groupId>
+	<artifactId>datamart-parent</artifactId>
+	<packaging>pom</packaging>
+	<version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>datamart-search</module>
+    </modules>
+
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.1.RELEASE</version>
+	</parent>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<maven.compiler.source>1.8</maven.compiler.source>
+		<maven.compiler.target>1.8</maven.compiler.target>
+		<mybatisplus-spring-boot-starter.version>1.0.5</mybatisplus-spring-boot-starter.version>
+		<mybatisplus.version>2.1.8</mybatisplus.version>
+		<fastjson.version>1.2.39</fastjson.version>
+		<druid-version>1.1.5</druid-version>
+		<slf4j-api.version>1.7.25</slf4j-api.version>
+		<reflections.version>0.9.10</reflections.version>
+		<spring-boot-autoconfigure.version>1.5.1.RELEASE</spring-boot-autoconfigure.version>
+		<guava.version>17.0</guava.version>
+		<commons-lang3.version>3.4</commons-lang3.version>
+		<spring-boot-starter-aop.version>1.5.1.RELEASE</spring-boot-starter-aop.version>
+		<jsoup.version>1.8.1</jsoup.version>
+		<velocity.version>1.7</velocity.version>
+		<shiro-spring.version>1.4.0</shiro-spring.version>
+		<java-jwt.version>3.2.0</java-jwt.version>
+		<poi.version>3.15</poi.version>
+		<dom4j.version>1.6.1</dom4j.version>
+		<pinyin4j.version>2.5.0</pinyin4j.version>
+		<gson.version>2.7</gson.version>
+		<mysql-connector-java.version>5.1.38</mysql-connector-java.version>
+		<scala-bcrypt_2.10.version>2.3</scala-bcrypt_2.10.version>
+		<rest-assured.version>2.9.0</rest-assured.version>
+		<ant.version>1.9.7</ant.version>
+		<velocity.version>1.7</velocity.version>
+	</properties>
+
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>druid</artifactId>
+				<version>${druid-version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.google.guava</groupId>
+				<artifactId>guava</artifactId>
+				<version>${guava.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-lang3</artifactId>
+				<version>${commons-lang3.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-aop</artifactId>
+				<version>${spring-boot-starter-aop.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jsoup</groupId>
+				<artifactId>jsoup</artifactId>
+				<version>${jsoup.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<scope>runtime</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.shiro</groupId>
+				<artifactId>shiro-spring</artifactId>
+				<version>${shiro-spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.auth0</groupId>
+				<artifactId>java-jwt</artifactId>
+				<version>${java-jwt.version}</version>
+			</dependency>
+
+			<!-- mybatis-plus begin -->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatisplus-spring-boot-starter</artifactId>
+				<version>${mybatisplus-spring-boot-starter.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>${mybatisplus.version}</version>
+			</dependency>
+			<!-- mybatis-plus end -->
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+				<scope>runtime</scope>
+				<version>${mysql-connector-java.version}</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>com.alibaba</groupId>
+				<artifactId>fastjson</artifactId>
+				<version>${fastjson.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.httpcomponents</groupId>
+				<artifactId>httpclient</artifactId>
+				<version>4.5</version>
+			</dependency>
+
+
+		</dependencies>
+	</dependencyManagement>
+
+	<!-- <build>
+		<plugins>
+			Srping Boot 打包工具
+			<plugin> <groupId>org.springframework.boot</groupId> <artifactId>spring-boot-maven-plugin</artifactId> 
+				<configuration> <mainClass>com.haier.datamart.SpringbootApplication</mainClass> 
+				</configuration> <executions> <execution> <goals> <goal>repackage</goal> 
+				</goals> </execution> </executions> </plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+					<encoding>UTF-8</encoding>
+					<verbose>true</verbose>
+					<fork>true</fork>
+					<executable>${JAVA8_HOME}/bin/javac</executable>
+				</configuration>
+			</plugin>
+			<plugin> <groupId>org.apache.maven.plugins</groupId> <artifactId>maven-surefire-plugin</artifactId> 
+				<version>2.19.1</version> <configuration> <skipTests>true</skipTests> 默认关掉单元测试 
+				</configuration> </plugin>
+
+		</plugins>
+	</build> -->
+	
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>3.0.2</version>
+				<configuration>
+					<delimiters>
+						<delimiter>@</delimiter>
+					</delimiters>
+					<useDefaultDelimiters>false</useDefaultDelimiters>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MinitorEtlControlParamMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.MonitorEtlControlParam">
+        <id column="id" property="id" />
+        <result column="etl_type_id" property="etlTypeId" />
+        <result column="module_id" property="moduleId" />
+        <result column="start_date" property="startDate" />
+        <result column="start_time" property="startTime" />
+        <result column="end_date" property="endDate" />
+        <result column="end_time" property="endTime" />
+        <result column="interval_type" property="intervalType" />
+        <result column="state" property="state" />
+        <result column="flag" property="flag" />
+        <result column="index_id" property="indexId" />
+        <result column="index_name" property="indexName" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+        <result column="module_name" property="moduleName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, etl_type_id AS etlTypeId, module_id AS moduleId, start_date AS startDate, start_time AS startTime, end_date AS endDate, end_time AS endTime, interval_type AS intervalType, state, flag, index_id AS indexId, index_name AS indexName, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag,module_name AS moduleName 
+    </sql>
+<select id="getList" resultType="com.haier.datamart.entity.MonitorEtlControlParam" parameterType="com.haier.datamart.entity.MonitorEtlControlParam">
+select <include refid="Base_Column_List"></include> from  monitor_etl_control_param where del_flag='0'
+</select>
+<update id="delete" >
+update monitor_etl_control_param set del_flag='1' where module_id=#{mid} and del_flag=0
+</update>
+
+    <!-- 通过id获取一条entry
+    @param configId
+    @return 
+    MonitorEtlControlParam getConfigById(String configId);
+    -->
+<select id="getConfigById" resultType="com.haier.datamart.entity.MonitorEtlControlParam" >
+select <include refid="Base_Column_List"></include> from monitor_etl_control_param where id=#{id} and del_flag=0
+</select>
+	<!--  通过moduleId获取一条entry
+	 @param moduleId
+	 @return
+	 MonitorEtlControlParam getConfigBymoduleId(String moduleId); -->
+	 
+	 <select id="getConfigBymoduleId" resultType="com.haier.datamart.entity.MonitorEtlControlParam" >
+	select 
+		<include refid="Base_Column_List"></include> from monitor_etl_control_param 
+	where 
+		module_id=#{moduleId}
+ 	and 
+ 		del_flag=0
+	 </select>
+	
+	
+	<!-- 通过entry参数更新数据库
+	@param com.haier.datamart.entity.MonitorEtlControlParam mecp
+	void updateMECP(MonitorEtlControlParam mecp); -->
+<update id="updateMECP"  parameterType="com.haier.datamart.entity.MonitorEtlControlParam">
+	update monitor_etl_control_param
+	<set>
+		<if test="etlTypeId != null" >
+        	etl_type_id=#{etlTypeId},
+      	</if>
+      	<if test="moduleId != null" >
+        	module_id=#{moduleId},
+      	</if>
+      	<if test="startDate != null" >
+        	start_date=#{startDate},
+      	</if>
+      	<if test="endDate != null" >
+        	end_date=#{endDate},
+      	</if>
+      	 <if test="startTime != null" >
+        	start_time=#{startTime},
+      	</if>
+      	<if test="endTime != null" >
+        	end_time=#{endTime},
+      	</if>
+      	<if test="intervalType != null" >
+        	interval_type=#{intervalType},
+      	</if>
+      	<if test="state != null" >
+        	state=#{state},
+      	</if>
+      	<if test="flag != null" >
+        	flag=#{flag},
+      	</if>
+      	<if test="indexId != null" >
+        	index_id=#{indexId},
+      	</if>
+      	<if test="indexName != null" >
+        	index_name=#{indexName},
+      	</if>
+      	<if test="createBy != null" >
+        	create_by=#{createBy},
+      	</if>
+      	<if test="createDate != null" >
+        	create_date=#{createDate},
+      	</if>
+      	<if test="updateBy != null" >
+        	update_by=#{updateBy},
+      	</if>
+      	<if test="remarks != null" >
+        	remarks=#{remarks},
+      	</if>
+      	<if test="delFlag != null" >
+        	del_flag=#{delFlag},
+      	</if>
+      	<if test="moduleName != null" >
+        	module_name=#{moduleName},
+      	</if>
+        	update_date=#{updateDate}
+	</set>
+	where
+		module_id=#{moduleId}
+</update>
+
+	<!-- @param com.haier.datamart.entity.MonitorEtlControlParam mecp
+     Integer addOne(MonitorEtlControlParam mecp); -->
+<insert id="addOne"  parameterType="com.haier.datamart.entity.MonitorEtlControlParam">
+	insert into 
+		monitor_etl_control_param
+	<trim prefix="(" suffix=")" suffixOverrides="," >
+			id,
+		<if test="etlTypeId != null" >
+        	etl_type_id,
+      	</if>
+      	<if test="moduleId != null" >
+        	module_id,
+      	</if>
+      	<if test="startDate != null" >
+        	start_date,
+      	</if>
+      	<if test="endDate != null" >
+        	end_date,
+      	</if>
+      	<if test="startTime != null" >
+        	start_time,
+      	</if>
+      	<if test="endTime != null" >
+        	end_time,
+      	</if>
+      	<if test="intervalType != null" >
+        	interval_type,
+      	</if>
+      	<if test="state != null" >
+        	state,
+      	</if>
+      	<if test="flag != null" >
+        	flag,
+      	</if>
+      	<if test="indexId != null" >
+        	index_id,
+      	</if>
+      	<if test="indexName != null" >
+        	index_name,
+      	</if>
+      	<if test="createBy != null" >
+        	create_by,
+      	</if>
+      	<if test="createDate != null" >
+        	create_date,
+      	</if>
+      	<if test="updateBy != null" >
+        	update_by,
+      	</if>
+      	<if test="updateDate != null" >
+        	update_date,
+      	</if>
+      	<if test="remarks != null" >
+        	remarks,
+      	</if>
+      	<if test="delFlag != null" >
+        	del_flag,
+      	</if>
+      	<if test="moduleName != null" >
+        	module_name
+      	</if>
+	</trim>
+	
+	<trim suffix=")" prefix="values(" suffixOverrides=",">
+			#{id},
+		<if test="etlTypeId != null" >
+        	#{etlTypeId},
+      	</if>
+      	<if test="moduleId != null" >
+        	#{moduleId},
+      	</if>
+      	<if test="startDate != null" >
+        	#{startDate},
+      	</if>
+      	<if test="endDate != null" >
+        	#{endDate},
+      	</if>
+      	<if test="startTime != null" >
+        	#{startTime},
+      	</if>
+      	<if test="endTime != null" >
+        	#{endTime},
+      	</if>
+      	<if test="intervalType != null" >
+        	#{intervalType},
+      	</if>
+      	<if test="state != null" >
+        	#{state},
+      	</if>
+      	<if test="flag != null" >
+        	#{flag},
+      	</if>
+      	<if test="indexId != null" >
+        	#{indexId},
+      	</if>
+      	<if test="indexName != null" >
+        	#{indexName},
+      	</if>
+      	<if test="createBy != null" >
+        	#{createBy},
+      	</if>
+      	<if test="createDate != null" >
+        	#{createDate},
+      	</if>
+      	<if test="updateBy != null" >
+        	#{updateBy},
+      	</if>
+      	<if test="updateDate != null" >
+        	#{updateDate},
+      	</if>
+      	<if test="remarks != null" >
+        	#{remarks},
+      	</if>
+      	<if test="delFlag != null" >
+        	#{delFlag}
+      	</if>
+      	<if test="moduleName != null" >
+        	#{moduleName}
+      	</if>
+	</trim>
+</insert>
+ <!-- 检查在当前指标下是否已经存在模板配置
+	 @param indexId
+	 @return
+	 Integer checkIsExist(String indexId); -->	 
+<select id="checkIsExist" resultType="java.lang.Integer">
+	select
+		count(id)
+	from 
+		monitor_etl_control_param
+	where
+		index_id=#{indexId}	
+	and
+		del_flag=0
+</select>
+<!-- 获取所有控制参数的集合
+	 @return
+	List<MonitorEtlControlParam> getControllerParam(); -->
+<select id="getControllerParam" resultType="com.haier.datamart.entity.MonitorEtlControlParam">
+ 	select
+		m.index_id as indexId,
+		m.index_name as indexName,
+		m.create_date as createDate,
+		u.`name` as createBy,
+		m.module_name as moduleName
+	from
+		monitor_etl_control_param m
+	left join sys_user u on u.id = m.create_by
+	where
+		m.del_flag = 0
+	and m.index_id != ''
+	group by
+		m.index_id
+	order by
+		m.update_date desc;
+</select>
+	<!--  * 模糊搜索
+	 * @param moduleName
+	 * @param remarks
+	 * @param userId
+	 * @return
+	 */
+	List<MonitorEtlControlParam> fuzzSearch(
+			@Param("moduleName")String moduleName, 
+			@Param("remarks")String remarks, 
+			@Param("userId")String userId); -->
+<select id="fuzzSearch" resultType="com.haier.datamart.entity.MonitorEtlControlParam">
+	select
+		m.index_id as indexId,
+		m.index_name as indexName,
+		m.create_date as createDate,
+		u.`name` as createBy,
+		m.module_name as moduleName
+	from 
+		monitor_etl_control_param m
+	left join sys_user u on u.id=m.create_by
+	where 
+		m.del_flag=0
+	AND 
+		m.index_id !=''
+	<if test="moduleName!=null">
+		and m.module_name like concat('%',#{moduleName},'%')
+	</if>
+	<if test="remarks!=null">
+		and m.remarks  like concat('%',#{remarks},'%')
+	</if>
+	<if test="userId!=null">
+		and m.create_by like concat('%',#{userId},'%')
+	</if>
+	GROUP BY
+		m.index_id
+	ORDER BY
+		m.update_date DESC;		
+</select>
+
+	 <!-- * 通过指标id获取模板id
+	 * @param index
+	 * @return
+	 */
+	List<MonitorEtlControlParam> getModuleIdByIndexId(String index); -->
+<select id="getModuleIdByIndexId"  resultType="com.haier.datamart.entity.MonitorEtlControlParam">
+	select 
+		<include refid="Base_Column_List"></include>
+	from
+		monitor_etl_control_param
+	where 
+		del_flag=0
+	AND
+		index_id=#{index}
+</select>
+
+	<!-- 根据表编码查询配置的模板信息 -->
+	<select id="getMonitorListByContentId" resultType="com.haier.datamart.entity.MonitorEtlControlParam">
+		SELECT DISTINCT
+			g.id,
+			g.module_name AS moduleName,
+			g.module_id AS moduleId,
+			g.index_id AS indexId,
+			g.index_name AS indexName
+		FROM
+			`scan_index_table_relative` r
+		INNER JOIN search_index i ON i.id = r.index_id
+		INNER JOIN monitor_etl_control_param g ON i.`code` = g.index_id
+		WHERE
+			r.del_flag = 0
+		AND r.content_id = #{contentId}
+	</select>
+	
+	<!-- 根据报表查询配置的模板信息 -->
+	<select id="getMonitorListByReportId" resultType="com.haier.datamart.entity.MonitorEtlControlParam">
+		SELECT DISTINCT
+				g.id,
+			g.module_name AS moduleName,
+			g.module_id AS moduleId,
+			g.index_id AS indexId,
+			g.index_name AS indexName
+		FROM search_index i
+		INNER JOIN search_reports_index report on report.index_id=i.id
+		INNER JOIN monitor_etl_control_param g ON i.`code` = g.index_id
+		WHERE
+			report.del_flag = 0
+		and report.report_id=#{reportId}
+	</select>
+	
+	<!-- 根据指标查询配置的模板信息 -->
+	<select id="getMonitorListByIndexId" resultType="com.haier.datamart.entity.MonitorEtlControlParam" parameterType="String">
+		SELECT DISTINCT
+				g.id,
+			g.module_name AS moduleName,
+			g.module_id AS moduleId,
+			g.index_id AS indexId,
+			g.index_name AS indexName
+		FROM search_index i
+		INNER JOIN monitor_etl_control_param g ON i.`code` = g.index_id
+		WHERE
+			i.del_flag = 0
+		and i.id=#{indexId}
+	</select>
+</mapper>

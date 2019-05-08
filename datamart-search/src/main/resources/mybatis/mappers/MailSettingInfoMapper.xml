@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MailSettingInfoMapper">
+
+   <!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="com.haier.datamart.entity.MailSettingInfo">
+      <result column="id" property="id" />
+      <result column="plat" property="plat" />
+      <result column="industry" property="industry" />
+      <result column="templete_id" property="templeteId" />
+      <result column="send_date" property="sendDate" />
+      <result column="message_open" property="messageOpen" />
+      <result column="message_title" property="messageTitle" />
+      <result column="message_reciver_id" property="messageReciverId" />
+      <result column="mail_open" property="mailOpen" />
+      <result column="mail_title" property="mailTitle" />
+      <result column="mail_reciver_id" property="mailReciverId" />
+      <result column="create_by" property="createBy" />
+      <result column="create_date" property="createDate" />
+      <result column="update_by" property="updateBy" />
+      <result column="update_date" property="updateDate" />
+      <result column="remarks" property="remarks" />
+      <result column="del_flag" property="delFlag" />
+   </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      id,
+      plat,
+      industry,
+      templete_id,
+      send_date,
+      message_open,
+      message_title,
+      message_reciver_id,
+      mail_open,
+      mail_title,
+      mail_reciver_id,
+      create_by,
+      create_date,
+      update_by,
+      update_date,
+      remarks,
+      del_flag,
+</sql>
+
+</mapper>

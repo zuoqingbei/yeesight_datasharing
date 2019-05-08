@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.DictMapper">
+
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.Dict">
+        <result column="id" property="id" />
+        <result column="value" property="value" />
+        <result column="label" property="label" />
+        <result column="type" property="type" />
+        <result column="description" property="description" />
+        <result column="sort" property="sort" />
+        <result column="parent_id" property="parentId" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+        
+        <result column="sys_name" property="sysName" />
+        <result column="responsible_person" property="responsiblePerson" />
+        <result column="access_address" property="accessAddress" />
+        <result column="terrace" property="terrace" />
+        <result column="deployment_path" property="deploymentPath" />
+        <result column="code_address" property="codeAddress" />
+        <result column="report_number" property="reportNumber" />
+        <result column="related_operation" property="relatedOperation" />
+        <result column="related_monitoring" property="relatedMonitoring" />
+        <result column="related_datasheet" property="relatedDatasheet" />
+        <result column="operation" property="operation" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, value, label, type, description, sort, parent_id AS parentId, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag,
+         sys_name AS sysName, responsible_person AS responsiblePerson, access_address AS accessAddress, terrace, deployment_path AS deploymentPath, code_address AS codeAddress, 
+        report_number AS reportNumber, related_operation AS relatedOperation, related_monitoring AS relatedMonitoring, related_datasheet AS relatedDatasheet, operation
+    </sql>
+<select id="get" resultType="com.haier.datamart.entity.Dict">
+		SELECT 
+			*
+		FROM search_index a
+		
+		WHERE a.id = #{id}
+	</select>
+	<insert id="add" parameterType="com.haier.datamart.entity.Dict">
+	 insert into sys_dict
+	 <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="value != null" >
+        value,
+      </if>
+      <if test="label != null" >
+        label,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="description != null" >
+        description,
+      </if>
+      <if test="sort != null" >
+        sort,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+      
+        <if test="sysName != null" >
+        sys_name,
+      </if>
+      <if test="responsiblePerson != null" >
+        responsible_person,
+      </if>
+      <if test="accessAddress != null" >
+        access_address,
+      </if>
+      <if test="terrace != null" >
+        terrace,
+      </if>
+      <if test="deploymentPath != null" >
+        deployment_path,
+      </if>
+      <if test="codeAddress != null" >
+        code_address,
+      </if>
+      <if test="reportNumber != null" >
+        report_number,
+      </if>
+      <if test="relatedOperation != null" >
+        related_operation,
+      </if>
+      <if test="relatedMonitoring != null" >
+        related_monitoring,
+      </if>
+      <if test="relatedDatasheet != null" >
+        related_datasheet,
+      </if>
+      <if test="operation != null" >
+        operation,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+       <if test="id != null" >
+        #{id},
+      </if>
+      <if test="value != null" >
+        #{value},
+      </if>
+      <if test="label != null" >
+        #{label},
+      </if>
+      <if test="type != null" >
+        #{type},
+      </if>
+      <if test="description != null" >
+        #{description},
+      </if>
+      <if test="sort != null" >
+        #{sort},
+      </if>
+      <if test="parentId != null" >
+        #{parentId},
+      </if>
+      <if test="createBy != null" >
+        #{createBy},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+      
+      <if test="sysName != null" >
+         #{sysName},
+      </if>
+      <if test="responsiblePerson != null" >
+        #{responsiblePerson},
+      </if>
+      <if test="accessAddress != null" >
+        #{accessAddress},
+      </if>
+      <if test="terrace != null" >
+        #{terrace},
+      </if>
+      <if test="deploymentPath != null" >
+        #{deploymentPath},
+      </if>
+      <if test="codeAddress != null" >
+        #{codeAddress},
+      </if>
+      <if test="reportNumber != null" >
+        #{reportNumber},
+      </if>
+      <if test="relatedOperation != null" >
+        #{relatedOperation},
+      </if>
+      <if test="relatedMonitoring != null" >
+        #{relatedMonitoring},
+      </if>
+      <if test="relatedDatasheet != null" >
+        #{relatedDatasheet},
+      </if>
+      <if test="operation != null" >
+        #{operation},
+      </if>
+    </trim>
+	
+	</insert>
+	
+	<select id="getByname" resultType="com.haier.datamart.entity.Dict" parameterType="String">
+		select 
+		*
+		from sys_dict 
+		
+		WHERE description = #{name}
+	</select>
+
+<select id="getAll" resultType="com.haier.datamart.entity.Dict">
+select <include refid="Base_Column_List"></include> from sys_dict where  type=#{type}
+</select>
+
+<select id="getDataType" resultType="com.haier.datamart.entity.Dict">
+select * from sys_dict where  type='dataType'
+</select>	
+</mapper>
+
+	
+

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.EnteringLogsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.EnteringLogs">
+        <result column="id" property="id" />
+        <result column="all_num" property="allNum" />
+        <result column="success_num" property="successNum" />
+        <result column="fail_num" property="failNum" />
+        <result column="fail_data" property="failData" />
+        <result column="industry_id" property="industryId" />
+        <result column="setting_id" property="settingId" />
+        <result column="create_date" property="createDate" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, all_num AS allNum, success_num AS successNum, fail_num AS failNum, fail_data AS failData, industry_id AS industryId, setting_id AS settingId, create_date AS createDate, create_by AS createBy, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+	<!-- /**
+	 * 增加一条日志
+	 * @param log
+	 */
+	void addLog(EnteringLogs log) -->
+	<insert id="addLog" parameterType="com.haier.datamart.entity.EnteringLogs">
+	insert into 
+		entering_logs 
+           		 (id,all_num,success_num,fail_num,fail_data,
+           		 industry_id, setting_id,create_date,create_by,
+           		 update_by,update_date) values
+           	(#{id},
+			#{allNum},
+			#{successNum},
+			#{failNum},
+			#{failData},
+			#{industryId},
+			#{settingId},
+			#{createDate},
+			#{createBy},
+			#{updateBy},
+			#{updateDate})
+			
+	</insert>
+</mapper>

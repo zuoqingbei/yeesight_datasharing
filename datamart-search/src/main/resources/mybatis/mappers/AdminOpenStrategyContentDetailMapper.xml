@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.AdminOpenStrategyContentDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.AdminOpenStrategyContentDetail">
+        <result column="id" property="id" />
+        <result column="open_strategy_id" property="openStrategyId" />
+        <result column="content_detail_id" property="contentDetailId" />
+        <result column="useable" property="useable" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, open_strategy_id AS openStrategyId, content_detail_id AS contentDetailId, useable, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+<select id="getbyid" parameterType="String" resultType="com.haier.datamart.entity.AdminOpenStrategyContentDetail">
+select c.id as id, c.datasource_id AS datasourceId, c.content_id AS contentId, c.column_name AS columnName, c.column_type AS columnType from admin_open_strategy_content_detail d
+LEFT JOIN  admin_content_open_strategy s on s.id=d.open_strategy_id
+LEFT JOIN admin_data_content_detail c on c.id=d.content_detail_id
+where s.id=#{id}
+</select>
+</mapper>

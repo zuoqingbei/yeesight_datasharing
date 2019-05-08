@@ -1,0 +1,338 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.ViewSearchMapper">
+
+
+   
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.ViewSearch">
+        <result column="id" property="id" />
+        <result column="pk" property="pk" />
+        <result column="NAME" property="name" />
+        <result column="type" property="type" />
+        <result column="url" property="url" />
+        <result column="screen_url" property="screenUrl" />
+        <result column="descs" property="descs" />
+        <result column="category1" property="category1" />
+        <result column="category2" property="category2" />
+        <result column="category3" property="category3" />
+        <result column="tags" property="tags" />
+        <result column="view_num" property="viewNum" />
+        <result column="zan_num" property="zanNum" />
+        <result column="share_num" property="shareNum" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="remarks" property="remarks" />
+        <result column="subName" property="subName" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        pk,id, NAME AS name, type, url, screen_url AS screenUrl, descs, category1, category2, category3, tags, view_num AS viewNum, zan_num AS zanNum, share_num AS shareNum, create_by AS createBy, create_date AS createDate, remarks,subName
+    </sql>
+    <select id="getByPK" parameterType="com.haier.datamart.entity.ViewSearch" resultType="com.haier.datamart.entity.ViewSearch">
+    select <include refid="Base_Column_List"/> from view_search where pk=#{pk}
+    </select>
+<select id="getByKeyword" parameterType="com.haier.datamart.entity.ViewSearch" resultType="com.haier.datamart.entity.ViewSearch">
+<!-- SELECT pk,id,type,NAME as name,descs,screen_url as screenUrl,view_num as viewNum,zan_num as zanNum,share_num as shareNum,create_date as createDate FROM view_search WHERE 1=1 -->
+	select  
+		pk,
+		id,
+		NAME AS NAME,
+		type,
+		url,
+		 screenUrl,
+		descs,
+		category1,
+		category2,
+		category3,
+		tags,
+	 	viewNum,
+	 	zanNum,
+		shareNum,
+		createBy,
+		createDate,
+		remarks,
+		subName
+ from
+  (select <include refid="Base_Column_List"/> from view_search where 1=1
+  
+    <if test="keywords!=null">
+    	<foreach open="and" collection="keywords" item="keyword"  separator="and">
+  		(NAME  like concat('%',#{keyword},'%') OR descs  like concat('%',#{keyword},'%') OR tags  like concat('%',#{keyword},'%'))
+  		</foreach>
+    </if>
+  <if test="category1 !=null and category1 != ''">
+  and category1=#{category1}
+  </if>
+  <if test="category2 !=null and category2 != ''">
+  and category2=#{category2}
+  </if>
+  <if test="category3 !=null and category3 != ''">
+  and category3=#{category3}
+  </if>
+  <if test="subName !=null and subName != ''">
+   and subName=#{subName}
+  </if>
+  <if test="keywords!=null">
+  	union 
+	SELECT
+		concat(
+			'search_index_',
+			`search_index`.`id`
+		) AS `pk`,
+		`search_index`.`id` AS `id`,
+		`search_index`.`name` AS `name`,
+		'指标' AS `type`,
+		`search_index`.`screen_url` AS `screenUrl`,
+		`search_index`.`screen_url` AS `url`,
+		`search_index`.`descs` AS `descs`,
+		`search_index`.`category1` AS `category1`,
+		`search_index`.`category2` AS `category2`,
+		`search_index`.`category3` AS `category3`,
+		`search_index`.`tags` AS `tags`,
+		`search_index`.`view_num` AS `viewNum`,
+		`search_index`.`zan_num` AS `zanNum`,
+		`search_index`.`share_num` AS `shareNum`,
+		`search_index`.`create_by` AS `createBy`,
+		`search_index`.`create_date` AS `createDate`,
+		`search_index`.`remarks` AS `remarks`,
+		`a`.`name` AS `subName`
+	FROM
+		search_index
+	LEFT JOIN `scan_subject_area_index` `ai` ON (
+		(
+			`ai`.`index_id` = `search_index`.`id`
+		)
+	)
+	LEFT JOIN `scan_subject_area` `a` ON (
+		(
+			`a`.`id` = `ai`.`subject_area_id`
+		)
+	)
+	RIGHT  JOIN (
+			SELECT
+				DISTINCT r.index_id
+			FROM
+				scan_index_table_relative r
+			LEFT JOIN admin_data_content c ON c.id = r.content_id
+			WHERE
+				c.del_flag = 0
+			AND r.del_flag = 0
+			 
+			<foreach open="and" collection="keywords" item="keyword" separator="and">
+			(c.table_name LIKE  concat('%',#{keyword},'%'))
+			</foreach>
+		)a on a.index_id=search_index.id
+	WHERE search_index.del_flag = 0
+  </if>
+  ) gg
+  <if test="viewNum !=null and viewNum != ''">
+   order by viewNum desc
+  </if>
+   <if test="createBy !=null and createBy != ''">
+   order by createDate desc
+  </if>
+  
+    limit #{pageNum},#{size} 
+
+</select>
+<select id="getAll" parameterType="com.haier.datamart.entity.ViewSearch" resultType="com.haier.datamart.entity.ViewSearch">
+<!-- SELECT pk,id,type,NAME as name,descs,screen_url as screenUrl,view_num as viewNum,zan_num as zanNum,share_num as shareNum,create_date as createDate FROM view_search WHERE 1=1 -->
+	 select <include refid="Base_Column_List"/> from view_search where 1=1
+</select>
+<!-- List<ViewSearch> getTuijian(@Param("par")String par); -->
+<select id="getTuijian" parameterType="java.lang.String" resultType="com.haier.datamart.entity.ViewSearch">
+SELECT v.id as id,v.view_num as viewNum,v.type AS type,v.NAME as name,v.screen_url as screenUrl 
+from view_search  v 
+<if test="par !=null and par != ''">
+  where v.type=#{par} 
+</if>
+ORDER BY v.view_num,v.zan_num,v.share_num desc LIMIT 0,3
+</select>
+<select id="getallTuijian"  resultType="com.haier.datamart.entity.ViewSearch">
+SELECT v.id as id,v.view_num as viewNum,v.type AS type,v.NAME as name,v.screen_url as screenUrl from view_search  v  ORDER BY v.view_num desc LIMIT 0,5
+</select>
+<select id="getCount" parameterType="com.haier.datamart.entity.ViewSearch" resultType="com.haier.datamart.entity.ViewSearch">
+SELECT COUNT(id) as count from
+  (select id from view_search where 1=1
+  
+    <if test="keywords!=null">
+    	<foreach open="and" collection="keywords" item="keyword"  separator="and">
+  		(NAME  like concat('%',#{keyword},'%') OR descs  like concat('%',#{keyword},'%') OR tags  like concat('%',#{keyword},'%'))
+  		</foreach>
+    </if>
+  <if test="category1 !=null and category1 != ''">
+  and category1=#{category1}
+  </if>
+  <if test="category2 !=null and category2 != ''">
+  and category2=#{category2}
+  </if>
+  <if test="category3 !=null and category3 != ''">
+  and category3=#{category3}
+  </if>
+  <if test="subName !=null and subName != ''">
+   and subName=#{subName}
+  </if>
+  <if test="keywords!=null">
+  	union 
+	SELECT
+		`search_index`.`id` AS `id`
+	FROM
+		search_index
+	LEFT JOIN `scan_subject_area_index` `ai` ON (
+		(
+			`ai`.`index_id` = `search_index`.`id`
+		)
+	)
+	LEFT JOIN `scan_subject_area` `a` ON (
+		(
+			`a`.`id` = `ai`.`subject_area_id`
+		)
+	)
+	RIGHT  JOIN (
+			SELECT
+				DISTINCT r.index_id
+			FROM
+				scan_index_table_relative r
+			LEFT JOIN admin_data_content c ON c.id = r.content_id
+			WHERE
+				c.del_flag = 0
+			AND r.del_flag = 0
+			 
+			<foreach open="and" collection="keywords" item="keyword" separator="and">
+			(c.table_name LIKE  concat('%',#{keyword},'%'))
+			</foreach>
+		)a on a.index_id=search_index.id
+	WHERE
+		 search_index.del_flag = 0
+  </if>
+  ) gg
+</select>
+
+<select id="getNewadd" resultType="com.haier.datamart.entity.ViewSearch">
+SELECT v.id as id,v.type AS type,v.NAME as name,v.screen_url as screenUrl,v.create_date as createDate from view_search  v  where 1=1
+ORDER BY v.create_date desc LIMIT 0,15
+</select>
+<select id="selectList" resultType="com.haier.datamart.entity.ViewSearch">
+</select>
+
+<update id="changeVZSNum" >
+	update
+	<if test="type =='api'.toString()">
+		 search_api set ${numType}=COALESCE(${numType},0)+1 where id=#{id}
+	</if>
+	<if test="type =='index'.toString()">
+		 search_index set ${numType}=COALESCE(${numType},0)+1 where id=#{id}
+	</if>
+	<if test="type =='report'.toString()">
+		 search_reports set ${numType}=COALESCE(${numType},0)+1 where id=#{id}
+	</if> 
+</update>
+
+
+
+<select id="getByKeywordList" parameterType="com.haier.datamart.entity.ViewSearch" resultType="com.haier.datamart.entity.ViewSearch">
+select  
+		pk,
+		id,
+		NAME AS NAME,
+		type,
+		url,
+		 screenUrl,
+		descs,
+		category1,
+		category2,
+		category3,
+		tags,
+	 	viewNum,
+	 	zanNum,
+		shareNum,
+		createBy,
+		createDate,
+		remarks,
+		subName
+ from
+  (select <include refid="Base_Column_List"/> from view_search where 1=1
+  
+    <if test="keywords!=null">
+    	<foreach open="and" collection="keywords" item="keyword"  separator="and">
+  		(NAME  like concat('%',#{keyword},'%') OR descs  like concat('%',#{keyword},'%') OR tags  like concat('%',#{keyword},'%'))
+  		</foreach>
+    </if>
+  <if test="category1 !=null and category1 != ''">
+  and type=#{category1}
+  </if>
+ <!--  <if test="category2 !=null and category2 != ''">
+  and category2=#{category2}
+  </if> -->
+ <!--  <if test="category3 !=null and category3 != ''">
+  and category3=#{category3}
+  </if>
+   -->
+   <if test="subName !=null and subName != ''">
+   and subName=#{subName}
+  </if>
+  <if test="keywords!=null and( category1=='' or category1=='指标')">
+  	union 
+	SELECT
+		concat(
+			'search_index_',
+			`search_index`.`id`
+		) AS `pk`,
+		`search_index`.`id` AS `id`,
+		`search_index`.`name` AS `name`,
+		'指标' AS `type`,
+		`search_index`.`screen_url` AS `screenUrl`,
+		`search_index`.`screen_url` AS `url`,
+		`search_index`.`descs` AS `descs`,
+		`search_index`.`category1` AS `category1`,
+		`search_index`.`category2` AS `category2`,
+		`search_index`.`category3` AS `category3`,
+		`search_index`.`tags` AS `tags`,
+		`search_index`.`view_num` AS `viewNum`,
+		`search_index`.`zan_num` AS `zanNum`,
+		`search_index`.`share_num` AS `shareNum`,
+		`search_index`.`create_by` AS `createBy`,
+		`search_index`.`create_date` AS `createDate`,
+		`search_index`.`remarks` AS `remarks`,
+		`a`.`name` AS `subName`
+	FROM
+		search_index
+	LEFT JOIN `scan_subject_area_index` `ai` ON (
+		(
+			`ai`.`index_id` = `search_index`.`id`
+		)
+	)
+	LEFT JOIN `scan_subject_area` `a` ON (
+		(
+			`a`.`id` = `ai`.`subject_area_id`
+		)
+	)
+	RIGHT  JOIN (
+			SELECT
+				DISTINCT r.index_id
+			FROM
+				scan_index_table_relative r
+			LEFT JOIN admin_data_content c ON c.id = r.content_id
+			WHERE
+				c.del_flag = 0
+			AND r.del_flag = 0
+			 
+			<foreach open="and" collection="keywords" item="keyword" separator="and">
+			(c.table_name LIKE  concat('%',#{keyword},'%'))
+			</foreach>
+		)a on a.index_id=search_index.id
+	WHERE search_index.del_flag = 0
+  </if>
+  ) gg
+  <if test="viewNum !=null and viewNum != ''">
+   order by viewNum desc
+  </if>
+   <if test="createBy !=null and createBy != ''">
+   order by createDate desc
+  </if>
+  
+</select>
+</mapper>
+

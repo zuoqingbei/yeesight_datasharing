@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.SysMenuMapper">
+
+   <!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="com.haier.datamart.entity.SysMenu">
+      <result column="id" property="id" />
+      <result column="parent_id" property="parentId" />
+      <result column="parent_ids" property="parentIds" />
+      <result column="name" property="name" />
+      <result column="sort" property="sort" />
+      <result column="menu_type" property="menuType" />
+      <result column="href" property="href" />
+      <result column="target" property="target" />
+      <result column="icon" property="icon" />
+      <result column="is_show" property="isShow" />
+      <result column="permission" property="permission" />
+      <result column="create_by" property="createBy" />
+      <result column="create_date" property="createDate" />
+      <result column="update_by" property="updateBy" />
+      <result column="update_date" property="updateDate" />
+      <result column="remarks" property="remarks" />
+      <result column="del_flag" property="delFlag" />
+   </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      id,
+      parent_id as parentId,
+      parent_ids as parentIds,
+      name,
+      sort,
+      menu_type as menuType,
+      href,
+      target,
+      icon,
+      is_show as isShow,
+      permission,
+      create_by as createBy,
+      create_date as createDate,
+      update_by as updateBy,
+      update_date as updateDate,
+      remarks,
+      del_flag as delFlag
+</sql>
+<select id="findList" parameterType="com.haier.datamart.entity.SysMenu"
+		resultType="com.haier.datamart.entity.SysMenu">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		sys_menu where del_flag=0
+		<if test="parentId != null and parentId != ''">
+			and parent_id =#{parentId}
+		</if>
+
+		<if test="createBy != null and createBy != ''">
+			create_by=#{createBy}
+		</if>
+		<if test="menuType !=null and menuType != ''">
+		  and menu_type = #{menuType}
+		</if>
+		<if test="isShow !=null and isShow != ''">
+		  and is_show = #{isShow}
+		</if>
+		<if test="name != null and name != ''">
+			and name like concat('%',#{name},'%')
+		</if>
+		ORDER BY sort
+	</select>
+</mapper>

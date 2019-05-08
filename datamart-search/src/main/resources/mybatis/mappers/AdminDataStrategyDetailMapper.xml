@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.AdminDataStrategyDetailMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.AdminDataStrategyDetail">
+        <result column="data_strategy_id" property="dataStrategyId" />
+        <result column="content_detail_id" property="contentDetailId" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        data_strategy_id AS dataStrategyId, content_detail_id AS contentDetailId, remarks, del_flag AS delFlag
+    </sql>
+<select id="getbyid" parameterType="String" resultType="com.haier.datamart.entity.AdminDataStrategyDetail">
+select c.id as id, c.datasource_id AS datasourceId, c.content_id AS contentId, c.column_name AS columnName, c.column_type AS columnType from admin_data_strategy_detail d
+LEFT JOIN  admin_data_strategy s on s.id=d.data_strategy_id
+LEFT JOIN admin_data_content_detail c on c.id=d.content_detail_id
+where s.id=#{id}
+</select>
+</mapper>

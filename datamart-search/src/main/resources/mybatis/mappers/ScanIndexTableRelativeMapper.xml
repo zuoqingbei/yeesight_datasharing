@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.ScanIndexTableRelativeMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.ScanIndexTableRelative">
+        <result column="id" property="id" />
+        <result column="index_id" property="indexId" />
+        <result column="content_id" property="contentId" />
+        <result column="content_deatil_id" property="contentDeatilId" />
+        <result column="check_rule" property="checkRule" />
+        <result column="data_source_id" property="dataSourceId" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, index_id AS indexId, content_id AS contentId, content_deatil_id AS contentDeatilId, check_rule AS checkRule, data_source_id AS dataSourceId, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+    <sql id="scanIndexTableRelativeColumns">
+		a.id AS "id",
+		a.index_id AS "indexId",
+		a.content_id AS "contentId",
+		a.content_deatil_id AS "contentDeatilId",
+		a.check_rule AS "checkRule",
+		a.data_source_id AS "dataSourceId",
+		a.create_by AS "createBy.id",
+		a.create_date AS "createDate",
+		a.update_by AS "updateBy.id",
+		a.update_date AS "updateDate",
+		a.remarks AS "remarks",
+		a.del_flag AS "delFlag"
+	</sql>
+	
+	<sql id="scanIndexTableRelativejoins">
+	LEFT JOIN search_index b ON b.id = a.id
+	</sql>
+	<select id="findList" resultType="com.haier.datamart.entity.ScanIndexTableRelative">
+		SELECT 
+			<include refid="scanIndexTableRelativeColumns"/>
+		FROM scan_index_table_relative a
+		<include refid="scanIndexTableRelativejoins"/>
+		<where>
+			a.del_flag = #{DEL_FLAG_NORMAL}
+			<if test="id != null and id != ''">
+				AND a.id = #{id}
+			</if>
+
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+				ORDER BY a.create_date ASC
+			</otherwise>
+		</choose>
+	</select>
+	<insert id="insert">
+		INSERT INTO scan_index_table_relative(
+			id,
+			index_id,
+			content_id,
+			content_deatil_id,
+			check_rule,
+			data_source_id,
+			create_by,
+			create_date,
+			update_by,
+			update_date,
+			remarks,
+			del_flag
+		) VALUES (
+			#{id},
+			#{indexId},
+			#{contentId},
+			#{contentDeatilId},
+			#{checkRule},
+			#{dataSourceId},
+			#{createBy.id},
+			#{createDate},
+			#{updateBy.id},
+			#{updateDate},
+			#{remarks},
+			#{delFlag}
+		)
+	</insert>
+	<insert id="add" parameterType="com.haier.datamart.entity.ScanIndexTableRelative">
+insert into scan_index_table_relative
+<trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="indexId != null" >
+        index_id,
+      </if>
+      <if test="contentId != null" >
+        content_id,
+      </if>
+      <if test="contentDeatilId != null" >
+        content_deatil_id,
+      </if>
+      <if test="checkRule != null" >
+        check_rule,
+      </if>
+      <if test="dataSourceId != null" >
+        data_source_id,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        <if test="id != null" >
+        #{id},
+      </if>
+      <if test="indexId != null" >
+        #{indexId},
+      </if>
+      <if test="contentId != null" >
+        #{contentId},
+      </if>
+      <if test="contentDeatilId != null" >
+        #{contentDeatilId},
+      </if>
+      <if test="checkRule != null" >
+        #{checkRule},
+      </if>
+      <if test="dataSourceId != null" >
+        #{dataSourceId},
+      </if>
+      <if test="createBy != null" >
+        #{createBy},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if><if test="updateBy != null" >
+        #{updateBy},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+    </trim>
+</insert>
+	<!-- <update id="update">
+		UPDATE scan_index_table_relative SET 	
+			id = #{id},
+			index_id = #{indexId},
+			content_id = #{contentId},
+			content_deatil_id = #{contentDeatilId},
+			check_rule = #{checkRule},
+			data_source_id = #{dataSourceId},
+			update_by = #{updateBy.id},
+			update_date = #{updateDate},
+			remarks = #{remarks}
+		WHERE id = #{id}
+	</update> -->
+	
+	<update id="updateDelete">
+		delete from  scan_index_table_relative 
+			WHERE index_id = #{indexId}
+	</update>
+<select id="getIndex" parameterType="String" resultType="com.haier.datamart.entity.ScanIndexTableRelative">
+SELECT DISTINCT re.content_id as contentId,c.table_name as tableName,re.data_source_id as dataSourceId,con.db_name as dbName  from scan_index_table_relative  re 
+LEFT JOIN admin_data_content c on c.id=re.content_id
+LEFT JOIN admin_datasource_config con on con.id=re.data_source_id
+where re.index_id=#{id} and re.del_flag='0'
+
+</select>
+<select id="getColumn" parameterType="com.haier.datamart.entity.ScanIndexTableRelative" resultType="com.haier.datamart.entity.AdminDataContentDetail">
+SELECT re.id as rid,d.id , d.column_name as columnName from scan_index_table_relative re 
+LEFT JOIN admin_data_content_detail d on d.id=re.content_deatil_id
+where re.content_id=#{contentId} and re.data_source_id=#{dataSourceId} and re.index_id=#{indexId}
+
+</select>
+<update id="update" parameterType="com.haier.datamart.entity.ScanIndexTableRelative">
+update scan_index_table_relative 
+<set>
+<if test="id!=null and id != ''">
+   id=#{id},
+</if>
+<if test="indexId !=null and indexId != ''">
+   index_id=#{indexId},
+</if>
+<if test="contentId !=null and contentId != ''">
+   content_id=#{contentId},
+</if>
+<if test="contentDeatilId !=null and contentDeatilId != ''">
+   content_deatil_id=#{contentDeatilId},
+</if>
+<if test="checkRule !=null and checkRule != ''">
+   check_rule=#{checkRule},
+</if>
+<if test="dataSourceId !=null and dataSourceId != ''">
+   data_source_id=#{dataSourceId},
+</if>
+<if test="updateBy !=null and updateBy != ''">
+   update_by=#{updateBy},
+</if>
+<if test="updateDate !=null and updateDate != ''">
+   update_date=#{updateDate},
+</if>
+<if test="remarks !=null and remarks != ''">
+   remarks=#{remarks},
+</if>
+<if test="delFlag !=null and delFlag != ''">
+   del_flag=#{delFlag},
+</if>
+  </set>
+</update>
+<select id="selectByuid" resultType="String" parameterType="String">
+select COUNT(re.id) as num from scan_index_table_relative re 
+LEFT JOIN admin_datasource_config c on c.id=re.data_source_id
+where re.del_flag='0'
+		<if test="uid != null and uid!=''">
+				and c.create_by=#{uid} 
+		</if>
+</select>
+</mapper>

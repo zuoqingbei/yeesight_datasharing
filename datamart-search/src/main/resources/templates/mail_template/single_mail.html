@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>发送邮件功能</title>
+</head>
+<body>
+<strong>Dear All:</strong>
+<br /><br />
+<div th:utext="${'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+mailEntry.hearder}">这里是header</div>
+<br /><br />
+    <div th:each="table : ${mailEntry.tableRenderBeanList}">
+        <p th:text="${content}">description</p>
+    </div>
+
+</body>
+</html>

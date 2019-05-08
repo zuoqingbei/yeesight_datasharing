@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.DocUploadFileTempMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.haier.datamart.entity.DocUploadFileTemp">
+		<id column="id" property="id" />
+		<result column="parent_id" property="parentId" />
+		<result column="temp_name" property="tempName" />
+		<result column="is_public" property="isPublic" />
+		<result column="order_no" property="orderNo" />
+		<result column="remarks" property="remarks" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="del_flag" property="delFlag" />
+		<result column="code" property="code" />
+		<result column="icon" property="icon" />
+		<result column="url" property="url" />
+		<result column="open_type" property="openType" />
+	</resultMap>
+	<sql id="Base_Column_ListOrg">
+		temp.id,
+		temp.order_no as orderNo,
+		temp.parent_id as parentId,
+		temp.temp_name as tempName,
+		temp.code,
+		temp.icon,
+		temp.url,
+		temp.open_type as openType,
+		temp.is_public as isPublic,
+		temp.remarks,
+		temp.create_by as createBy,
+		temp.create_date as updateDate,
+		temp.update_by as updateBy,
+		temp.update_date as updateDate,
+		temp.del_flag as delFlag
+	</sql>
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		temp.id,
+		temp.order_no as orderNo,
+		temp.parent_id as parentId,
+		temp.temp_name as tempName,
+		temp.code,
+		temp.icon,
+		temp.url,
+		temp.open_type as openType,
+		temp.is_public as isPublic,
+		temp.remarks,
+		temp.create_by as createBy,
+		temp.create_date as updateDate,
+		temp.update_by as updateBy,
+		temp.update_date as updateDate,
+		temp.del_flag as delFlag,
+		a.opt as optAuthor
+	</sql>
+	<select id="findListOrg" parameterType="com.haier.datamart.entity.DocUploadFileTemp"
+		resultType="com.haier.datamart.entity.DocUploadFileTemp">
+		SELECT
+		<include refid="Base_Column_ListOrg" />
+		FROM
+		doc_upload_file_temp temp
+		
+		 where temp.del_flag=0
+		<if test="parentId != null and parentId != ''">
+			and temp.parent_id =#{parentId}
+		</if>
+
+		<if test="isAdmin != 'true'">
+			<choose>
+				<when test="createBy != null and createBy != ''">
+					and (
+					temp.create_by=#{createBy}
+					<choose>
+					<when test="isPublic != null and isPublic != ''">
+						or temp.is_public =#{isPublic}
+					</when>
+					<otherwise>
+						or temp.is_public=0
+					</otherwise>
+					</choose>
+					)
+				</when>
+				<otherwise>
+					<choose>
+					<when test="isPublic != null and isPublic != ''">
+						and temp.is_public =#{isPublic}
+					</when>
+					<otherwise>
+						and temp.is_public=0
+					</otherwise>
+					</choose>
+				</otherwise>
+			</choose>
+		</if>
+		<if test="isAdmin == 'true'">
+			<if test="isPublic != null and isPublic != ''">
+				and temp.is_public =#{isPublic}
+			</if>
+		</if>
+		<if test="tempName != null and tempName != ''">
+			and temp.temp_name like concat('%',#{tempName},'%')
+		</if>
+		
+		ORDER BY temp.order_no
+	</select>
+	
+	<select id="findList" parameterType="com.haier.datamart.entity.DocUploadFileTemp"
+		resultType="com.haier.datamart.entity.DocUploadFileTemp">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		doc_upload_file_temp temp
+		<choose>
+			<when test="createBy != null and createBy != '' and isAdmin != 'true'">
+				INNER JOIN (
+				(
+					SELECT
+						te.*
+					FROM
+						sys_user u
+					INNER JOIN sys_user_group ug ON u.id = ug.user_id
+					INNER JOIN sys_group g ON ug.group_id = g.id
+					INNER JOIN sys_group_role gr ON gr.group_id = g.id
+					LEFT JOIN sys_role r ON r.id = gr.role_id
+					INNER JOIN sys_role_file_temp te ON te.role_id = r.id
+					WHERE
+						u.login_name = #{createBy}
+				))a
+				on a.temp_id=temp.id
+			</when>
+			<when  test="isAdmin == 'true'">
+				left join (select 'all' as opt from dual)a on 1=1
+			</when>
+		</choose>
+		 where temp.del_flag=0
+		<if test="parentId != null and parentId != ''">
+			and temp.parent_id =#{parentId}
+		</if>
+
+		<if test="isAdmin != 'true'">
+			<choose>
+				<when test="createBy != null and createBy != ''">
+					and (
+					temp.create_by=#{createBy}
+					<choose>
+					<when test="isPublic != null and isPublic != ''">
+						or temp.is_public =#{isPublic}
+					</when>
+					<otherwise>
+						or temp.is_public=0
+					</otherwise>
+					</choose>
+					)
+				</when>
+				<otherwise>
+					<choose>
+					<when test="isPublic != null and isPublic != ''">
+						and temp.is_public =#{isPublic}
+					</when>
+					<otherwise>
+						and temp.is_public=0
+					</otherwise>
+					</choose>
+				</otherwise>
+			</choose>
+		</if>
+		<if test="isAdmin == 'true'">
+			<if test="isPublic != null and isPublic != ''">
+				and temp.is_public =#{isPublic}
+			</if>
+		</if>
+		<if test="tempName != null and tempName != ''">
+			and temp.temp_name like concat('%',#{tempName},'%')
+		</if>
+		
+		ORDER BY temp.order_no
+	</select>
+
+</mapper>

@@ -1,0 +1,489 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.EnteringTableSettingDetailMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.haier.datamart.entity.EnteringTableSettingDetail">
+		<result column="id" property="id" />
+		<result column="entering_setting_id" property="enteringSettingId" />
+		<result column="col_name" property="colName" />
+		<result column="col_type" property="colType" />
+		<result column="col_length" property="colLength" />
+		<result column="col_xsd" property="colXsd" />
+		<result column="col_pk" property="colPk" />
+
+		<result column="data_space" property="dataSpace" />
+		<result column="data_type" property="dataType" />
+		<result column="data_key" property="dataKey" />
+		<result column="is_export" property="isExport" />
+
+		<result column="comments" property="comments" />
+		<result column="order_no" property="orderNo" />
+		<result column="excel_col_name" property="excelColName" />
+		<result column="create_date" property="createDate" />
+		<result column="create_by" property="createBy" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+		<result column="excel_gs" property="excelGs" />
+		<result column="index_id" property="IndexId" />
+		<result column="functions" property="functions" />
+		<result column="is_index" property="isIndex" />
+		<result column="is_lock" property="isLock" />
+		<result column="column_style" property="columnStyle" />
+		<result column="default_value" property="defaultValue" />
+		<result column="col_accuracy" property="colAccuracy" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		entering_table_setting_detail.id,
+		entering_table_setting_detail.default_value as defaultValue,
+		entering_table_setting_detail.col_accuracy as colAccuracy,
+		entering_table_setting_detail.index_id As IndexId,
+		entering_table_setting_detail.excel_gs As excelGs,
+		entering_table_setting_detail.entering_setting_id AS enteringSettingId,
+		entering_table_setting_detail.col_name AS colName,
+		entering_table_setting_detail.col_type AS colType,
+		entering_table_setting_detail.col_length AS colLength,
+		entering_table_setting_detail.col_xsd AS colXsd,
+		entering_table_setting_detail.col_pk AS colPk,
+		entering_table_setting_detail.is_lock as isLock,
+		entering_table_setting_detail.is_export as isExport,
+		entering_table_setting_detail.column_style as columnStyle,
+		entering_table_setting_detail.comments, order_no AS orderNo,
+		entering_table_setting_detail.excel_col_name AS excelColName,
+		entering_table_setting_detail.create_date AS createDate,
+		entering_table_setting_detail.create_by AS createBy,
+		entering_table_setting_detail.update_by AS updateBy,
+		entering_table_setting_detail.update_date AS updateDate,
+		entering_table_setting_detail.remarks,
+		entering_table_setting_detail.functions,
+		entering_table_setting_detail.is_index AS isIndex,
+		entering_table_setting_detail.del_flag AS delFlag,
+		entering_table_setting_detail.data_space as dataSpace,
+		entering_table_setting_detail.data_type as dataType,
+		entering_table_setting_detail.data_key as dataKey,
+		entering_table_setting_detail.is_lock as isLock,
+		entering_table_setting_detail.column_style as columnStyle
+	</sql>
+	<select id="getBySettingId" parameterType="java.lang.String"
+		resultType="com.haier.datamart.entity.EnteringTableSettingDetail">
+		select
+		<include refid="Base_Column_List" />,search_index.name as indexName
+		from entering_table_setting_detail 
+		left join search_index on entering_table_setting_detail.index_id=search_index.id
+		where
+		entering_table_setting_detail.entering_setting_id=#{enteringSettingId} and entering_table_setting_detail.del_flag=0 order by
+		entering_table_setting_detail.order_no
+	</select>
+
+	<!-- @param defineOrder @return 当前列真实顺序 Integer getRelOrder(@Param("defineOrder")Integer 
+		defineOrder, @Param("entrySettingId")String entrySettingId) -->
+	<select id="getRelOrder" resultType="java.lang.Integer">
+		SELECT
+		count(id)
+		FROM
+		entering_table_setting_detail
+		WHERE
+		order_no&lt;#{defineOrder}
+		AND
+		del_flag=0
+		AND
+		entering_setting_id=#{entrySettingId}
+	</select>
+	<!-- 根据id获取order_no @param idParameter @return order_no Integer getOrderById(@Param("idParameter")String 
+		idParameter, @Param("entrySettingId")String entrySettingId) -->
+	<select id="getOrderById" resultType="java.lang.Integer">
+		SELECT
+		order_no
+		FROM
+		entering_table_setting_detail
+		WHERE
+		id=#{idParameter}
+		AND
+		entering_setting_id=#{entrySettingId}
+		AND
+		del_flag=0
+	</select>
+	<insert id="insertBatch" parameterType="java.util.List">
+		INSERT INTO entering_table_setting_detail(
+		id,
+		index_id,
+		entering_setting_id,
+		col_name,
+		col_type,
+		col_length,
+		col_xsd,
+		col_pk,
+		comments,
+		order_no,
+		excel_col_name,
+		create_date,
+		create_by,
+		update_by,
+		update_date,
+		remarks,
+		excel_gs,
+		<if test="functions!=null">
+			functions,
+		</if>
+		<if test="isIndex!=null and isIndex!='' ">
+			is_index,
+		</if>
+		<if test="dataType!=null and dataType!=''">
+			data_type,
+		</if>
+		<if test="dataSpace!=null and dataSpace!=''">
+			data_space,
+		</if>
+		<if test="dataKey!=null and dataKey!=''">
+			data_key,
+		</if>
+		<if test="isLock!=null and isLock!=''">
+			is_lock,
+		</if>
+		<if test="isExport!=null and isExport!=''">
+			is_export,
+		</if>
+		<if test="columnStyle!=null and columnStyle!=''">
+			column_style,
+		</if>
+		<if test="defaultValue!=null and defaultValue!=''">
+			default_value,
+		</if>
+		<if test="colAccuracy!=null and colAccuracy!=''">
+			col_accuracy,
+		</if>
+		del_flag
+		) VALUES
+		<foreach collection="etDetail" item="detail" index="index"
+			separator=",">
+			(
+			#{detail.id},
+			#{detail.indexId},
+			#{detail.enteringSettingId},
+			#{detail.colName},
+			#{detail.colType},
+			#{detail.colLength},
+			#{detail.colXsd},
+			#{detail.colPk},
+			#{detail.comments},
+			#{detail.orderNo},
+			#{detail.excelColName},
+			#{detail.createBy},
+			#{detail.createDate},
+			#{detail.updateBy},
+			#{detail.updateDate},
+			#{detail.remarks},
+			#{detail.excelGs},
+			<if test="functions!=null">
+				#{functions},
+			</if>
+			<if test="isIndex!=null and isIndex!='' ">
+				#{isIndex},
+			</if>
+			<if test="dataType!=null and dataType!=''">
+				#{dataType},
+			</if>
+			<if test="dataSpace!=null and dataSpace!=''">
+				#{dataSpace},
+			</if>
+			<if test="dataKey!=null and dataKey!=''">
+				#{dataKey},
+			</if>
+			<if test="isLock!=null and isLock!=''">
+				#{isLock},
+			</if>
+			<if test="isExport!=null and isExport!=''">
+				#{isExport},
+			</if>
+			<if test="columnStyle!=null and columnStyle!=''">
+				#{columnStyle},
+			</if>
+			<if test="defaultValue!=null and defaultValue!=''">
+				#{defaultValue},
+			</if>
+			<if test="colAccuracy!=null and colAccuracy!=''">
+				#{colAccuracy},
+			</if>
+			0
+			)
+
+		</foreach>
+	</insert>
+	<update id="deleteBySettingId" parameterType="String">
+		update
+		entering_table_setting_detail set del_flag=1 where
+		entering_setting_id=#{enteringSettingId}
+	</update>
+	<update id="updateById" parameterType="com.haier.datamart.entity.EnteringTableSettingInfo">
+		update entering_table_setting_detail
+		<set>
+			<if test="id != null">
+				id=#{id},
+			</if>
+			<if test="indexId != null">
+				index_id=#{indexId},
+			</if>
+			<if test="enteringSettingId != null">
+				entering_setting_id=#{enteringSettingId},
+			</if>
+			<if test="colName != null">
+				col_name=#{colName},
+			</if>
+			<if test="colType != null">
+				col_type=#{colType},
+			</if>
+			<if test="colLength != null">
+				col_length=#{colLength},
+			</if>
+			<if test="colXsd != null">
+				col_xsd=#{colXsd},
+			</if>
+			<if test="colPk != null">
+				col_pk=#{colPk},
+			</if>
+			<if test="comments != null">
+				comments=#{comments},
+			</if>
+			<if test="orderNo != null">
+				order_no=#{orderNo},
+			</if>
+			<if test="excelColName != null">
+				excel_col_name=#{excelColName},
+			</if>
+
+			<if test="createDate != null">
+				create_date=#{createDate},
+			</if>
+			<if test="createBy != null">
+				create_by=#{createBy},
+			</if>
+			<if test="updateBy != null">
+				update_by=#{updateBy},
+			</if>
+			<if test="updateDate != null">
+				update_date=#{updateDate},
+			</if>
+
+			<if test="remarks != null">
+				remarks=#{remarks},
+			</if>
+			<if test="excelGs != null">
+				excel_gs=#{excelGs},
+			</if>
+			<if test="functions!=null">
+				functions=#{functions},
+			</if>
+			<if test="isIndex!=null and isIndex!='' ">
+				is_index=#{isIndex},
+			</if>
+			<if test="isLock!=null">
+				is_lock=#{isLock},
+			</if>
+			<if test="isExport!=null and isExport!=''">
+				is_export=#{isExport},
+			</if>
+			<if test="columnStyle!=null and columnStyle!='' ">
+				column_style=#{columnStyle},
+			</if>
+
+			<if test="dataSpace!=null and dataSpace!='' ">
+				data_space=#{dataSpace},
+			</if>
+			<if test="dataType!=null and dataType!=''">
+				data_type=#{dataType},
+			</if>
+			<if test="dataKey!=null and dataKey!='' ">
+				data_key=#{dataKey},
+			</if>
+			<if test="defaultValue!=null and defaultValue!=''">
+				default_value=#{defaultValue},
+			</if>
+			<if test="colAccuracy!=null and colAccuracy!=''">
+				col_accuracy=#{colAccuracy},
+			</if>
+		</set>
+		where id=#{id}
+	</update>
+
+
+	<insert id="insert">
+		insert into entering_table_setting_detail
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="indexId != null">
+				index_id,
+			</if>
+			<if test="enteringSettingId != null">
+				entering_setting_id,
+			</if>
+			<if test="colName != null">
+				col_name,
+			</if>
+			<if test="colType != null">
+				col_type,
+			</if>
+			<if test="colLength != null">
+				col_length,
+			</if>
+			<if test="colXsd != null">
+				col_xsd,
+			</if>
+			<if test="colPk != null">
+				col_pk,
+			</if>
+			<if test="comments != null">
+				comments,
+			</if>
+			<if test="orderNo != null">
+				order_no,
+			</if>
+			<if test="excelColName != null">
+				excel_col_name,
+			</if>
+			<if test="createBy != null">
+				create_by,
+			</if>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+			<if test="excelGs != null">
+				excel_gs,
+			</if>
+			<if test="functions!=null">
+				functions,
+			</if>
+			<if test="isIndex!=null">
+				is_index,
+			</if>
+			<if test="dataType!=null and dataType!=''">
+			data_type,
+		</if>
+		<if test="dataSpace!=null and dataSpace!=''">
+			data_space,
+		</if>
+		<if test="dataKey!=null and dataKey!=''">
+			data_key,
+		</if>
+		<if test="isLock!=null and isLock!=''">
+			is_lock,
+		</if>
+		<if test="isExport!=null and isExport!=''">
+			is_export,
+		</if>
+		<if test="columnStyle!=null and columnStyle!=''">
+			column_style,
+		</if>
+		<if test="defaultValue!=null and defaultValue!=''">
+			default_value,
+		</if>
+		<if test="colAccuracy!=null and colAccuracy!=''">
+			col_accuracy,
+		</if>
+		del_flag
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="indexId != null">
+				#{indexId},
+			</if>
+			<if test="enteringSettingId != null">
+				#{enteringSettingId},
+			</if>
+			<if test="colName != null">
+				#{colName},
+			</if>
+			<if test="colType != null">
+				#{colType},
+			</if>
+			<if test="colLength != null">
+				#{colLength},
+			</if>
+			<if test="colXsd != null">
+				#{colXsd},
+			</if>
+			<if test="colPk != null">
+				#{colPk},
+			</if>
+			<if test="comments != null">
+				#{comments},
+			</if>
+			<if test="orderNo != null">
+				#{orderNo},
+			</if>
+			<if test="excelColName != null">
+				#{excelColName},
+			</if>
+			<if test="createBy != null">
+				#{createBy},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+
+			<if test="updateBy != null">
+				#{updateBy},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate},
+			</if>
+			<if test="remarks != null">
+				#{remarks},
+			</if>
+
+			<if test="excelGs != null">
+				#{excelGs},
+			</if>
+			<if test="functions!=null">
+				#{functions},
+			</if>
+			<if test="isIndex!=null">
+				#{isIndex},
+			</if>
+			<if test="dataType!=null and dataType!=''">
+				#{dataType},
+			</if>
+			<if test="dataSpace!=null and dataSpace!=''">
+				#{dataSpace},
+			</if>
+			<if test="dataKey!=null and dataKey!=''">
+				#{dataKey},
+			</if>
+			<if test="isLock!=null and isLock!=''">
+				#{isLock},
+			</if>
+			<if test="isExport!=null and isExport!=''">
+				#{isExport},
+			</if>
+			<if test="columnStyle!=null and columnStyle!=''">
+				#{columnStyle},
+			</if>
+			<if test="defaultValue!=null and defaultValue!=''">
+				#{defaultValue},
+			</if>
+			<if test="colAccuracy!=null and colAccuracy!=''">
+				#{colAccuracy},
+			</if>
+			0
+		</trim>
+
+
+	</insert>
+</mapper>

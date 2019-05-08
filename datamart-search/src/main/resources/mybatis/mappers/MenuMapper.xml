@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MenuMapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.haier.datamart.entity.Menu">
+		<result column="id" property="id" />
+		<result column="parent_id" property="parentId" />
+		<result column="parent_ids" property="parentIds" />
+		<result column="name" property="name" />
+		<result column="sort" property="sort" />
+		<result column="href" property="href" />
+		<result column="target" property="target" />
+		<result column="icon" property="icon" />
+		<result column="is_show" property="isShow" />
+		<result column="permission" property="permission" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+		<result column="menu_type" property="menuType" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, parent_id AS parentId, parent_ids AS parentIds, name,
+		sort, href,
+		target, icon, is_show AS isShow, permission, create_by AS
+		createBy,
+		create_date AS createDate, update_by AS updateBy, update_date
+		AS
+		updateDate, remarks, del_flag AS delFlag
+	</sql>
+	<select id="getMenuByRole" parameterType="String"
+		resultType="com.haier.datamart.entity.Menu">
+		SELECT m.* from sys_menu m
+		INNER JOIN sys_role_menu rm on
+		m.id=rm.menu_id
+		INNER JOIN sys_role r on r.id=rm.role_id
+		where
+		r.id=#{id}
+
+	</select>
+	<select id="getMenuByUserName" parameterType="String"
+		resultType="com.haier.datamart.entity.Menu">
+		select distinct
+		m.*
+		from
+		sys_menu m
+		left join sys_role_menu rm on rm.menu_id = m.id
+		left join sys_role r
+		on r.id = rm.role_id
+		left join sys_group_role sgr on r.id = sgr.role_id
+		left join sys_group sg on sg.id = sgr.group_id
+		left join sys_user_group
+		sug on sug.group_id = sg.id
+		left join sys_user u on u.id = sug.user_id
+		where
+		 u.del_flag = '0'
+		and m.del_flag = '0'
+		and m.is_show = '0'
+		and m.del_flag= '0'
+		and r.del_flag = '0'
+		and sg.del_flag = '0'
+		<if test="uid !=null and uid != ''">
+		  and u.id =#{uid}
+		</if>
+		<if test="parentId !=null and parentId != ''">
+		  and m.parent_id = #{parentId}
+		</if>
+		<if test="menuType !=null and menuType != ''">
+		  and m.menu_type = #{menuType}
+		</if>
+		order by
+		m.sort
+	</select>
+</mapper>

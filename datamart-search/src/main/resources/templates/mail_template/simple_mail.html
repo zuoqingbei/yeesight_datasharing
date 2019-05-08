@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <title>发送邮件功能</title>
+    <style type="text/css">
+        table.imagetable {
+            font-family: verdana, arial, sans-serif;
+            font-size: 12px;
+            color: #333333;
+            border-width: 1px;
+            border-color: #000000;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        table.imagetable caption {
+            background: #0F6099;
+            font-size: 14px;
+            font-family: serif;
+            font-weight: 800;
+            text-align: left;
+            color: #FFFFFF;
+            border-color: #000000;
+            border-width: 1px;
+            border-style: solid;
+            border-bottom: 0 solid #000000;
+            padding: 4px;
+        }
+
+        table.imagetable th {
+            background: #0F6099;
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #000000;
+            color: #FFFFFF;
+        }
+
+        table.imagetable td {
+            border-width: 1px;
+            padding: 8px;
+            border-style: solid;
+            border-color: #000000;
+        }
+    </style>
+</head>
+<body>
+<strong>Dear All:</strong>
+<br /><br />
+<div th:utext="${'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'+mailEntry.hearder}">这里是header</div>
+<br /><br />
+    <div th:each="table : ${mailEntry.tableRenderBeanList}">
+        <table class="imagetable">
+            <caption th:utext="${table.title}"></caption>
+            <thead>
+            <tr>
+                <td th:each="tdheader : ${table.tableHeader}" th:utext="${tdheader}">
+                </td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="trcontent : ${table.tableContent}">
+                <div th:each="tdcontent : ${trcontent}" th:utext="${tdcontent}">
+                </div>
+            </tr>
+            </tbody>
+        </table>
+        <br />
+        <br />
+    </div>
+
+</body>
+</html>

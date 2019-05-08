@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.HacResourceDtoMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.HacResourceDto">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="hac_reource" property="hacReource" />
+        <result column="hac_dataprivilege" property="hacDataprivilege" />
+        <result column="user_detail" property="userDetail" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, hac_reource AS hacReource,hac_dataprivilege as hacDataprivilege ,user_detail as userDetail,create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+    
+		<!-- 新增-->	
+	<insert id="insertHac" parameterType="com.haier.datamart.entity.HacResourceDto">
+		insert into hac_resource_dto
+	<trim prefix="(" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        id,
+	      </if>
+	      <if test="name != null" >
+	        name,
+	      </if>
+	      <if test="hacReource != null" >
+	        hac_reource,
+	      </if>
+	      <if test="hacDataprivilege != null" >
+	        hac_dataprivilege,
+	      </if>
+	      <if test="userDetail != null" >
+	        user_detail,
+	      </if>
+	      <if test="createBy != null" >
+	        create_by,
+	      </if>
+	      <if test="createDate != null" >
+	        create_date,
+	      </if>
+	      <if test="updateBy != null" >
+	        update_by,
+	      </if>
+	      <if test="updateDate != null" >
+	        update_date,
+	      </if>
+	      <if test="remarks != null" >
+	        remarks,
+	      </if>
+	     </trim>
+	    <trim prefix="values (" suffix=")" suffixOverrides="," >
+	      <if test="id != null" >
+	        #{id},
+	      </if>
+	      <if test="name != null" >
+	         #{name},
+	      </if>
+	      <if test="hacReource != null" >
+	         #{hacReource},
+	      </if>
+	      <if test="hacDataprivilege != null" >
+	         #{hacDataprivilege},
+	      </if>
+	      <if test="userDetail != null" >
+	         #{userDetail},
+	      </if>
+	      <if test="createBy != null" >
+	        #{createBy},
+	      </if>
+	      <if test="createDate != null" >
+	         #{createDate},
+	      </if>
+	      <if test="updateBy != null" >
+	        #{updateBy},
+	      </if>
+	      <if test="updateDate != null" >
+	         #{updateDate},
+	      </if>
+	      <if test="remarks != null" >
+	         #{remarks},
+	      </if>
+	</trim>
+	</insert>
+	<update id="updateHac" parameterType="com.haier.datamart.entity.HacResourceDto">
+		update hac_resource_dto
+			<set>
+			<if test="id != null" >
+				id=#{id},
+			</if>
+			<if test="name != null" >
+				name=#{name},
+			</if>
+			<if test="hacReource != null" >
+				hac_reource=#{hacReource},
+			</if>
+			<if test="hacDataprivilege != null" >
+				hac_dataprivilege=#{hacDataprivilege},
+			</if>
+			<if test="userDetail != null" >
+				user_detail=#{userDetail},
+			</if>
+			<if test="createDate != null" >
+				create_date=#{createDate},
+			</if>
+		    <if test="createBy != null" >
+				create_by=#{createBy},
+			</if>
+			<if test="updateBy != null" >
+				update_by=#{updateBy},
+			</if>
+			<if test="updateDate != null" >
+				update_date=#{updateDate},
+			</if>
+			<if test="remarks != null" >
+				remarks=#{remarks},
+			</if>
+			</set>
+				  where name=#{name} and del_flag=0
+	
+	</update>
+	<select id="getByName" parameterType="com.haier.datamart.entity.HacResourceDto" resultType="com.haier.datamart.entity.HacResourceDto">
+		select <include refid="Base_Column_List"></include> from hac_resource_dto where name=#{name} and del_flag=0
+	</select>
+</mapper>

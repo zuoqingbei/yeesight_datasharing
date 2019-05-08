@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MonitorEtlEmailContentQueryInfoMapper">
+<!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="com.haier.datamart.entity.MonitorEtlEmailContentQueryInfo">
+      <id column="id" property="id" />
+      <result column="mail_id" property="mailId" />
+       <result column="template_id" property="templateId" />
+       <result column="datasource_id" property="datasourceId" />
+      <result column="sql_no" property="sqlNo" />
+      <result column="sql_string" property="sqlString" />
+      <result column="data_type_marking" property="dataTypeMarking" />
+      <result column="create_by" property="createBy" />
+      <result column="create_date" property="createDate" />
+      <result column="update_by" property="updateBy" />
+      <result column="update_date" property="updateDate" />
+      <result column="remarks" property="remarks" />
+      <result column="del_flag" property="delFlag" />
+   </resultMap>
+
+   <!-- 通用查询结果列 -->
+   <sql id="Base_Column_List">
+      mail_id,
+      datasource_id,
+      sql_no,
+      sql_string,
+      data_type_marking,
+      create_by,
+      create_date,
+      update_by,
+      update_date,
+      remarks,
+      del_flag
+  </sql>
+  <resultMap extends="BaseResultMap" id="ResultMapWithBLOBs" type="com.haier.datamart.entity.MonitorEtlEmailContentQueryInfo">
+    <result column="sql_string" jdbcType="LONGVARCHAR" property="sqlString" />
+  </resultMap>
+  <sql id="Blob_Column_List">
+    sql_string
+  </sql>
+  <!-- 获取数据列表 -->
+  <select id="selectListCustom" parameterType="com.haier.datamart.entity.MonitorEtlEmailContentQueryInfo" resultMap="ResultMapWithBLOBs">
+    select 
+    <include refid="Base_Column_List" />
+    ,
+    <include refid="Blob_Column_List" />
+    from monitor_etl_email_content_query_info
+    <where>
+		<if test="id != null">
+			id = #{id,jdbcType=VARCHAR}
+		</if>
+		<if test="mailId != null">
+			and mail_id = #{mailId,jdbcType=VARCHAR}
+		</if>
+		<if test="createBy != null">
+			and #{createBy,jdbcType=VARCHAR}
+		</if>
+			and del_flag = '0'
+	</where>
+    order by update_date desc, sql_no asc
+  </select>
+  
+  <!-- 添加数据 -->
+  <insert id="insertSelective" parameterType="com.haier.datamart.entity.MonitorEtlEmailContentQueryInfo">
+    insert into monitor_etl_email_content_query_info
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="mailId != null">
+        mail_id,
+      </if>
+      <if test="datasourceId != null">
+        datasource_id,
+      </if>
+      <if test="sqlNo != null">
+        sql_no,
+      </if>
+      <if test="createBy != null">
+        create_by,
+      </if>
+      <if test="createDate != null">
+        create_date,
+      </if>
+      <if test="updateBy != null">
+        update_by,
+      </if>
+      <if test="updateDate != null">
+        update_date,
+      </if>
+      <if test="remarks != null">
+        remarks,
+      </if>
+      <if test="delFlag != null">
+        del_flag,
+      </if>
+      <if test="sqlString != null">
+        sql_string,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="mailId != null">
+        #{mailId,jdbcType=VARCHAR},
+      </if>
+      <if test="datasourceId != null">
+        #{datasourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="sqlNo != null">
+        #{sqlNo,jdbcType=INTEGER},
+      </if>
+      <if test="createBy != null">
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createDate != null">
+        #{createDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null">
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remarks != null">
+        #{remarks,jdbcType=VARCHAR},
+      </if>
+      <if test="delFlag != null">
+        #{delFlag,jdbcType=CHAR},
+      </if>
+      <if test="sqlString != null">
+        #{sqlString,jdbcType=LONGVARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  <!-- 根据邮箱Id删除数据 -->
+  <update id="deleteByMailId" parameterType="com.haier.datamart.entity.MonitorEtlEmailContentQueryInfo">
+    update monitor_etl_email_content_query_info
+    <set>
+      <if test="updateBy != null">
+        update_by = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateDate != null">
+        update_date = #{updateDate,jdbcType=TIMESTAMP},
+      </if>
+        del_flag = '1'
+    </set>
+    where mail_id = #{mailId,jdbcType=VARCHAR} and del_flag = '0'
+  </update>
+  
+</mapper>

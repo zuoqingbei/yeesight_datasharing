@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.DocUploadFileMapper">
+
+   <!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="com.haier.datamart.entity.DocUploadFile">
+      <id column="id" property="id" />
+      <result column="temp_id" property="tempId" />
+      <result column="originalname" property="originalname" />
+      <result column="path" property="path" />
+      <result column="ext" property="ext" />
+      <result column="upload_name" property="uploadName" />
+      <result column="size" property="size" />
+      <result column="html_name" property="htmlName" />
+      <result column="view_url" property="viewUrl" />
+      <result column="remarks" property="remarks" />
+      <result column="create_by" property="createBy" />
+      <result column="create_date" property="createDate" />
+      <result column="update_by" property="updateBy" />
+      <result column="update_date" property="updateDate" />
+      <result column="del_flag" property="delFlag" />
+      <result column="code" property="code" />
+   </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      a.id,
+      a.temp_id AS tempId,
+      a.originalname AS originalname,
+      a.path,
+      a.ext,
+      a.upload_name AS uploadName,
+      a.size,
+      a.html_name AS htmlName,
+      a.view_url AS viewUrl,
+      a.remarks,
+      a.create_by AS createBy,
+      a.create_date AS createDate,
+      a.update_by AS updateBy,
+      a.update_date AS updateDate,
+      a.del_flag AS delFlag,
+      a.code,
+      b.opt AS optAuthor
+	</sql>
+	
+	<select id="getFilesByMapper" parameterType="com.haier.datamart.entity.DocUploadFile"
+		resultType="com.haier.datamart.entity.DocUploadFile">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		doc_upload_file a
+		<choose>
+			<when test="isAdmin != 'true'">
+				inner join(
+				SELECT
+					te.*
+				FROM
+					sys_user u
+				INNER JOIN sys_user_group ug ON u.id = ug.user_id
+				INNER JOIN sys_group g ON ug.group_id = g.id
+				INNER JOIN sys_group_role gr ON gr.group_id = g.id
+				LEFT JOIN sys_role r ON r.id = gr.role_id
+				INNER JOIN sys_role_file_temp te ON te.role_id = r.id
+				WHERE
+					u.login_name = #{createBy}
+			)b on a.id=b.temp_id
+			</when>
+			<otherwise>
+			left join (select 'all' as opt from dual)b on 1=1
+			</otherwise>
+		</choose>
+		
+		where a.del_flag=0
+		<if test="tempId != null and tempId != ''">
+			and a.temp_id=#{tempId}
+		</if>
+		ORDER BY a.create_date
+	</select>
+	
+	<select id="getFilesByMapperNew" parameterType="com.haier.datamart.entity.DocUploadFile"
+		resultType="com.haier.datamart.entity.DocUploadFile">
+		SELECT
+		<include refid="Base_Column_List" />
+		FROM
+		doc_upload_file a
+		<choose>
+			<when test="isAdmin != 'true'">
+				inner join(
+				SELECT
+					te.*
+				FROM
+					sys_user u
+				INNER JOIN sys_user_group ug ON u.id = ug.user_id
+				INNER JOIN sys_group g ON ug.group_id = g.id
+				INNER JOIN sys_group_role gr ON gr.group_id = g.id
+				LEFT JOIN sys_role r ON r.id = gr.role_id
+				INNER JOIN sys_role_file_temp te ON te.role_id = r.id
+				WHERE
+					u.login_name = #{createBy}
+			)b on a.id=b.temp_id
+			INNER JOIN doc_upload_file_temp duft ON a.temp_id = duft.id 
+			</when>
+			<otherwise>
+			left join (select 'all' as opt from dual)b on 1=1
+			</otherwise>
+		</choose>
+		
+		where a.del_flag=0
+		<if test="tempId != null and tempId != ''">
+			and a.temp_id=#{tempId}
+		</if>
+		ORDER BY a.create_date
+	</select>
+</mapper>

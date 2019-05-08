@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MailReceiverManagerMapper">
+
+   <!-- 通用查询映射结果 -->
+   <resultMap id="BaseResultMap" type="com.haier.datamart.entity.MailReceiverManager">
+      <id column="order_no" property="orderNo" />
+      <result column="id" property="id" />
+      <result column="module_id" property="moduleId" />
+      <result column="plat_id" property="platId" />
+      <result column="name" property="name" />
+      <result column="tel" property="tel" />
+      <result column="email" property="email" />
+      <result column="numbers" property="numbers" />
+      <result column="dept" property="dept" />
+      <result column="is_success" property="isSuccess" />
+      <result column="error_col" property="errorCol" />
+      <result column="error_msg" property="errorMsg" />
+      <result column="create_date" property="createDate" />
+      <result column="create_by" property="createBy" />
+      <result column="update_date" property="updateDate" />
+      <result column="update_by" property="updateBy" />
+      <result column="remarks" property="remarks" />
+      <result column="del_flag" property="delFlag" />
+   </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+      id,
+      module_id,
+      plat_id,
+      name,
+      tel,
+      email,
+      numbers,
+      dept,
+      is_success,
+      error_col,
+      error_msg,
+      create_date,
+      create_by,
+      update_date,
+      update_by,
+      remarks,
+      del_flag,
+</sql>
+
+</mapper>

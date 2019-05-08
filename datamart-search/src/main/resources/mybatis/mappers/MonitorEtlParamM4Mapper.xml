@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.MonitorEtlParamM4Mapper">
+
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap" type="com.haier.datamart.entity.MonitorEtlParamM4">
+		<id column="module_id" property="moduleId" />
+		<result column="index_id" property="indexId" />
+		<result column="index_name" property="indexName" />
+		<result column="http_url" property="httpUrl" />
+		<result column="http_paramname" property="httpParamname" />
+		<result column="http_paramvalue" property="httpParamvalue" />
+		<result column="json_name" property="jsonName" />
+		<result column="json_path" property="jsonPath" />
+		<result column="http_url1" property="httpUrl1" />
+		<result column="http_paramname1" property="httpParamname1" />
+		<result column="http_paramvalue1" property="httpParamvalue1" />
+		<result column="json_name1" property="jsonName1" />
+		<result column="json_path1" property="jsonPath1" />
+		<result column="sortmeta" property="sortmeta" />
+		<result column="sortmeta1" property="sortmeta1" />
+		<result column="mergejoinmeta" property="mergejoinmeta" />
+		<result column="mergejoinmeta1" property="mergejoinmeta1" />
+		<result column="filter_leftvalue" property="filterLeftvalue" />
+		<result column="filter_function" property="filterFunction" />
+		<result column="filter_rightvalue" property="filterRightvalue" />
+		<result column="tableoutput_database" property="tableoutputDatabase" />
+		<result column="tableoutput_table" property="tableoutputTable" />
+		<result column="tableoutput_column" property="tableoutputColumn" />
+		<result column="streamoutput_column" property="streamoutputColumn" />
+		<result column="type_id" property="typeId" />
+		<result column="module_desc" property="moduleDesc" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+	</resultMap>
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		module_id AS moduleId, index_id AS indexId, index_name AS indexName, http_url
+		AS httpUrl, http_paramname AS httpParamname, http_paramvalue AS
+		httpParamvalue, json_name AS jsonName, json_path AS jsonPath,
+		http_url1 AS httpUrl1, http_paramname1 AS httpParamname1,
+		http_paramvalue1 AS httpParamvalue1, json_name1 AS jsonName1,
+		json_path1 AS jsonPath1, sortmeta, sortmeta1, mergejoinmeta,
+		mergejoinmeta1, filter_leftvalue AS filterLeftvalue, filter_function
+		AS filterFunction, filter_rightvalue AS filterRightvalue,
+		tableoutput_database AS tableoutputDatabase, tableoutput_table AS
+		tableoutputTable, tableoutput_column AS tableoutputColumn,
+		streamoutput_column AS streamoutputColumn, type_id AS typeId,
+		module_desc AS moduleDesc, create_by AS createBy, create_date AS
+		createDate, update_by AS updateBy, update_date AS updateDate, remarks,
+		del_flag AS delFlag
+	</sql>
+
+	<!-- /** * 根据用户id查找对应的数据 * @param uid * @return List<MonitorEtlParamM4> 
+		getListByUserId(String uid); */ -->
+	<select id="getListByUserId" resultType="com.haier.datamart.entity.MonitorEtlParamM4">
+		select
+			<include refid="Base_Column_List"></include>
+		from
+			monitor_etl_param_m4
+		where
+			<!-- create_by=#{uid}
+		and -->
+			del_flag=0
+	</select>
+	<!-- /** * @param moudelId * @return com.haier.datamart.entity.MonitorEtlParamM4 
+		*/ MonitorEtlParamM4 getModel4ById(String moduleId); -->
+	<select id="getModel4ById" resultType="com.haier.datamart.entity.MonitorEtlParamM4">
+		select
+			<include refid="Base_Column_List"></include>
+		from
+			monitor_etl_param_m4
+		where
+			module_id=#{moduleId}
+		and
+			del_flag=0
+	</select>
+	<!-- /** * 增加操作 * @param paramM4 * @return */ Integer addParam4(MonitorEtlParamM4 
+		paramM4); -->
+	<insert id="addParam4" parameterType="com.haier.datamart.entity.MonitorEtlParamM4">
+		insert into
+			monitor_etl_param_m4
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+				module_id,
+			<if test="indexId!=null">
+				index_id,
+			</if>
+			<if test="indexName!=null">
+				index_name,
+			</if>
+			<if test="httpUrl!=null">
+				http_url,
+			</if>
+			<if test="httpParamname!=null">
+				http_paramname,
+			</if>
+			<if test="httpParamvalue!=null">
+				http_paramvalue,
+			</if>
+			<if test="jsonName!=null">
+				json_name,
+			</if>
+			<if test="jsonPath!=null">
+				json_path,
+			</if>
+			<if test="httpUrl1!=null">
+				http_url1,
+			</if>
+			<if test="httpParamname1!=null">
+				http_paramname1,
+			</if>
+			<if test="httpParamvalue1!=null">
+				http_paramvalue1,
+			</if>
+			<if test="jsonName1!=null">
+				json_name1,
+			</if>
+			<if test="jsonPath1!=null">
+				json_path1,
+			</if>
+			<if test="sortmeta!=null">
+				sortmeta,
+			</if>
+			<if test="sortmeta1!=null">
+				sortmeta1,
+			</if>
+			<if test="mergejoinmeta!=null">
+				mergejoinmeta,
+			</if>
+			<if test="mergejoinmeta1!=null">
+				mergejoinmeta1,
+			</if>
+			<if test="filterLeftvalue!=null">
+				filter_leftvalue,
+			</if>
+			<if test="filterFunction!=null">
+				filter_function,
+			</if>
+			<if test="filterRightvalue!=null">
+				filter_rightvalue,
+			</if>
+			<if test="tableoutputDatabase!=null">
+				tableoutput_database,
+			</if>
+			<if test="tableoutputTable!=null">
+				tableoutput_table,
+			</if>
+			<if test="tableoutputColumn!=null">
+				tableoutput_column,
+			</if>
+			<if test="streamoutputColumn!=null">
+				streamoutput_column,
+			</if>
+			<if test="typeId!=null">
+				type_id,
+			</if>
+			<if test="moduleDesc!=null">
+				module_desc,
+			</if>
+			<if test="createBy!=null">
+				create_by,
+			</if>
+			<if test="createDate!=null">
+				create_date,
+			</if>
+			<if test="updateBy!=null">
+				update_by,
+			</if>
+			<if test="updateDate!=null">
+				update_date,
+			</if>
+			<if test="remarks!=null">
+				remarks,
+			</if>
+			<if test="delFlag!=null">
+				del_flag,
+			</if>
+		</trim>
+
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+				#{moduleId},
+			<if test="indexId!=null">
+				#{indexId},
+			</if>
+			<if test="indexName!=null">
+				#{indexName},
+			</if>
+			<if test="httpUrl!=null">
+				#{httpUrl},
+			</if>
+			<if test="httpParamname!=null">
+				#{httpParamname},
+			</if>
+			<if test="httpParamvalue!=null">
+				#{httpParamvalue},
+			</if>
+			<if test="jsonName!=null">
+				#{jsonName},
+			</if>
+			<if test="jsonPath!=null">
+				#{jsonPath},
+			</if>
+			<if test="httpUrl1!=null">
+				#{httpUrl1},
+			</if>
+			<if test="httpParamname1!=null">
+				#{httpParamname1},
+			</if>
+			<if test="httpParamvalue1!=null">
+				#{httpParamvalue1},
+			</if>
+			<if test="jsonName1!=null">
+				#{jsonName1},
+			</if>
+			<if test="jsonPath1!=null">
+				#{jsonPath1},
+			</if>
+			<if test="sortmeta!=null">
+				#{sortmeta},
+			</if>
+			<if test="sortmeta1!=null">
+				#{sortmeta1},
+			</if>
+			<if test="mergejoinmeta!=null">
+				#{mergejoinmeta},
+			</if>
+			<if test="mergejoinmeta1!=null">
+				#{mergejoinmeta1},
+			</if>
+			<if test="filterLeftvalue!=null">
+				#{filterLeftvalue},
+			</if>
+			<if test="filterFunction!=null">
+				#{filterFunction},
+			</if>
+			<if test="filterRightvalue!=null">
+				#{filterRightvalue},
+			</if>
+			<if test="tableoutputDatabase!=null">
+				#{tableoutputDatabase},
+			</if>
+			<if test="tableoutputTable!=null">
+				#{tableoutputTable},
+			</if>
+			<if test="tableoutputColumn!=null">
+				#{tableoutputColumn},
+			</if>
+			<if test="streamoutputColumn!=null">
+				#{streamoutputColumn},
+			</if>
+			<if test="typeId!=null">
+				#{typeId},
+			</if>
+			<if test="moduleDesc!=null">
+				#{moduleDesc},
+			</if>
+			<if test="createBy!=null">
+				#{createBy},
+			</if>
+			<if test="createDate!=null">
+				#{createDate},
+			</if>
+			<if test="updateBy!=null">
+				#{updateBy},
+			</if>
+			<if test="updateDate!=null">
+				#{updateDate},
+			</if>
+			<if test="remarks!=null">
+				#{remarks},
+			</if>
+			<if test="delFlag!=null">
+				#{delFlag},
+			</if>
+		</trim>
+	</insert>
+
+	<!-- ** * 根据传入参数更新数据库 * @param com.haier.datamart.entity.MonitorEtlParamM4 
+		paramM4 */ Integer updateParamM4(MonitorEtlParamM4 paramM4); -->
+	<update id="updateParamM4" parameterType="com.haier.datamart.entity.MonitorEtlParamM4">
+		update
+			monitor_etl_param_m4
+		<set>
+			<if test="indexId!=null">
+				index_id=#{indexId},
+			</if>
+			<if test="indexName!=null">
+				index_name=#{indexName},
+			</if>
+			<if test="httpUrl!=null">
+				http_url=#{httpUrl},
+			</if>
+			<if test="httpParamname!=null">
+				http_paramname=#{httpParamname},
+			</if>
+			<if test="httpParamvalue!=null">
+				http_paramvalue=#{httpParamvalue},
+			</if>
+			<if test="jsonName!=null">
+				json_name=#{jsonName},
+			</if>
+			<if test="jsonPath!=null">
+				json_path=#{jsonPath},
+			</if>
+			<if test="httpUrl1!=null">
+				http_url1=#{httpUrl1},
+			</if>
+			<if test="httpParamname1!=null">
+				http_paramname1=#{httpParamname1},
+			</if>
+			<if test="httpParamvalue1!=null">
+				http_paramvalue1=#{httpParamvalue1},
+			</if>
+			<if test="jsonName1!=null">
+				json_name1=#{jsonName1},
+			</if>
+			<if test="jsonPath1!=null">
+				json_path1=#{jsonPath1},
+			</if>
+			<if test="sortmeta!=null">
+				sortmeta=#{sortmeta},
+			</if>
+			<if test="sortmeta1!=null">
+				sortmeta1=#{sortmeta1},
+			</if>
+			<if test="mergejoinmeta!=null">
+				mergejoinmeta=#{mergejoinmeta},
+			</if>
+			<if test="mergejoinmeta1!=null">
+				mergejoinmeta1=#{mergejoinmeta1},
+			</if>
+			<if test="filterLeftvalue!=null">
+				filter_leftvalue=#{filterLeftvalue},
+			</if>
+			<if test="filterFunction!=null">
+				filter_function=#{filterFunction},
+			</if>
+			<if test="filterRightvalue!=null">
+				filter_rightvalue=#{filterRightvalue},
+			</if>
+			<if test="tableoutputDatabase!=null">
+				tableoutput_database=#{tableoutputDatabase},
+			</if>
+			<if test="tableoutputTable!=null">
+				tableoutput_table=#{tableoutputTable},
+			</if>
+			<if test="tableoutputColumn!=null">
+				tableoutput_column=#{tableoutputColumn},
+			</if>
+			<if test="streamoutputColumn!=null">
+				streamoutput_column=#{streamoutputColumn},
+			</if>
+			<if test="typeId!=null">
+				type_id=#{typeId},
+			</if>
+			<if test="moduleDesc!=null">
+				module_desc=#{moduleDesc},
+			</if>
+			<if test="createBy!=null">
+				create_by=${createBy},
+			</if>
+			<if test="createDate!=null">
+				create_date=#{createDate},
+			</if>
+			<if test="updateBy!=null">
+				update_by=#{updateBy},
+			</if>
+			<if test="remarks!=null">
+				remarks=#{remarks},
+			</if>
+			<if test="delFlag!=null">
+				del_flag=#{delFlag},
+			</if>
+				update_date=#{updateDate}
+		</set>
+		where
+		module_id=#{moduleId}
+	</update>
+	
+	<!-- /** * 删除操作 * @param moduleId */ Integer deleteModel4(String moduleId); -->
+	<update id="deleteModel4" parameterType="com.haier.datamart.entity.MonitorEtlParamM4">
+		update
+			monitor_etl_param_m4
+		set
+			del_flag=1
+		where
+			module_id=#{moduleId}
+	</update>
+</mapper>

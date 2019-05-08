@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.SearchReportsIndexMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.SearchReportsIndex">
+        <result column="id" property="id" />
+        <result column="report_id" property="reportId" />
+        <result column="index_id" property="indexId" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, report_id AS reportId, index_id AS indexId, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+<insert id="add" parameterType="com.haier.datamart.entity.SearchReportsIndex">
+		INSERT INTO search_reports_index
+	<trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="reportId != null" >
+        report_d,
+      </if>
+      <if test="indexId != null" >
+        index_id,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        <if test="id != null" >
+        #{id},
+      </if>
+      <if test="reportId != null" >
+        #{reportId},
+      </if>
+      <if test="indexId != null" >
+        #{indexId},
+      </if>
+      <if test="createBy != null" >
+        #{createBy},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if><if test="updateBy != null" >
+        #{updateBy},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+    </trim>
+	</insert>
+<select id="getidByplat" parameterType="String" resultType="com.haier.datamart.entity.SearchReportsIndex">
+SELECT DISTINCT
+			report_id as reportId
+		FROM
+			search_reports_index
+		WHERE
+			index_id IN (
+				SELECT
+					id
+				FROM
+					search_index
+				WHERE
+					plat = #{plat}
+			)
+	
+
+</select>	
+</mapper>

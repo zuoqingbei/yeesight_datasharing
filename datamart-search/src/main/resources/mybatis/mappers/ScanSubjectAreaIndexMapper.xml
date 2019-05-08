@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.ScanSubjectAreaIndexMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.ScanSubjectAreaIndex">
+        <result column="id" property="id" />
+        <result column="subject_area_id" property="subjectAreaId" />
+        <result column="index_id" property="indexId" />
+        <result column="create_date" property="createDate" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+  <resultMap id="BaseResultMap2" type="com.haier.datamart.entity.ScanSubjectAreaIndex">
+        <result column="id" property="id" />
+        <result column="area_name" property="areaName" />
+        <result column="subject_area_id" property="subjectAreaId" />
+        <result column="index_id" property="indexId" />
+        <result column="create_date" property="createDate" />
+        <result column="create_by" property="createBy" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List" >
+        id, subject_area_id AS subjectAreaId, index_id AS indexId, create_date AS createDate, create_by AS createBy, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+    <select id="getAreaIdByIndexId" parameterType="String"  resultType="com.haier.datamart.entity.ScanSubjectAreaIndex">
+    	select <include refid="Base_Column_List"/> from scan_subject_area_index where index_id=#{indexId}
+    </select>
+    <select id="getInclude" resultMap="BaseResultMap2">
+	    select a.*,b.name as area_name from scan_subject_area_index a 
+	    	LEFT JOIN scan_subject_area b on a.subject_area_id=b.id where a.del_flag=0 and b.del_flag=0
+    </select>
+<insert id="add" parameterType="com.haier.datamart.entity.ScanSubjectAreaIndex">
+insert into scan_subject_area_index
+<trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="subjectAreaId != null" >
+        subject_area_id,
+      </if>
+      <if test="indexId != null" >
+        index_id,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+        <if test="id != null" >
+        #{id},
+      </if>
+      <if test="subjectAreaId != null" >
+        #{subjectAreaId},
+      </if>
+      <if test="indexId != null" >
+        #{indexId},
+      </if>
+      <if test="createBy != null" >
+        #{createBy},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if><if test="updateBy != null" >
+        #{updateBy},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+    </trim>
+</insert>
+<update id="updateDelete" parameterType="com.haier.datamart.entity.ScanSubjectAreaIndex">
+ update scan_subject_area_index set del_flag=#{delFlag}  where index_id=#{indexId}
+</update>
+
+<select id="getIndex" parameterType="String" resultType="com.haier.datamart.entity.ScanSubjectAreaIndex">
+SELECT  i.id, i.subject_area_id AS subjectAreaId, i.index_id AS indexId, s.`name` as areaName from scan_subject_area_index i
+LEFT JOIN scan_subject_area s ON s.id=i.subject_area_id
+where i.index_id=#{id} and i.del_flag='0'
+</select>
+<update id="update" parameterType="com.haier.datamart.entity.ScanSubjectAreaIndex">
+update scan_subject_area_index set
+ id=#{id},
+ subject_area_id =#{subjectAreaId}, 
+ index_id =#{indexId}, 
+ create_date = #{createDate}, 
+ create_by =#{createBy}, 
+ update_by =#{updateBy}, 
+ update_date =#{updateDate}, 
+ remarks =#{remarks}, 
+ del_flag =#{delFlag}
+ where id=#{id}
+ 
+</update>
+<update id="updatebyid"  parameterType="com.haier.datamart.entity.ScanSubjectAreaIndex">
+update scan_subject_area_index set 
+subject_area_id=#{subjectAreaId},
+update_by=#{updateBy},
+update_date=#{updateDate}
+where index_id=#{indexId}
+</update>
+<select id="getArea" parameterType="String" resultType="com.haier.datamart.entity.ScanSubjectAreaIndex">
+select * from scan_subject_area_index where subject_area_id=#{id}
+</select>
+</mapper>

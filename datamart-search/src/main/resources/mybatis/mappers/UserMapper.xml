@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haier.datamart.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.User">
+        <result column="id" property="id" />
+        <result column="login_name" property="loginName" />
+        <result column="password" property="password" />
+        <result column="no" property="no" />
+        <result column="name" property="name" />
+        <result column="email" property="email" />
+        <result column="phone" property="phone" />
+        <result column="mobile" property="mobile" />
+        <result column="user_type" property="userType" />
+        <result column="photo" property="photo" />
+        <result column="login_ip" property="loginIp" />
+        <result column="login_date" property="loginDate" />
+        <result column="login_flag" property="loginFlag" />
+        <result column="create_by" property="createBy" />
+        <result column="create_date" property="createDate" />
+        <result column="update_by" property="updateBy" />
+        <result column="update_date" property="updateDate" />
+        <result column="remarks" property="remarks" />
+        <result column="del_flag" property="delFlag" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, login_name AS loginName, password, no, name, email, phone, mobile, user_type AS userType, photo, login_ip AS loginIp, login_date AS loginDate, login_flag AS loginFlag, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+    </sql>
+<insert id="adduser" parameterType="com.haier.datamart.entity.User">
+ insert into sys_user
+<trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="loginName != null" >
+        login_name,
+      </if>
+      <if test="password != null" >
+        password,
+      </if>
+      <if test="no != null" >
+        no,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="email != null" >
+        email,
+      </if>
+      <if test="phone != null" >
+        phone,
+      </if>
+      <if test="mobile != null" >
+        mobile,
+      </if>
+      <if test="userType != null" >
+        user_type,
+      </if>
+      <if test="photo != null" >
+        photo,
+      </if>
+      <if test="loginIp != null" >
+        login_ip,
+      </if>
+      <if test="loginDate != null" >
+        login_date,
+      </if>
+      <if test="loginFlag != null" >
+        login_flag,
+      </if>
+      <if test="createBy != null" >
+        create_by,
+      </if>
+      <if test="createDate != null" >
+        create_date,
+      </if>
+      <if test="updateBy != null" >
+        update_by,
+      </if>
+      <if test="updateDate != null" >
+        update_date,
+      </if>
+      <if test="remarks != null" >
+        remarks,
+      </if>
+      <if test="delFlag != null" >
+        del_flag,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="loginName != null" >
+        #{loginName},
+      </if>
+      <if test="password != null" >
+        #{password},
+      </if>
+      <if test="no != null" >
+        #{no},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="email != null" >
+        #{email},
+      </if>
+      <if test="phone != null" >
+        #{phone},
+      </if>
+      <if test="mobile != null" >
+        #{mobile},
+      </if>
+      <if test="userType != null" >
+        #{userType},
+      </if>
+      <if test="photo != null" >
+        #{photo},
+      </if>
+      <if test="loginIp != null" >
+        #{loginIp},
+      </if>
+      <if test="loginDate != null" >
+        #{loginDate},
+      </if>
+      <if test="loginFlag != null" >
+        #{loginFlag},
+      </if>
+      <if test="createBy != null" >
+        #{createBy},
+      </if>
+      <if test="createDate != null" >
+        #{createDate},
+      </if><if test="updateBy != null" >
+        #{updateBy},
+      </if>
+      <if test="updateDate != null" >
+        #{updateDate},
+      </if>
+      <if test="remarks != null" >
+        #{remarks},
+      </if>
+      <if test="delFlag != null" >
+        #{delFlag},
+      </if>
+    </trim>
+</insert>
+<update id="updateUser" parameterType="com.haier.datamart.entity.User">
+update sys_user 
+<set>
+     <if test="id != null" >
+      id=#{id},
+      </if>
+      <if test="loginName != null" >
+      login_name=#{loginName},
+      </if>
+      <if test="password != null" >
+       password=#{password},
+      </if>
+      <if test="no != null" >
+       no=#{no},
+      </if>
+      <if test="name != null" >
+       name=#{name},
+      </if>
+      <if test="email != null" >
+       email=#{email},
+      </if>
+      <if test="phone != null" >
+       phone=#{phone},
+      </if>
+      <if test="mobile != null" >
+       mobile=#{mobile},
+      </if>
+      <if test="userType != null" >
+       user_type=#{userType},
+      </if>
+      <if test="photo != null" >
+       photo=#{photo},
+      </if>
+      <if test="loginIp != null" >
+       login_ip= #{loginIp},
+      </if>
+      <if test="loginDate != null" >
+       login_date=#{loginDate},
+      </if>
+      <if test="loginFlag != null" >
+      login_flag=#{loginFlag},
+      </if>
+      <if test="createBy != null" >
+       create_by=#{createBy},
+      </if>
+      <if test="createDate != null" >
+       create_date=#{createDate},
+      </if><if test="updateBy != null" >
+        update_by=#{updateBy},
+      </if>
+      <if test="updateDate != null" >
+       update_date=#{updateDate},
+      </if>
+      <if test="remarks != null" >
+       remarks= #{remarks},
+      </if>
+      <if test="delFlag != null" >
+        del_flag=#{delFlag}
+      </if>
+
+</set>
+	where id=#{id}
+</update>
+<delete id="deleteUser" parameterType="String">
+delete from sys_user where id=#{id}
+</delete>
+
+<select id="selectOne" parameterType="java.lang.String" resultType="com.haier.datamart.entity.User">
+ select <include refid="Base_Column_List"></include> from  sys_user where id=#{id} and del_flag=0
+</select>
+<select id="get" resultType="com.haier.datamart.entity.User" parameterType="com.haier.datamart.entity.User">
+select <include refid="Base_Column_List"></include> from sys_user
+where login_name=#{loginName}  and del_flag=0
+</select>
+<!--
+	 * 通过登录名获取userId
+	 * @param loginName
+	 * @return
+	List<User> getUserIdByLoginName(String loginName); -->
+<select id="getUserIdByLoginName" parameterType="java.lang.String"  resultType="com.haier.datamart.entity.User">
+	select 
+		id
+	from  
+		sys_user 
+	where
+		del_flag=0
+	<if test="loginName!=null">
+		and login_name  like concat('%',#{loginName},'%')
+	</if>
+		
+		
+</select>
+<!-- 校验登录名是否被占用 -->
+<select id="getByLoginName" parameterType="java.lang.String"  resultType="com.haier.datamart.entity.User">
+	select 
+		<include refid="Base_Column_List"></include>
+	from  
+		sys_user 
+	where
+		del_flag=0
+		and login_name  =#{loginName}
+		
+		
+</select>
+</mapper>
