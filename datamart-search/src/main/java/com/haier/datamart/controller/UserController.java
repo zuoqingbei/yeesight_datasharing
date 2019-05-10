@@ -1,5 +1,6 @@
 package com.haier.datamart.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,10 +12,26 @@ import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.Header;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.alibaba.fastjson.JSON;
 import com.haier.datamart.annotation.Log;
 import com.haier.datamart.base.PublicResult;
 import com.haier.datamart.base.PublicResultConstant;
@@ -115,25 +132,30 @@ public class UserController extends BaseController {
 	@GetMapping(value = "/user/login", produces = { "application/json;charset=UTF-8" })
 	@Log(description = "API接口:/user/login")
 	public Object loginRoot(HttpServletRequest request,
-			HttpServletResponse response) throws Exception {
+			HttpServletResponse response,String loginName,String password) throws Exception {
 		if (needPwd) {
 			User user = new User();
-			String loginName = request.getParameter("loginName");
-			String password = request.getParameter("password");
+			//String loginName = request.getParameter("loginName");
+			//String  password= request.getParameter("password");
+			
+			//http://192.168.25.55:9999/loginAndRegister/login?email=zuo%40qq.com&password=123456
+			user = checkUser(loginName, password);
+			
 			String passwordByMD5 = MD5Util.getMd5(password);
 			user.setLoginName(loginName);
 			user.setPassword(passwordByMD5);
 			HacResourceDto hacResourceDto = new HacResourceDto();
-
+			
+			
+			
 			try {
 				/*ExecuteResult re = toYanZhengLogin(loginName, password);
 				UserMergeDTO userMergeDTO = (UserMergeDTO) re.getResult();*/
 				// String userId = userMergeDTO.getUserId()+"";
 				// System.out.println(userId+"===========================");
 				// 登录成功则保存用户相关信息
-				if (true) {
-					System.out
-							.println("第三方登录成功==================================");
+				if (user!=null&&user.getLoginName()!=null) {
+					System.out.println("第三方登录成功==================================");
 					User getUser = userService.getByLoginNameAndPwd(user);
 					User temp = new User();
 					temp.setLoginName(loginName);
@@ -235,8 +257,8 @@ public class UserController extends BaseController {
 			}
 		} else {
 			User user = new User();
-			String loginName = request.getParameter("loginName");
-			String password = request.getParameter("password");
+			//String loginName = request.getParameter("loginName");
+			//String password = request.getParameter("password");
 			String passwordByMD5 = MD5Util.getMd5(password);
 			user.setLoginName(loginName);
 			user.setPassword(passwordByMD5);
@@ -245,7 +267,82 @@ public class UserController extends BaseController {
 			return new PublicResult<>(PublicResultConstant.SUCCESS, getUsers);
 		}
 	}
-
+    
+	public static User checkUser(String name,String password) {
+			HttpPost post = new HttpPost("http://192.168.25.55:9999/loginAndRegister/login");
+			post.setHeader("User-Agent", 
+					    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36");
+		    ArrayList<NameValuePair> postData = new ArrayList<NameValuePair>();
+		    postData.add(new BasicNameValuePair("email", name));
+	        postData.add(new BasicNameValuePair("password",password));
+		    CloseableHttpResponse response = null;
+		    CloseableHttpClient httpclient = HttpClients.createDefault();
+		    String result = "";
+		    User user = null;
+		    try {
+		    	post.setEntity(new UrlEncodedFormEntity(postData,"utf-8"));//捆绑参数
+		        response = httpclient.execute(post);
+		        result = EntityUtils.toString(response.getEntity(), "utf-8");
+		        System.out.println(result);
+		        JSONObject jsonObject = JSONObject.fromObject(result);
+		        if(!(jsonObject!=null&&"true".equals(jsonObject.get("result")))){
+		        	return null;
+		        }
+		        user = userConver(jsonObject);
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    } finally {
+		        if (response != null) {
+		            try {
+		                response.close();
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
+		return user;
+	}
+	
+	public static User userConver(JSONObject jsonObject ) {
+		JSONObject data = (JSONObject) jsonObject.get("data");
+		if(data==null) {
+			return null;
+		}
+		User user = new User();
+		user.setCreateBy(data.get("createBy")+""); // "createBy": "system",
+		//user.setCreateDate(new Date(Long.parseLong(data.get("createDate")+""))); // "createDate": 1555406591000,
+		//user.setDataSourceConfigId(dataSourceConfigId);
+		//user.setDataStrategies(dataStrategies);
+		if(!"0".equals(data.get("status"))) { //"status": "0",
+			user.setDelFlag("1");
+		} 
+		user.setEmail(data.get("email")+""); //"email": "zuo@qq.com",
+		//user.setGroups(groups);
+		
+		if("1".equals(data.get("mgrType"))) { //"mgrType": "0",
+			user.setHasAdmin(true);
+		}else {
+			user.setHasAdmin(false);
+		}
+		//user.setHasEntering(hasEntering);
+		user.setRemarks(data.get("userCode")+""); //"userCode": "6fc949dfb37c_8lg5",
+		//user.setLoginDate(new Date(Long.parseLong(data.get("lastLoginDate")+""))); //"lastLoginDate": 1557464353329,
+		//user.setLoginFlag(loginFlag);
+		user.setLoginIp(data.get("lastLoginIp")+""); // "lastLoginIp": null,
+		user.setLoginName(data.get("userName")+""); // "userName": "zuo",
+		user.setName(data.get("userName")+""); // "userName": "zuo",
+		user.setPassword(data.get("password")+""); // "password": "",
+		user.setPhone(data.get("phone")+""); //"phone": null,
+		user.setUpdateBy(data.get("updateBy")+""); // "updateBy": "system",
+		user.setUserType(data.get("userType")+""); // "userType": "employee",
+		//user.setRoles(roles);
+		return user;
+	}
+	public static void main(String[] args) {
+		checkUser("zuo@qq.com", "123456");
+	}
+	
+	
 	@SuppressWarnings("unchecked")
 	private User getHacUser(User user, String loginName,
 			HacResourceDto hacResourceDto) {
