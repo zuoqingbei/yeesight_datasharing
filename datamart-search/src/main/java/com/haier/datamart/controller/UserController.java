@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -19,22 +20,17 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.alibaba.fastjson.JSON;
 import com.haier.datamart.annotation.Log;
 import com.haier.datamart.base.PublicResult;
 import com.haier.datamart.base.PublicResultConstant;
+import com.haier.datamart.config.Constant;
 import com.haier.datamart.entity.HacResourceDto;
 import com.haier.datamart.entity.MainPageNum;
 import com.haier.datamart.entity.Menu;
@@ -46,6 +42,7 @@ import com.haier.datamart.service.IHacResourceDtoService;
 import com.haier.datamart.service.IMenuService;
 import com.haier.datamart.service.IRoleService;
 import com.haier.datamart.service.IUserService;
+import com.haier.datamart.utils.FileUtil;
 import com.haier.datamart.utils.GenerationSequenceUtil;
 import com.haier.datamart.utils.MD5Util;
 import com.haier.openplatform.hac.resource.service.HacResourceDTO;
@@ -54,7 +51,6 @@ import com.haier.openplatform.hac.resource.service.HacResourceServiceClientPortT
 import com.haier.openplatform.hac.resource.service.UserSourceAndScode;
 import com.haier.openplatform.hac.service.HacDataPrivilegeDTO;
 import com.haier.openplatform.hac.service.UserMergeDTO;
-
 /**
  * <p>
  * 用户表 前端控制器
@@ -79,6 +75,8 @@ public class UserController extends BaseController {
 	private SysUserGroupMapper sysUserGroupMapper;
 	private boolean needPwd = true;// 是否验证密码
 	private String defalutGroupId="2";//默认用户权限-指标管理
+ 
+	public static final String PORTAL_HOST = FileUtil.bundle.getString("portal.host");//认证中心地址
 	/**
 	 * 
 	 * @time   2018年9月19日 上午9:04:30
@@ -140,7 +138,10 @@ public class UserController extends BaseController {
 			
 			//http://192.168.25.55:9999/loginAndRegister/login?email=zuo%40qq.com&password=123456
 			user = checkUser(loginName, password);
-			
+			if(user==null) {
+				return new PublicResult<>(PublicResultConstant.FAILED,
+						"账号或者密码错误!");
+			}
 			String passwordByMD5 = MD5Util.getMd5(password);
 			user.setLoginName(loginName);
 			user.setPassword(passwordByMD5);
@@ -157,16 +158,16 @@ public class UserController extends BaseController {
 				if (user!=null&&user.getLoginName()!=null) {
 					System.out.println("第三方登录成功==================================");
 					User getUser = userService.getByLoginNameAndPwd(user);
-					User temp = new User();
-					temp.setLoginName(loginName);
-					temp.setName(loginName);
-					temp.setPassword(passwordByMD5);
+					User temp = user;
+					//temp.setLoginName(loginName);
+					//temp.setName(loginName);
+					//temp.setPassword(passwordByMD5);
 					if (getUser == null) {
 						temp.setId(GenerationSequenceUtil.getUUID());
-						temp.setCreateBy(loginName);
-						temp.setCreateDate(new Date());
-						temp.setUpdateBy(loginName);
-						temp.setUpdateDate(new Date());
+						//temp.setCreateBy(loginName);
+						//temp.setCreateDate(new Date());
+						//temp.setUpdateBy(loginName);
+						//temp.setUpdateDate(new Date());
 						userService.addUser(temp);
 						//默认添加用户指标录入权限
 						List<SysUserGroup> sysUserGroups = sysUserGroupMapper.getGroupId(temp.getId());
@@ -181,10 +182,11 @@ public class UserController extends BaseController {
 						}
 					} else {
 						temp.setId(getUser.getId());
-						temp.setUpdateBy(loginName);
-						temp.setUpdateDate(new Date());
+						//temp.setUpdateBy(loginName);
+						//temp.setUpdateDate(new Date());
 						userService.updateUser(temp);
 					}
+					com.haier.datamart.utils.CookieUtil.setCookie(response, "token", user.getToken());
 					// 根据用户名获取权限资源并保存
 				/*	List<HacResourceDTO> resourcesByAppAndUser = getHacResource(loginName);
 					// 根据用户名获取数据维度并保存
@@ -227,6 +229,7 @@ public class UserController extends BaseController {
 						return new PublicResult<>(PublicResultConstant.FAILED,
 								user2);
 					}
+					
 				} else {
 					// 登录失败则根据用户名获取历史相关权限资源
 					User user2 = getHacUser(user, loginName, hacResourceDto);
@@ -241,6 +244,7 @@ public class UserController extends BaseController {
 					return new PublicResult<>(PublicResultConstant.FAILED,
 							user2);
 				}
+			
 			} catch (Exception e) {
 				e.printStackTrace();
 				User user2 = getHacUser(user, loginName, hacResourceDto);
@@ -267,9 +271,46 @@ public class UserController extends BaseController {
 			return new PublicResult<>(PublicResultConstant.SUCCESS, getUsers);
 		}
 	}
-    
+    /**
+     * 解析token
+     * @param token
+     * @return
+     */
+	public static User paserToken(String token) {
+		HttpPost post = new HttpPost(PORTAL_HOST+"/loginAndRegister/getUserByToken");
+		post.setHeader("User-Agent", 
+				    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36");
+	    ArrayList<NameValuePair> postData = new ArrayList<NameValuePair>();
+	    postData.add(new BasicNameValuePair("token", token));
+	    CloseableHttpClient httpclient = HttpClients.createDefault();
+	    CloseableHttpResponse response = null;
+	    String result = "";
+	    User user = null;
+	    try {
+	    	post.setEntity(new UrlEncodedFormEntity(postData,"utf-8"));//捆绑参数
+	        response = httpclient.execute(post);
+	        result = EntityUtils.toString(response.getEntity(), "utf-8");
+	        JSONObject jsonObject = JSONObject.fromObject(result);
+	        if(jsonObject==null){
+	        	return null;
+	        }
+	        user = userConver(jsonObject);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    } finally {
+	        if (response != null) {
+	            try {
+	                response.close();
+	            } catch (IOException e) {
+	                e.printStackTrace();
+	            }
+	        }
+	    }
+		return user;
+	}
+	
 	public static User checkUser(String name,String password) {
-			HttpPost post = new HttpPost("http://192.168.25.55:9999/loginAndRegister/login");
+			HttpPost post = new HttpPost(PORTAL_HOST+"/loginAndRegister/login");
 			post.setHeader("User-Agent", 
 					    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36");
 		    ArrayList<NameValuePair> postData = new ArrayList<NameValuePair>();
@@ -283,12 +324,14 @@ public class UserController extends BaseController {
 		    	post.setEntity(new UrlEncodedFormEntity(postData,"utf-8"));//捆绑参数
 		        response = httpclient.execute(post);
 		        result = EntityUtils.toString(response.getEntity(), "utf-8");
-		        System.out.println(result);
+		       
 		        JSONObject jsonObject = JSONObject.fromObject(result);
 		        if(!(jsonObject!=null&&"true".equals(jsonObject.get("result")))){
 		        	return null;
 		        }
+		        System.out.println("认证中心上线!");
 		        user = userConver(jsonObject);
+		       
 		    } catch (IOException e) {
 		        e.printStackTrace();
 		    } finally {
@@ -309,32 +352,32 @@ public class UserController extends BaseController {
 			return null;
 		}
 		User user = new User();
-		user.setCreateBy(data.get("createBy")+""); // "createBy": "system",
+		user.setCreateBy(data.get("userId")+""); // "userId": "6fc949dfb37c_8lg5",
+		user.setToken(data.get("token")+"");
 		//user.setCreateDate(new Date(Long.parseLong(data.get("createDate")+""))); // "createDate": 1555406591000,
 		//user.setDataSourceConfigId(dataSourceConfigId);
 		//user.setDataStrategies(dataStrategies);
-		if(!"0".equals(data.get("status"))) { //"status": "0",
+		JSONObject sysuser = (JSONObject) data.get("sysuser");
+		if(sysuser==null||StringUtils.isEmpty(sysuser.get("userCode")+"")) {
+			return null;
+		}
+		if(!"0".equals(sysuser.get("status"))) { //"status": "0",
 			user.setDelFlag("1");
 		} 
-		user.setEmail(data.get("email")+""); //"email": "zuo@qq.com",
+		user.setEmail(sysuser.get("email")+""); //"email": "zuo@qq.com",
 		//user.setGroups(groups);
 		
-		if("1".equals(data.get("mgrType"))) { //"mgrType": "0",
-			user.setHasAdmin(true);
-		}else {
-			user.setHasAdmin(false);
-		}
 		//user.setHasEntering(hasEntering);
-		user.setRemarks(data.get("userCode")+""); //"userCode": "6fc949dfb37c_8lg5",
+		user.setRemarks(sysuser.get("userCode")+""); //"userCode": "6fc949dfb37c_8lg5",
 		//user.setLoginDate(new Date(Long.parseLong(data.get("lastLoginDate")+""))); //"lastLoginDate": 1557464353329,
 		//user.setLoginFlag(loginFlag);
-		user.setLoginIp(data.get("lastLoginIp")+""); // "lastLoginIp": null,
-		user.setLoginName(data.get("userName")+""); // "userName": "zuo",
-		user.setName(data.get("userName")+""); // "userName": "zuo",
-		user.setPassword(data.get("password")+""); // "password": "",
-		user.setPhone(data.get("phone")+""); //"phone": null,
-		user.setUpdateBy(data.get("updateBy")+""); // "updateBy": "system",
-		user.setUserType(data.get("userType")+""); // "userType": "employee",
+		user.setLoginIp(sysuser.get("lastLoginIp")+""); // "lastLoginIp": null,
+		user.setLoginName(sysuser.get("userName")+""); // "userName": "zuo",
+		user.setName(sysuser.get("userName")+""); // "userName": "zuo",
+		user.setPassword(sysuser.get("password")+""); // "password": "",
+		user.setPhone(sysuser.get("phone")+""); //"phone": null,
+		user.setUpdateBy(sysuser.get("updateBy")+""); // "updateBy": "system",
+		user.setUserType(1+""); // "userType": "employee",
 		//user.setRoles(roles);
 		return user;
 	}
@@ -468,7 +511,7 @@ public class UserController extends BaseController {
 
 
 	/**
-	 * 用户登陆
+	 * 用户出
 	 * 
 	 * @param request
 	 * @param response
@@ -478,6 +521,44 @@ public class UserController extends BaseController {
 	@Log(description = "API接口:/user/logout")
 	public Object logout(HttpServletRequest request,
 			HttpServletResponse response) {
+		
+		
+
+	    User flagUser =  (User) getSession(request, response,  Constant.USER_INFO);
+		if(flagUser!=null&&StringUtils.isNotEmpty(flagUser.getEmail())){
+
+			HttpPost post = new HttpPost(PORTAL_HOST+"/logout");
+			post.setHeader("User-Agent", 
+					    "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36");
+		    ArrayList<NameValuePair> postData = new ArrayList<NameValuePair>();
+		    postData.add(new BasicNameValuePair("emailCode", flagUser.getEmail()));
+		    CloseableHttpResponse tempResponse = null;
+		    CloseableHttpClient httpclient = HttpClients.createDefault();
+		    String result = "";
+		    User user = null;
+		    try {
+		    	post.setEntity(new UrlEncodedFormEntity(postData,"utf-8"));//捆绑参数
+		    	tempResponse = httpclient.execute(post);
+		        result = EntityUtils.toString(tempResponse.getEntity(), "utf-8");
+		        if(StringUtils.isNotEmpty(result)&&"true".equals(result)){
+		        	 System.out.println("认证中心下线!");
+		        }
+		    } catch (IOException e) {
+		        e.printStackTrace();
+		    } finally {
+		        if (tempResponse != null) {
+		            try {
+		            	tempResponse.close();
+		            } catch (IOException e) {
+		                e.printStackTrace();
+		            }
+		        }
+		    }
+
+		}
+		
+		
+		
 		clearSessionUser(request, response, USER_INFO);
 		return new PublicResult<>(PublicResultConstant.SUCCESS, null);
 	}

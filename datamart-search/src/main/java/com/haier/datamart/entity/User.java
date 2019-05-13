@@ -37,6 +37,11 @@ public class User extends Model<User> {
      */
     private String id;
     /**
+     * token
+     */
+    @TableField(exist=false)
+    private String token;
+    /**
      * 登录名
      */
     @TableField("login_name")
@@ -161,6 +166,14 @@ public class User extends Model<User> {
 
 	public boolean isHasAdmin() {
 		return hasAdmin;
+	}
+	
+	public String getToken() {
+		return token;
+	}
+
+	public void setToken(String token) {
+		this.token = token;
 	}
 
 	public void setHasAdmin(boolean hasAdmin) {

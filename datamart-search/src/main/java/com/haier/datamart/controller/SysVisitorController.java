@@ -38,9 +38,9 @@ public class SysVisitorController extends BaseController {
 	@ApiOperation(value = "登录签证", notes = "登录签证")
 	@RequestMapping(value = "/loginSign", produces = { "application/json;charset=UTF-8" })
 	@Log(description = "API接口:/api/sysVisitor/loginSign")
-	public Object loginSign(HttpServletRequest request, HttpServletResponse response) {
+	public Object loginSign(HttpServletRequest request, HttpServletResponse response,String loginName,String password) {
 		try {
-			PublicResult<User> publicResult = (PublicResult<User>) userController.loginRoot(request, response);
+			PublicResult<User> publicResult = (PublicResult<User>) userController.loginRoot(request, response,loginName,password);
 			User user = publicResult.getData();
 			if ("success".equals(publicResult.getMsg())) {
 				String token = iSysVisitorService.loginSign(request, user);

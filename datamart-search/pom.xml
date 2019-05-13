@@ -310,7 +310,7 @@
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.aspose.words/aspose-words-jdk16 -->
 		<!-- 处理word2pdf -->
-		<dependency>
+		<dependency> 
 		    <groupId>com.aspose.words</groupId>
 		    <artifactId>aspose-words-jdk16</artifactId>
 		    <version>14.6.0.0</version>
