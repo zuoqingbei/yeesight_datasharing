@@ -11,6 +11,7 @@ public class UrlDatabase {
 	  public  String  subString(String url) {  
 		    String tempStr=StringUtils.substringAfter(url, "//");
 		    String StrDatabase=StringUtils.substringAfter(tempStr, "/");
+		    StrDatabase= StrDatabase.split("\\?")[0];
 			return StrDatabase;
 	     
 	    }  

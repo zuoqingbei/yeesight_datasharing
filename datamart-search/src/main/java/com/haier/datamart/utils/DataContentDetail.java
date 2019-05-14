@@ -54,6 +54,7 @@ public class DataContentDetail {
 	    	        	 String[] names=tableName.split("\\.");
 	    	        	 if(names.length>1){
 	    	        		 tableName=names[1];
+	    	        		 tableName= tableName.split("\\?")[0];
 	    	        	 }
 	    	         }
 	    	         List<Map<String, Object>> columns=DBMSMetaUtil.listColumns(databasetype, url, username, password,tableName);

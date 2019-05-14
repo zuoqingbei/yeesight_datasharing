@@ -29,7 +29,7 @@ public class ParentInterceptors extends WebMvcConfigurerAdapter {
 	public void addInterceptors(InterceptorRegistry registry) {
 		registry.addInterceptor(
 				loginCeptor()
-				).excludePathPatterns("/user/login","/user/logout","/user/getUserByToken");
+				).excludePathPatterns("/user/login","/user/logout","/user/getUserByToken","/v2/api-docs");
 	}
 	
  }
