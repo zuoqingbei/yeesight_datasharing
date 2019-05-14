@@ -29,7 +29,7 @@ public class  LoginInterceptors extends HandlerInterceptorAdapter {
      */
     public static String DEFAULT_TOKEN_NAME = "token";
 	private static List<String> notNeedLogin=Arrays.asList(
-			"/user/login","/user/logout","/swagger-resources/configuration/ui","/user/getUserByToken"
+			"/user/login","/user/logout","/swagger-resources","/user/getUserByToken"
     );
  
     @Override
