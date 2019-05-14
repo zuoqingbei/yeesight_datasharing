@@ -70,13 +70,13 @@ public class UserController extends BaseController {
 	@Autowired
 	private IMenuService menuService;
 	@Autowired
-	private IUserService userService;
+	private static IUserService userService;
 	@Autowired
 	private IHacResourceDtoService dtoService;
 	@Autowired 
-	private SysUserGroupMapper sysUserGroupMapper;
+	private static SysUserGroupMapper sysUserGroupMapper;
 	private boolean needPwd = true;// 是否验证密码
-	private String defalutGroupId="2";//默认用户权限-指标管理
+	private static String defalutGroupId="2";//默认用户权限-指标管理
  
 	public static final String PORTAL_HOST = FileUtil.bundle.getString("portal.host");//认证中心地址
 	/**
@@ -307,6 +307,7 @@ public class UserController extends BaseController {
 	        	return null;
 	        }
 	        user = userConver(jsonObject);
+	        user.setId(updateOrSaveUser(user));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    } finally {
@@ -320,6 +321,43 @@ public class UserController extends BaseController {
 	    }
 		return user;
 	}
+	
+	
+	public static String updateOrSaveUser(User user) {
+		if(user==null) {
+			return null;
+		}
+		User getUser = userService.getByLoginNameAndPwd(user);
+		User temp = user;
+		if (getUser == null) {
+			temp.setId(GenerationSequenceUtil.getUUID());
+	 
+			userService.addUser(temp);
+			//默认添加用户指标录入权限
+			List<SysUserGroup> sysUserGroups = sysUserGroupMapper.getGroupId(temp.getId());
+			boolean has=false;
+			for(SysUserGroup group:sysUserGroups){
+				if(defalutGroupId.equals(group.getGroupId())){
+					has=true;
+				}
+			}
+			if(!has){
+				sysUserGroupMapper.addSysUserGroup(new SysUserGroup(temp.getId(), defalutGroupId));
+			}
+		} else {
+			temp.setId(getUser.getId());
+			userService.updateUser(temp);
+		}
+		return user.getId();
+	}
+
+	
+	
+	
+	
+	
+	
+	
 	
 	public static User checkUser(String name,String password) {
 			HttpPost post = new HttpPost(PORTAL_HOST+"/loginAndRegister/login");
