@@ -69,12 +69,20 @@ public class UserController extends BaseController {
 	private IRoleService roleService;
 	@Autowired
 	private IMenuService menuService;
-	@Autowired
+	
 	private static IUserService userService;
 	@Autowired
-	private IHacResourceDtoService dtoService;
-	@Autowired 
+	public void setUserService(IUserService userService) {
+		UserController.userService = userService;
+	}
 	private static SysUserGroupMapper sysUserGroupMapper;
+	@Autowired
+	public void setSysUserGroupMapper(SysUserGroupMapper sysUserGroupMapper) {
+		UserController.sysUserGroupMapper = sysUserGroupMapper;
+	}
+	@Autowired
+	private IHacResourceDtoService dtoService;
+	
 	private boolean needPwd = true;// 是否验证密码
 	private static String defalutGroupId="2";//默认用户权限-指标管理
  
@@ -175,9 +183,9 @@ public class UserController extends BaseController {
 					if (getUser == null) {
 						temp.setId(GenerationSequenceUtil.getUUID());
 						//temp.setCreateBy(loginName);
-						//temp.setCreateDate(new Date());
+						temp.setCreateDate(new Date());
 						//temp.setUpdateBy(loginName);
-						//temp.setUpdateDate(new Date());
+						temp.setUpdateDate(new Date());
 						userService.addUser(temp);
 						//默认添加用户指标录入权限
 						List<SysUserGroup> sysUserGroups = sysUserGroupMapper.getGroupId(temp.getId());
@@ -324,7 +332,7 @@ public class UserController extends BaseController {
 	
 	
 	public static String updateOrSaveUser(User user) {
-		if(user==null) {
+		if(user==null||StringUtils.isEmpty(user.getLoginName())) {
 			return null;
 		}
 		User getUser = userService.getByLoginNameAndPwd(user);
@@ -404,6 +412,7 @@ public class UserController extends BaseController {
 		User user = new User();
 		user.setCreateBy(data.get("userId")+""); // "userId": "6fc949dfb37c_8lg5",
 		user.setToken(data.get("token")+"");
+		user.setLoginName(data.get("loginName")+""); // "userName": "zuo",
 		//user.setCreateDate(new Date(Long.parseLong(data.get("createDate")+""))); // "createDate": 1555406591000,
 		//user.setDataSourceConfigId(dataSourceConfigId);
 		//user.setDataStrategies(dataStrategies);
@@ -422,13 +431,15 @@ public class UserController extends BaseController {
 		user.setUserCode(sysuser.get("userCode")+"");
 		//user.setLoginDate(new Date(Long.parseLong(data.get("lastLoginDate")+""))); //"lastLoginDate": 1557464353329,
 		//user.setLoginFlag(loginFlag);
-		user.setLoginIp(sysuser.get("lastLoginIp")+""); // "lastLoginIp": null,
-		user.setLoginName(sysuser.get("userName")+""); // "userName": "zuo",
+		//user.setLoginIp(sysuser.get("lastLoginIp")+""); // "lastLoginIp": null,
+	
 		user.setName(sysuser.get("userName")+""); // "userName": "zuo",
 		user.setPassword(sysuser.get("password")+""); // "password": "",
-		user.setPhone(sysuser.get("phone")+""); //"phone": null,
+		//user.setPhone(sysuser.get("phone")+""); //"phone": null,
 		user.setUpdateBy(sysuser.get("updateBy")+""); // "updateBy": "system",
 		user.setUserType(1+""); // "userType": "employee",
+		user.setCreateDate(new Date());
+		user.setUpdateDate(new Date());
 		//user.setRoles(roles);
 		return user;
 	}
