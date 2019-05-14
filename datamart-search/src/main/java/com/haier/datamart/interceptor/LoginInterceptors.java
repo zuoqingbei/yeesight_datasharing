@@ -1,7 +1,11 @@
 package com.haier.datamart.interceptor;
 
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -10,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
+import com.haier.datamart.base.PublicResultConstant;
 import com.haier.datamart.config.Constant;
 import com.haier.datamart.controller.BaseController;
 import com.haier.datamart.controller.UserController;
@@ -24,7 +29,7 @@ public class  LoginInterceptors extends HandlerInterceptorAdapter {
      */
     public static String DEFAULT_TOKEN_NAME = "token";
 	private static List<String> notNeedLogin=Arrays.asList(
-			"/user/login","/user/logout"
+			"/user/login","/user/logout","/swagger-resources/configuration/ui"
     );
  
     @Override
@@ -47,10 +52,16 @@ public class  LoginInterceptors extends HandlerInterceptorAdapter {
 		    if(!isPassToken) {
 		    		//当前用户没有登录  判断是否需要拦截
 		        	 if(!isPass(uri)){
-		    			response.reset();
-		        		response.sendRedirect("/user/logout");
-		        		 //baseController.logout(request, response);
-		        		 return true;
+		    			
+		    			 response.setContentType("application/json;charset=utf-8");
+		        		//response.sendRedirect("/user/logout");
+		        		//baseController.logout(request, response);
+		    			 //response.reset(); 
+		    			 PrintWriter pw = response.getWriter();
+		        		 Map<String,Object> map = new HashMap<>();
+		        		 map.put("data",  PublicResultConstant.UNAUTHORIZED);
+		        		 pw.write(map.entrySet().toString().replace("=", ":").replace("[", "{").replace("]", "}"));
+		        		 return false;
 		        	 }
 		    }
 		}

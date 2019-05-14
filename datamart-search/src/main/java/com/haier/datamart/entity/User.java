@@ -42,6 +42,11 @@ public class User extends Model<User> {
     @TableField(exist=false)
     private String token;
     /**
+     * userCode
+     */
+    @TableField(exist=false)
+    private String userCode;
+    /**
      * 登录名
      */
     @TableField("login_name")
@@ -251,8 +256,16 @@ public class User extends Model<User> {
     public void setLoginName(String loginName) {
         this.loginName = loginName;
     }
+    
+    public String getUserCode() {
+		return userCode;
+	}
 
-    public String getPassword() {
+	public void setUserCode(String userCode) {
+		this.userCode = userCode;
+	}
+
+	public String getPassword() {
         return password;
     }
 

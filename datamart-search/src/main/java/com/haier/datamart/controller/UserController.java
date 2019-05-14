@@ -26,6 +26,7 @@ import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import com.haier.datamart.annotation.Log;
 import com.haier.datamart.base.PublicResult;
@@ -42,6 +43,7 @@ import com.haier.datamart.service.IHacResourceDtoService;
 import com.haier.datamart.service.IMenuService;
 import com.haier.datamart.service.IRoleService;
 import com.haier.datamart.service.IUserService;
+import com.haier.datamart.utils.CookieUtil;
 import com.haier.datamart.utils.FileUtil;
 import com.haier.datamart.utils.GenerationSequenceUtil;
 import com.haier.datamart.utils.MD5Util;
@@ -116,6 +118,14 @@ public class UserController extends BaseController {
 		}
 		return new PublicResult<>(PublicResultConstant.SUCCESS, menus);
 	}
+	
+	
+	 
+	@GetMapping(value = "/user/getUserByToken", produces = { "application/json;charset=UTF-8" })
+	//@Log(description = "API接口:/user/getUserByToken")
+	public Object getUserByToken(HttpServletRequest request,@RequestParam(value="token",required = true) String token) {
+		return new PublicResult<>(PublicResultConstant.SUCCESS, paserToken(token));
+	}
 	/**
 	 * 
 	 * @time   2018年9月19日 上午9:04:40
@@ -138,7 +148,7 @@ public class UserController extends BaseController {
 			
 			//http://192.168.25.55:9999/loginAndRegister/login?email=zuo%40qq.com&password=123456
 			user = checkUser(loginName, password);
-			if(user==null) {
+			if(user==null||StringUtils.isEmpty(user.getUserCode())) {
 				return new PublicResult<>(PublicResultConstant.FAILED,
 						"账号或者密码错误!");
 			}
@@ -271,6 +281,8 @@ public class UserController extends BaseController {
 			return new PublicResult<>(PublicResultConstant.SUCCESS, getUsers);
 		}
 	}
+	
+	
     /**
      * 解析token
      * @param token
@@ -369,6 +381,7 @@ public class UserController extends BaseController {
 		
 		//user.setHasEntering(hasEntering);
 		user.setRemarks(sysuser.get("userCode")+""); //"userCode": "6fc949dfb37c_8lg5",
+		user.setUserCode(sysuser.get("userCode")+"");
 		//user.setLoginDate(new Date(Long.parseLong(data.get("lastLoginDate")+""))); //"lastLoginDate": 1557464353329,
 		//user.setLoginFlag(loginFlag);
 		user.setLoginIp(sysuser.get("lastLoginIp")+""); // "lastLoginIp": null,
@@ -554,10 +567,10 @@ public class UserController extends BaseController {
 		            }
 		        }
 		    }
-
+ 
 		}
 		
-		
+		 CookieUtil.deleteCookie(response, "token");
 		
 		clearSessionUser(request, response, USER_INFO);
 		return new PublicResult<>(PublicResultConstant.SUCCESS, PublicResultConstant.UNAUTHORIZED);
