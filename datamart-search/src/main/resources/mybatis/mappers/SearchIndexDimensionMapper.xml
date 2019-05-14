@@ -62,7 +62,7 @@
 		FROM search_index_dimension a
 		<include refid="searchIndexDimensionjoins"/>
 		<where>
-			a.del_flag = #{DEL_FLAG_NORMAL}
+			a.del_flag = 0
 			<if test="id != null and id != ''">
 				AND a.report_id = #{id}
 			</if>
