@@ -47,9 +47,10 @@ public class  LoginInterceptors extends HandlerInterceptorAdapter {
 		    if(!isPassToken) {
 		    		//当前用户没有登录  判断是否需要拦截
 		        	 if(!isPass(uri)){
-		    			//response.reset();
-		        		//response.sendRedirect("/user/logout");
+		    			response.reset();
+		        		response.sendRedirect("/user/logout");
 		        		 //baseController.logout(request, response);
+		        		 return true;
 		        	 }
 		    }
 		}

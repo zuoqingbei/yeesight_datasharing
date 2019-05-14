@@ -560,6 +560,6 @@ public class UserController extends BaseController {
 		
 		
 		clearSessionUser(request, response, USER_INFO);
-		return new PublicResult<>(PublicResultConstant.SUCCESS, null);
+		return new PublicResult<>(PublicResultConstant.SUCCESS, PublicResultConstant.UNAUTHORIZED);
 	}
 }
