@@ -75,7 +75,7 @@ public class JdbcUtil implements Constant {
 			switch (dbType) {
 			case JdbcConstants.MYSQL:
 				connectionUrl = connectionUrl.split("\\?")[0];
-				connectionUrl += "?useUnicode=true&characterEncoding=utf8&useSSL=false";
+				connectionUrl += "?characterEncoding=UTF-8&zeroDateTimeBehavior=convertToNull&useSSL=false";
 				break;
 			/*
 			 * case "impala": connectionUrl+=";auth=noSasl"; break;
