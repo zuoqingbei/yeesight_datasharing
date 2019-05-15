@@ -45,7 +45,7 @@ public class  LoginInterceptors extends HandlerInterceptorAdapter {
 		    if(StringUtils.isNotBlank(token)){
 		    	User user = UserController.paserToken(token);
 		    	if(user!=null&&StringUtils.isNotEmpty(user.getId())) {
-		    		baseController.setSession(request, response, Constant.USER_INFO, user);
+		    		//baseController.setSession(request, response, Constant.USER_INFO, user);
 		    		isPassToken = true;
 		    	}
 		    }
