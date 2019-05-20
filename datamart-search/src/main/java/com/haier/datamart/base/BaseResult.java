@@ -18,9 +18,15 @@ public class BaseResult<T> {
     }
 
     public BaseResult(String result, String msg, T data) {
+    	
         this.result = result;
         this.msg = msg;
-        this.data = data;
+        if(data==null) {
+    		this.data = (T) "[]";
+    	}else {
+    		this.data = data;
+    	}
+        
     }
 
     public String getResult() {

@@ -34,38 +34,44 @@ public class  LoginInterceptors extends HandlerInterceptorAdapter {
  
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-    	 
-		 User flagUser = (User) baseController.getSession(request, response,  Constant.USER_INFO);
-		if(flagUser==null||StringUtils.isEmpty(flagUser.getId())) {
-			//setSession(request, response, , user2);
-		    String uri = request.getRequestURI();
-		    //String to = request.getParameter("to");
-		    String token = CookieUtil.getCookieValue(request, LoginInterceptors.DEFAULT_TOKEN_NAME);
-		    boolean isPassToken = false;
-		    if(StringUtils.isNotBlank(token)){
-		    	User user = UserController.paserToken(token);
-		    	if(user!=null&&StringUtils.isNotEmpty(user.getId())) {
-		    		//baseController.setSession(request, response, Constant.USER_INFO, user);
-		    		isPassToken = true;
-		    	}
-		    }
-		    if(!isPassToken) {
-		    		//当前用户没有登录  判断是否需要拦截
-		        	 if(!isPass(uri)){
-		    			
-		    			 response.setContentType("application/json;charset=utf-8");
-		        		//response.sendRedirect("/user/logout");
-		        		//baseController.logout(request, response);
-		    			 //response.reset(); 
-		    			 PrintWriter pw = response.getWriter();
-		        		 Map<String,Object> map = new HashMap<>();
-		        		 map.put("data",  PublicResultConstant.UNAUTHORIZED);
-		        		 pw.write(map.entrySet().toString().replace("=", ":").replace("[", "{").replace("]", "}"));
-		        		 return false;
-		        	 }
-		    }
-		}
-		 
+    	String uri = request.getRequestURI();
+    	String clientToken = CookieUtil.getCookieValue(request, LoginInterceptors.DEFAULT_TOKEN_NAME);
+    	boolean isPass = false;
+    	//判断是否需要拦截
+	   	if(!isPass(uri)){
+	    	if(StringUtils.isEmpty(clientToken)) {
+	    		baseController.clearSessionUser(request, response,  Constant.USER_INFO);
+	    		baseController.clearSessionUser(request, response,  Constant.TOKEN_INFO);
+	    	}else {
+	    		User flagUser = (User) baseController.getSession(request, response,  Constant.USER_INFO);
+	    		if(flagUser==null||StringUtils.isEmpty(flagUser.getId())) {
+	    		    User user = UserController.paserToken(clientToken);
+	    		    if(user!=null&&StringUtils.isNotEmpty(user.getId())&&StringUtils.isNotEmpty(user.getToken())) {
+	    		    	baseController.setSession(request, response, Constant.USER_INFO, user);
+	    		    	baseController.setSession(request, response, Constant.TOKEN_INFO, clientToken);
+	    		    	isPass = true;
+	    		    }
+	    		}else {	  
+	    			String localToken = baseController.getSession(request, response,  Constant.TOKEN_INFO)+"";
+	    			if(clientToken.equals(localToken)) {
+	    				isPass = true;
+	    			}
+	    		}
+	    	}
+	   	}else {
+	   		isPass = true;
+	   	}
+   	 	if(!isPass){
+			 response.setContentType("application/json;charset=utf-8");
+	   		 //response.sendRedirect("/user/logout");
+	   		 //baseController.logout(request, response);
+			 //response.reset(); 
+			 PrintWriter pw = response.getWriter();
+	   		 Map<String,Object> map = new HashMap<>();
+	   		 map.put("data",  PublicResultConstant.UNAUTHORIZED);
+	   		 pw.write(map.entrySet().toString().replace("=", ":").replace("[", "{").replace("]", "}"));
+	   		 return isPass;
+   	 	}
     	
     return super.preHandle(request, response, handler);
 }

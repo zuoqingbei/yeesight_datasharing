@@ -14,7 +14,7 @@ import com.baomidou.mybatisplus.mapper.BaseMapper;
  *
  * @author lixiaoyi123
  * @since 2018-06-26
- */
+ */				  
 public interface MinitorEtlControlParamMapper extends BaseMapper<MonitorEtlControlParam> {
      List<MonitorEtlControlParam> getList(MonitorEtlControlParam param);
      Integer delete(String mid);

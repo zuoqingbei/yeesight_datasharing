@@ -1,174 +1,195 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.haier.datamart.mapper.MonitorEtlMailReceiverMapper">
+<mapper
+	namespace="com.haier.datamart.mapper.MonitorEtlMailReceiverMapper">
 
-    <!-- 通用查询映射结果 -->
-    <resultMap id="BaseResultMap" type="com.haier.datamart.entity.MonitorEtlMailReceiver">
-        <id column="id" property="id" />
-         <id column="entrymark" property="entrymark" />
-        <result column="receive_id" property="receiveId" />
-        <result column="receive_name" property="receiveName" />
-        <result column="login_name" property="loginName" />
-        <result column="receive_type" property="receiveType" />
-        <result column="receive_addr" property="receiveAddr" />
-        <result column="receive_user" property="receiveUser" />
-        <result column="state" property="state" />
-        <result column="create_by" property="createBy" />
-        <result column="create_date" property="createDate" />
-        <result column="update_by" property="updateBy" />
-        <result column="update_date" property="updateDate" />
-        <result column="remarks" property="remarks" />
-        <result column="del_flag" property="delFlag" />
-    </resultMap>
+	<!-- 通用查询映射结果 -->
+	<resultMap id="BaseResultMap"
+		type="com.haier.datamart.entity.MonitorEtlMailReceiver">
+		<id column="id" property="id" />
+		<id column="entrymark" property="entrymark" />
+		<result column="receive_id" property="receiveId" />
+		<result column="receive_name" property="receiveName" />
+		<result column="login_name" property="loginName" />
+		<result column="receive_type" property="receiveType" />
+		<result column="receive_addr" property="receiveAddr" />
+		<result column="receive_user" property="receiveUser" />
+		<result column="state" property="state" />
+		<result column="create_by" property="createBy" />
+		<result column="create_date" property="createDate" />
+		<result column="update_by" property="updateBy" />
+		<result column="update_date" property="updateDate" />
+		<result column="remarks" property="remarks" />
+		<result column="del_flag" property="delFlag" />
+	</resultMap>
 
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, receive_id AS receiveId, receive_name AS receiveName, receive_type AS receiveType, receive_addr AS receiveAddr, receive_user AS receiveUser, state, create_by AS createBy, create_date AS createDate, update_by AS updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
-    </sql>
-<!-- 收件人组配置管理  查询获取收件人组基本信息-->
-	<select id="getEtlMailReceiver" parameterType="com.haier.datamart.entity.MonitorEtlMailReceiver" resultMap="BaseResultMap">
-		select t1.*,t2.name as login_name from monitor_etl_mail_receiver  t1 LEFT JOIN sys_user t2 on t1.create_by=t2.id where 1=1
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, receive_id AS receiveId, receive_name AS receiveName, receive_type AS
+		receiveType, receive_addr AS receiveAddr, receive_user AS receiveUser,
+		state, create_by AS createBy, create_date AS createDate, update_by AS
+		updateBy, update_date AS updateDate, remarks, del_flag AS delFlag
+	</sql>
+	<!-- 收件人组配置管理 查询获取收件人组基本信息 -->
+	<select id="getEtlMailReceiver"
+		parameterType="com.haier.datamart.entity.MonitorEtlMailReceiver"
+		resultMap="BaseResultMap">
+		select  t1.receive_id,t1.receive_name,t1.remarks,t2.name as
+		login_name from monitor_etl_mail_receiver t1 LEFT JOIN sys_user t2 on
+		t1.create_by=t2.id where 1=1
+		<if test="receiveName != null">
+			and t1.receive_name like concat('%',#{receiveName},'%')
+		</if>
+		<if test="createBy != null">
+			and t2.name like concat('%',#{createBy},'%')
+		</if>
+		and t1.del_flag=0
+		group by t1.receive_id,t1.receive_name,t1.remarks,t2.name
+
+	</select>
+	<!-- 收件人组配置管理 获取要修改的收件人组基本信息 -->
+	<select id="getEtlMailReceiver2Update" parameterType="String"
+		resultType="com.haier.datamart.entity.MonitorEtlMailReceiver">
+		select
+		<include refid="Base_Column_List" />
+		from monitor_etl_mail_receiver where del_flag=0 and
+		receive_id=#{receiveId}
+	</select>
+	<!-- 收件人组配置管理 根据receiveName查询 -->
+	<select id="getByReceiveName" parameterType="String"
+		resultType="com.haier.datamart.entity.MonitorEtlMailReceiver">
+		select
+		<include refid="Base_Column_List" />
+		from monitor_etl_mail_receiver where del_flag=0 and
+		receive_name=#{receiveName}
+	</select>
+	<!-- 收件人组配置管理 新增 -->
+	<insert id="insertEtlMailReceiver"
+		parameterType="com.haier.datamart.entity.MonitorEtlMailReceiver">
+		insert into monitor_etl_mail_receiver
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				id,
+			</if>
+			<if test="receiveId != null">
+				receive_id,
+			</if>
 			<if test="receiveName != null">
-				and t1.receive_name  like concat('%',#{receiveName},'%')
+				receive_name,
+			</if>
+			<if test="receiveType != null">
+				receive_type,
+			</if>
+			<if test="receiveAddr != null">
+				receive_addr,
+			</if>
+			<if test="receiveUser != null">
+				receive_user,
+			</if>
+			<if test="state != null">
+				state,
 			</if>
 			<if test="createBy != null">
-				and t1.create_by  like concat('%',#{createBy},'%')
+				create_by,
 			</if>
-			    and t1.del_flag=0 
-				group by t1.receive_id
-			
-	</select>
-	<!-- 收件人组配置管理  获取要修改的收件人组基本信息 -->
-	<select id="getEtlMailReceiver2Update" parameterType="String" resultType="com.haier.datamart.entity.MonitorEtlMailReceiver">
-		select <include refid="Base_Column_List"/> from monitor_etl_mail_receiver where  del_flag=0 and receive_id=#{receiveId}
-	</select>
-	<!-- 收件人组配置管理  根据receiveName查询 -->
-	<select id="getByReceiveName" parameterType="String" resultType="com.haier.datamart.entity.MonitorEtlMailReceiver">
-		select <include refid="Base_Column_List"/> from monitor_etl_mail_receiver where  del_flag=0 and receive_name=#{receiveName}
-	</select>
-	<!-- 收件人组配置管理  新增-->	
-	<insert id="insertEtlMailReceiver" parameterType="com.haier.datamart.entity.MonitorEtlMailReceiver">
-		insert into monitor_etl_mail_receiver
-	<trim prefix="(" suffix=")" suffixOverrides="," >
-	      <if test="id != null" >
-	        id,
-	      </if>
-	      <if test="receiveId != null" >
-	        receive_id,
-	      </if>
-	      <if test="receiveName != null" >
-	        receive_name,
-	      </if>
-	      <if test="receiveType != null" >
-	        receive_type,
-	      </if>
-	      <if test="receiveAddr != null" >
-	        receive_addr,
-	      </if>
-	       <if test="receiveUser != null" >
-	        receive_user,
-	      </if>
-	      <if test="state != null" >
-	        state,
-	      </if>
-	      <if test="createBy != null" >
-	        create_by,
-	      </if>
-	      <if test="createDate != null" >
-	        create_date,
-	      </if>
-	      <if test="updateBy != null" >
-	        update_by,
-	      </if>
-	      <if test="updateDate != null" >
-	        update_date,
-	      </if>
-	      <if test="remarks != null" >
-	        remarks,
-	      </if>
-	     </trim>
-	    <trim prefix="values (" suffix=")" suffixOverrides="," >
-	      <if test="id != null" >
-	        #{id},
-	      </if>
-	      <if test="receiveId != null" >
-	         #{receiveId},
-	      </if>
-	      <if test="receiveName != null" >
-	         #{receiveName},
-	      </if>
-	      <if test="receiveType != null" >
-	         #{receiveType},
-	      </if>
-	      <if test="receiveAddr != null" >
-	         #{receiveAddr},
-	      </if>
-	       <if test="receiveUser != null" >
-	         #{receiveUser},
-	      </if>
-	      <if test="state != null" >
-	         #{state},
-	      </if>
-	      <if test="createBy != null" >
-	        #{createBy},
-	      </if>
-	      <if test="createDate != null" >
-	         #{createDate},
-	      </if>
-	      <if test="updateBy != null" >
-	        #{updateBy},
-	      </if>
-	      <if test="updateDate != null" >
-	         #{updateDate},
-	      </if>
-	      <if test="remarks != null" >
-	         #{remarks},
-	      </if>
-	</trim>
+			<if test="createDate != null">
+				create_date,
+			</if>
+			<if test="updateBy != null">
+				update_by,
+			</if>
+			<if test="updateDate != null">
+				update_date,
+			</if>
+			<if test="remarks != null">
+				remarks,
+			</if>
+		</trim>
+		<trim prefix="values (" suffix=")" suffixOverrides=",">
+			<if test="id != null">
+				#{id},
+			</if>
+			<if test="receiveId != null">
+				#{receiveId},
+			</if>
+			<if test="receiveName != null">
+				#{receiveName},
+			</if>
+			<if test="receiveType != null">
+				#{receiveType},
+			</if>
+			<if test="receiveAddr != null">
+				#{receiveAddr},
+			</if>
+			<if test="receiveUser != null">
+				#{receiveUser},
+			</if>
+			<if test="state != null">
+				#{state},
+			</if>
+			<if test="createBy != null">
+				#{createBy},
+			</if>
+			<if test="createDate != null">
+				#{createDate},
+			</if>
+			<if test="updateBy != null">
+				#{updateBy},
+			</if>
+			<if test="updateDate != null">
+				#{updateDate},
+			</if>
+			<if test="remarks != null">
+				#{remarks},
+			</if>
+		</trim>
 	</insert>
 	<update id="deleteByReceiveId" parameterType="String">
-		update monitor_etl_mail_receiver set del_flag=1 where receive_id =#{receiveId}
+		update
+		monitor_etl_mail_receiver set del_flag=1 where receive_id
+		=#{receiveId}
 	</update>
-	<update id="updateByReceiveId" parameterType="com.haier.datamart.entity.MonitorEtlMailReceiver">
-			update monitor_etl_mail_receiver 
-			<set>
-			<if test="id != null" >
+	<update id="updateByReceiveId"
+		parameterType="com.haier.datamart.entity.MonitorEtlMailReceiver">
+		update monitor_etl_mail_receiver
+		<set>
+			<if test="id != null">
 				id=#{id},
 			</if>
-			<if test="receiveId != null" >
+			<if test="receiveId != null">
 				receive_id=#{receiveId},
 			</if>
-			<if test="receiveName != null" >
+			<if test="receiveName != null">
 				receive_name=#{receiveName},
 			</if>
-			<if test="receiveType != null" >
+			<if test="receiveType != null">
 				receive_type=#{receiveType},
 			</if>
-			<if test="receiveAddr != null" >
+			<if test="receiveAddr != null">
 				receive_addr=#{receiveAddr},
 			</if>
-			<if test="receiveUser != null" >
+			<if test="receiveUser != null">
 				receive_user=#{receiveUser},
 			</if>
-			<if test="state != null" >
+			<if test="state != null">
 				state=#{state},
 			</if>
-			<if test="createDate != null" >
+			<if test="createDate != null">
 				create_date=#{createDate},
 			</if>
-		    <if test="createBy != null" >
+			<if test="createBy != null">
 				create_by=#{createBy},
 			</if>
-			<if test="updateBy != null" >
+			<if test="updateBy != null">
 				update_by=#{updateBy},
 			</if>
-			<if test="updateDate != null" >
+			<if test="updateDate != null">
 				update_date=#{updateDate},
 			</if>
-			<if test="remarks != null" >
+			<if test="remarks != null">
 				remarks=#{remarks},
 			</if>
-			</set>
-				  where receive_id=#{receiveId}
+		</set>
+		where receive_id=#{receiveId}
 	</update>
 </mapper>

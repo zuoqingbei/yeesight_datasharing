@@ -267,16 +267,28 @@ select <include refid="Base_Column_List"></include> from monitor_etl_control_par
 		m.create_date as createDate,
 		u.`name` as createBy,
 		m.module_name as moduleName
-	from
+	from 
 		monitor_etl_control_param m
-	left join sys_user u on u.id = m.create_by
-	where
-		m.del_flag = 0
-	and m.index_id != ''
-	group by
-		m.index_id
-	order by
-		m.update_date desc;
+	left join sys_user u on u.id=m.create_by
+	where 
+		m.del_flag=0
+	AND 
+		m.index_id !=''
+	<if test="moduleName!=null">
+		and m.module_name like concat('%',#{moduleName},'%')
+	</if>
+	<if test="remarks!=null">
+		and m.remarks  like concat('%',#{remarks},'%')
+	</if>
+	<if test="createBy!=null">
+		and  u.`name` like concat('%',#{createBy},'%')
+	</if>
+	GROUP BY
+		m.index_id,
+		m.index_name ,
+		m.create_date ,
+		u.`name`  ,
+		m.module_name  
 </select>
 	<!--  * 模糊搜索
 	 * @param moduleName
@@ -309,12 +321,14 @@ select <include refid="Base_Column_List"></include> from monitor_etl_control_par
 		and m.remarks  like concat('%',#{remarks},'%')
 	</if>
 	<if test="userId!=null">
-		and m.create_by like concat('%',#{userId},'%')
+		and  u.id in(#{userId})
 	</if>
 	GROUP BY
-		m.index_id
-	ORDER BY
-		m.update_date DESC;		
+		m.index_id,
+		m.index_name ,
+		m.create_date ,
+		u.`name`  ,
+		m.module_name  
 </select>
 
 	 <!-- * 通过指标id获取模板id

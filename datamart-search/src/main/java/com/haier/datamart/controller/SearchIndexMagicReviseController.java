@@ -19,8 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.aspose.words.PageInfo;
+import com.github.pagehelper.PageInfo;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.haier.datamart.base.PublicResult;
 import com.haier.datamart.base.PublicResultConstant;
@@ -263,7 +262,7 @@ public class SearchIndexMagicReviseController extends BaseController {
     public Object list(SearchIndexMagicRevise entity,@RequestParam(value="pageNum",required = false,defaultValue="1") Integer pageNum,
 			@RequestParam(value="pageSize",required = false,defaultValue="10") Integer pageSize,HttpServletRequest request) {
 		try {
-			/*if(StringUtils.isBlank(getLoginUser(request).getId())){
+			if(StringUtils.isBlank(getLoginUser(request).getId())){
 				return new PublicResult<>(PublicResultConstant.UNAUTHORIZED,"登录过期,请重新登录!");
 			}
 			EntityWrapper<SearchIndexMagicRevise> wrapper = searchWrapper(request, entity);
@@ -276,8 +275,8 @@ public class SearchIndexMagicReviseController extends BaseController {
 					r.setIndexCode(i.getCode());
 					r.setIndexName(i.getName());
 				}
-			}*/
-			return new PublicResult<>(PublicResultConstant.SUCCESS, null);
+			}
+			return new PublicResult<>(PublicResultConstant.SUCCESS, list);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

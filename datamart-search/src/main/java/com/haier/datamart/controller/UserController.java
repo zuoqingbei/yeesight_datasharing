@@ -37,6 +37,7 @@ import com.haier.datamart.entity.MainPageNum;
 import com.haier.datamart.entity.Menu;
 import com.haier.datamart.entity.SysUserGroup;
 import com.haier.datamart.entity.User;
+import com.haier.datamart.interceptor.LoginInterceptors;
 import com.haier.datamart.mapper.SysUserGroupMapper;
 import com.haier.datamart.service.IGroupService;
 import com.haier.datamart.service.IHacResourceDtoService;
@@ -82,7 +83,6 @@ public class UserController extends BaseController {
 	}
 	@Autowired
 	private IHacResourceDtoService dtoService;
-	
 	private boolean needPwd = true;// 是否验证密码
 	private static String defalutGroupId="2";//默认用户权限-指标管理
  
@@ -156,6 +156,7 @@ public class UserController extends BaseController {
 			
 			//http://192.168.25.55:9999/loginAndRegister/login?email=zuo%40qq.com&password=123456
 			user = checkUser(loginName, password);
+			
 			if(user==null||StringUtils.isEmpty(user.getUserCode())) {
 				return new PublicResult<>(PublicResultConstant.FAILED,
 						"账号或者密码错误!");
@@ -241,6 +242,8 @@ public class UserController extends BaseController {
 								&& StringUtils.isNotBlank(user2.getPassword())) {
 							clearSessionUser(request, response, USER_INFO);
 							setSession(request, response, USER_INFO, user2);
+							CookieUtil.setCookie(response, LoginInterceptors.DEFAULT_TOKEN_NAME,user.getToken());
+							setSession(request, response,  Constant.TOKEN_INFO, user.getToken());
 							return new PublicResult<>(PublicResultConstant.SUCCESS,
 									user2);
 						}
@@ -271,6 +274,7 @@ public class UserController extends BaseController {
 				setSession(request, response, USER_INFO, user2);
 				if (StringUtils.isNotBlank(user2.getLoginName())
 						&& StringUtils.isNotBlank(user2.getPassword())) {
+					
 					return new PublicResult<>(PublicResultConstant.SUCCESS,
 							user2);
 				}
