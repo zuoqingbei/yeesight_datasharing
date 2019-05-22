@@ -105,7 +105,7 @@ public class UserController extends BaseController {
 			String menuType = request.getParameter("menuType");
 			if (StringUtils.isNotBlank(uid)) {
 				User user = userService.selectById(uid);
-				boolean isAdmin=("1".equals(user.getUserType()));
+				boolean isAdmin= true; //("1".equals(user.getUserType()));
 				if(!isAdmin){
 					menus = menuService.getMenuByUserName(uid, "0", menuType);
 					// 查询子菜单
@@ -131,7 +131,11 @@ public class UserController extends BaseController {
 	 
 	@GetMapping(value = "/user/getUserByToken", produces = { "application/json;charset=UTF-8" })
 	//@Log(description = "API接口:/user/getUserByToken")
-	public Object getUserByToken(HttpServletRequest request,@RequestParam(value="token",required = true) String token) {
+	public Object getUserByToken(HttpServletRequest request,HttpServletResponse response,@RequestParam(value="token",required = true) String token) {
+		String localToken = this.getSession(request, response,  Constant.TOKEN_INFO)+"";
+		if(token.equals(localToken)) {
+			return new PublicResult<>(PublicResultConstant.SUCCESS, (User)this.getSession(request, response,  Constant.USER_INFO) );
+		}
 		return new PublicResult<>(PublicResultConstant.SUCCESS, paserToken(token));
 	}
 	/**
@@ -339,11 +343,16 @@ public class UserController extends BaseController {
 		if(user==null||StringUtils.isEmpty(user.getLoginName())) {
 			return null;
 		}
-		User getUser = userService.getByLoginNameAndPwd(user);
 		User temp = user;
+		
+		user.setUpdateDate(null);
+		user.setUpdateDate(null);
+		User getUser = userService.getByLoginNameAndPwd(user);
+		
 		if (getUser == null) {
 			temp.setId(GenerationSequenceUtil.getUUID());
-	 
+			temp.setCreateDate(new Date());
+			temp.setUpdateDate(new Date());
 			userService.addUser(temp);
 			//默认添加用户指标录入权限
 			List<SysUserGroup> sysUserGroups = sysUserGroupMapper.getGroupId(temp.getId());
@@ -358,6 +367,7 @@ public class UserController extends BaseController {
 			}
 		} else {
 			temp.setId(getUser.getId());
+			temp.setUpdateDate(new Date());
 			userService.updateUser(temp);
 		}
 		return user.getId();
