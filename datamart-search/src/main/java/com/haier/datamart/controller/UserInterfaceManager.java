@@ -48,6 +48,7 @@ public class UserInterfaceManager extends BaseController{
 			dataIFC.setLastUpdateBy(user.getId());
 			dataIFC.setDelFlag("0");
 			boolean isSuccess;
+			/*dataIFC.setDataSourceId("200");*/
 			if(dataIFC.getId()!=null){//修改功能
 				dataIFC.setCreateBy(UIMservice.getDataInterfaceById(dataIFC.getId()).getCreateBy());
 				isSuccess =	UIMservice.updateDataIFC(dataIFC);

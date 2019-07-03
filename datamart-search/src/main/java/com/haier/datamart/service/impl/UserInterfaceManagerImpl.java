@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.derby.iapi.sql.conn.ConnectionUtil;
@@ -34,6 +35,7 @@ import com.haier.datamart.mapper.SysUserGroupMapper;
 import com.haier.datamart.mapper.SysUserMapper;
 import com.haier.datamart.service.IUserInterfaceManager;
 import com.haier.datamart.utils.ExcelConnection;
+import com.haier.datamart.utils.UUIDUtils;
 @Service
 @Transactional
 public class UserInterfaceManagerImpl implements IUserInterfaceManager{
@@ -86,26 +88,22 @@ public class UserInterfaceManagerImpl implements IUserInterfaceManager{
 			boolean alter(DataInterfaceExc dataIFC) {
 				conn = ExcelConnection.getConn();
 				String sqlForAdd = "insert into "+TABLE_NAME+
-						  " (data_type,data_space,data_sql,param_id,begin_date,date_format,"
-						  + "fresh_flag,update_days,timer_offset,exc_time,cache_type,"
-						  + "transform_data,create_by,create_time,last_update_by,"
-						  + "last_update_time,remark,dataSourceId) "
+						  " (data_type,data_space,data_sql,"
+						  + "transform_data,create_by,create_date,"
+						  + "update_by,update_date,remarks,db_datasource_id,id) "
 						  +"VALUES(?,?,?,?,?,?,"
-						  + "?,?,?,?,?,"
-						  + "?,?,?,?,"
-						  + "?,?,?)";
+						  + "?,?,?,?,?)";
 				
 			   String sqlForUpdate = "update "+TABLE_NAME+
-						  " SET data_type=?,data_space=?,data_sql=?,param_id=?,begin_date=?,date_format=?,"
-						  + "fresh_flag=?,update_days=?,timer_offset=?,exc_time=?,cache_type=?,"
-						  + "transform_data=?,create_by=?,create_time=?,last_update_by=?,"
-						  + "last_update_time=?,remark=?,dataSourceId=?"
+						  " SET data_type=?,data_space=?,data_sql=?,"
+						  + "transform_data=?,create_by=?,create_date=?,update_by=?,"
+						  + "update_date=?,remarks=?,db_datasource_id=?"
 						  + " WHERE id=?";
 			    //查询刚刚插入实体的id
 				String forGetIdSql = "select id As id from "+TABLE_NAME+" where data_type='"+dataIFC.getDataType()+"' and data_space='"+dataIFC.getDataSpace()+"'";
 				int resultConut = 0;//记录结果集实体数
 			    Long targetId = -1L;
-			   
+			   boolean isInsert=false;
 				 try {
 					 pstmt = conn.prepareStatement(forGetIdSql);
 					 rs = pstmt.executeQuery();
@@ -117,39 +115,31 @@ public class UserInterfaceManagerImpl implements IUserInterfaceManager{
 						 if(targetId==-1L||resultConut!=1)
 						 throw  new RuntimeException("无对应接口信息!");
 						 pstmt = conn.prepareStatement(sqlForUpdate);
-						 pstmt.setLong(19, targetId);
+						 pstmt.setLong(11, targetId);
 						
 					 }else{
 						 if(resultConut>0)//若重复命名
 						 throw  new RuntimeException("同一指标下命名空间不可重复!");
 						 pstmt = conn.prepareStatement(sqlForAdd);
+						 isInsert=true;
 					 }
 					
 					pstmt.setString(1, dataIFC.getDataType());
 					pstmt.setString(2, dataIFC.getDataSpace());
 					pstmt.setString(3, dataIFC.getDataSql());
-					if(dataIFC.getParamId()==null){
-						pstmt.setNull(4, Types.BIGINT);
-					}else{
-						pstmt.setLong(4, dataIFC.getParamId());
+					pstmt.setString(4, dataIFC.getTransformData());
+					pstmt.setString(5, dataIFC.getCreateBy());
+					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					pstmt.setString(6,sdf.format(new Date()));
+					pstmt.setString(7, dataIFC.getLastUpdateBy());
+					pstmt.setString(8,sdf.format(new Date()));
+					pstmt.setString(9, dataIFC.getRemark());
+					pstmt.setString(10, dataIFC.getDataSourceId());
+					if(isInsert){
+						pstmt.setString(11, UUIDUtils.get8UUID());
 					}
-					pstmt.setString(5, dataIFC.getBeginDate());
 					
-					pstmt.setString(6, dataIFC.getDateFormat());
-					pstmt.setLong(7,Long.parseLong(dataIFC.getFreshFlag()));
-					pstmt.setInt(8, dataIFC.getUpdateDays());
-					pstmt.setInt(9, dataIFC.getTimerOffset());
-					pstmt.setString(10, dataIFC.getExcTime());
-					pstmt.setInt(11, dataIFC.getCacheType());
 					
-					pstmt.setString(12, dataIFC.getTransformData());
-					pstmt.setString(13, dataIFC.getCreateBy());
-					pstmt.setString(14, dateStr);
-					pstmt.setString(15, dataIFC.getLastUpdateBy());
-					
-					pstmt.setString(16, dateStr);
-					pstmt.setString(17, dataIFC.getRemark());
-					pstmt.setString(18, dataIFC.getDataSourceId());
 					int count = pstmt.executeUpdate();//执行增加或者更新语句
 					
 					 pstmt = conn.prepareStatement(forGetIdSql);
@@ -186,14 +176,11 @@ public class UserInterfaceManagerImpl implements IUserInterfaceManager{
 			Integer addHistorySql(DataInterfaceExc dataIFC) {
 				//增加操作历史的sql语句(同为更新操作的历史sql
 				String addHistorySql = "insert into "+HISTOR_TABLE_NAME+
-						  " (data_type,data_space,data_sql,param_id,begin_date,date_format,"
-						  + "fresh_flag,update_days,timer_offset,exc_time,cache_type,"
+						  " (data_type,data_space,data_sql,"
 						  + "transform_data,create_by,create_time,last_update_by,"
-						  + "last_update_time,remark,data_exc_id,del_flag) "
+						  + "last_update_time,remark,data_exc_id,del_flag,id) "
 						  +"VALUES(?,?,?,?,?,?,"
-						  + "?,?,?,?,?,"
-						  + "?,?,?,?,"
-						  + "?,?,?,?)";
+						  + "?,?,?,?,?,?)";
 				int historySqlCount = -1;
 				try {
 				/*	close();
@@ -202,37 +189,24 @@ public class UserInterfaceManagerImpl implements IUserInterfaceManager{
 					pstmt.setString(1, dataIFC.getDataType());
 					pstmt.setString(2, dataIFC.getDataSpace());
 					pstmt.setString(3, dataIFC.getDataSql());
-					if(dataIFC.getParamId()==null){
-						pstmt.setNull(4, Types.BIGINT);
-					}else{
-						pstmt.setLong(4, dataIFC.getParamId());
-					}
-					pstmt.setString(5, dataIFC.getBeginDate());
-					pstmt.setString(6, dataIFC.getDateFormat());
-					
-					pstmt.setLong(7, Long.parseLong(dataIFC.getFreshFlag()));
-					pstmt.setInt(8, dataIFC.getUpdateDays());
-					pstmt.setInt(9, dataIFC.getTimerOffset());
-					pstmt.setString(10, dataIFC.getExcTime());
-					pstmt.setInt(11, dataIFC.getCacheType());
-					
-					pstmt.setString(12, dataIFC.getTransformData());
-					pstmt.setString(13, dataIFC.getCreateBy());
+					pstmt.setString(4, dataIFC.getTransformData());
+					pstmt.setString(5, dataIFC.getCreateBy());
 					if(dataIFC.getCreateTime()!=null){
-						pstmt.setString(14, sdf.format(dataIFC.getCreateTime()));
+						pstmt.setString(6, sdf.format(dataIFC.getCreateTime()));
 					}else{
-						pstmt.setString(14,sdf.format(new Date()));
+						pstmt.setString(6,sdf.format(new Date()));
 					}
-					pstmt.setString(15, dataIFC.getLastUpdateBy());
+					pstmt.setString(7, dataIFC.getLastUpdateBy());
 					if(dataIFC.getLastUpdateTime()!=null){
-						pstmt.setString(16, sdf.format(dataIFC.getLastUpdateTime()));
+						pstmt.setString(8, sdf.format(dataIFC.getLastUpdateTime()));
 					}else{
-						pstmt.setString(16, "");
+						pstmt.setString(8, "");
 					}
-					pstmt.setString(17, dataIFC.getRemark());
 					
-					pstmt.setLong(18, dataIFC.getId());
-					pstmt.setString(19, dataIFC.getDelFlag());
+					pstmt.setString(9, dataIFC.getRemark());
+					pstmt.setLong(10, dataIFC.getId());
+					pstmt.setString(11, dataIFC.getDelFlag());
+					pstmt.setString(12, UUIDUtils.get8UUID().toLowerCase());
 					historySqlCount = pstmt.executeUpdate();
 				}catch(SQLException e){
 					e.printStackTrace();
@@ -304,7 +278,7 @@ public class UserInterfaceManagerImpl implements IUserInterfaceManager{
 			}
 			 List<DataInterfaceExc> getAllInterfaceList() {
 					List<DataInterfaceExc> list = new ArrayList<>();
-					StringBuffer sql = new StringBuffer("select t.*, d.`name` as dbName from "+TABLE_NAME+" t left join db_datasource_config d on d.id=t.db_datasource_id where  t.del_flag=0 ") ;
+					StringBuffer sql = new StringBuffer("select t.*, d.`name` as dbName from "+TABLE_NAME+" t left join db_datasource_config d on d.id=t.db_datasource_id where  t.del_flag=0 order by t.create_date desc") ;
 					String sqlStr = sql+"";
 					try {
 						pstmt = conn.prepareStatement(sqlStr);
@@ -349,7 +323,7 @@ public class UserInterfaceManagerImpl implements IUserInterfaceManager{
 				for (int i = 0; i < excIdlist.size(); i++) {
 						sql.append(",'"+excIdlist.get(i)+"'");
 				}
-				sql.append(") and t.del_flag=0 ") ;
+				sql.append(") and t.del_flag=0 order by t.create_date desc") ;
 				String sqlStr = sql+"";
 				try {
 					pstmt = conn.prepareStatement(sqlStr);
